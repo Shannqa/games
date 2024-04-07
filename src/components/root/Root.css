@@ -1,8 +1,20 @@
 .root {
-
+  display: grid;
+  grid-template-areas: "header header"
+                       "menu main";
 }
 
 h1 {
   font-size: 1.4rem;
   margin: 2px;
 }
+
+header {
+  grid-area: header;
+}
+
+.menu {
+  grid-area: menu;
+  
+}
+

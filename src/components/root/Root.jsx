@@ -1,11 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import styles from "./Root.css";
+import Menu from "./Menu";
+import "./Root.css";
 
 function Root() {
   return(
-    <div className={styles.root}>
+    <div className="root">
       <Header />
+      <Menu />
       <Outlet />
     </div>
   )
