@@ -36,9 +36,7 @@ function drop(ev) {
   try {
     ev.preventDefault();
     const shipID = ev.dataTransfer.getData("text");
-    console.log(shipID);
     const draggedShip = document.querySelector(`#${shipID}`);
-    console.log(draggedShip);
     const shipSize = parseInt(shipID.slice(-1));
     const targetX = parseInt(ev.target.dataset.column); // horizontal
     const targetY = parseInt(ev.target.dataset.row); // vertical
@@ -58,6 +56,7 @@ function drop(ev) {
     }
     draggedShip.classList.add("ship-on-board");
     ev.target.appendChild(draggedShip);
+    console.log(fullCoords);
   } catch {
     console.error("error - drag&drop");
     removeHoverClass();

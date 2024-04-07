@@ -1,0 +1,23 @@
+.gameWindow {
+  
+}
+
+
+.button {
+  margin: 10px;
+  background-color: #11364a;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  padding: 6px 18px;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.button:hover {
+  background-color: #234e66;
+  cursor: pointer;
+}
+
+.button:active, .default-btn:active {
+  background-color: rgb(56 9 135);
+}

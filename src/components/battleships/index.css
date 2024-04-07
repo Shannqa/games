@@ -49,24 +49,6 @@ h3 {
 .ship-to-place .cell {
   background-color: #234e66;
 }
-.default-btn {
-  margin: 10px;
-  background-color: #11364a;
-  color: #dca85d;
-  border: 1px #dca85d solid;
-  padding: 6px 18px;
-  font-size: 1.2rem;
-  align-self: center;
-}
-
-.default-btn:hover {
-  background-color: #234e66;
-  cursor: pointer;
-}
-
-.default-btn:active, .default-btn:active {
-  background-color: rgb(56 9 135);
-}
 
 .gameboards {
   display: grid;

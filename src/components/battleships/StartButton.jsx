@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import styles from "./Battleships.module.css";
 
 function StartButton({ onClick }) {
   
   return(
-    <button className="default-btn" onClick={onClick}>Start Game</button>
+    <button className={styles.button} onClick={onClick}>Start Game</button>
     )
 }
 
