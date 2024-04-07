@@ -34,3 +34,17 @@ body {
   background-color: #0d1e26;
   color: #dca85d;
 }
+
+.dragover-ship {
+  background-color: red;
+}
+
+.ship-on-board {
+  background-color: green;
+  position: absolute;
+}
+
+
+.flex-toggle {
+  flex-direction: column;
+}
