@@ -9,18 +9,18 @@ function Prepboard({ grid, prepShipList, setPrepShipList  }) {
       const shipID = ev.dataTransfer.getData("text");
       const draggedShip = document.querySelector(`#${shipID}`);
       const shipSize = parseInt(shipID.slice(-1));
-      const targetX = parseInt(ev.target.dataset.column); // horizontal
-      const targetY = parseInt(ev.target.dataset.row); // vertical
+      const targetR = parseInt(ev.target.dataset.row); 
+      const targetC = parseInt(ev.target.dataset.column); 
       const direction = draggedShip.classList.contains("flex-toggle")
         ? "vertical"
         : "horizontal";
-      const fullCoords = getFullCoords([targetX, targetY], shipSize, direction);
+      const fullCoords = getFullCoords([targetR, targetC], shipSize, direction);
       // to add: need to list full coords when direction is toggled while on the board!
   
       // if the ship would be placed outside of the grid
       if (
-        (direction === "horizontal" && shipSize + targetX > 10) ||
-        (direction === "vertical" && shipSize + targetY > 10)
+        (direction === "horizontal" && shipSize + targetC > 10) ||
+        (direction === "vertical" && shipSize + targetR > 10)
       ) {
         removeHoverClass();
         return;

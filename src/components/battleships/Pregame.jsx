@@ -60,8 +60,8 @@ function Pregame({ grid, prepShipList, setPrepShipList, setStage, playerGrid, se
     // bug - adds sometimes more grid fields for some reason. maybe a problem with the difference between vertical and horizontal, x and y
     keys.forEach((key) => {
       shipList[key].forEach((coord) => {
-        const [x, y] = coord;
-        newGrid[x][y] = parseInt(key);
+        const [r, c] = coord;
+        newGrid[r][c] = parseInt(key);
       })
     })
     console.log(newGrid);

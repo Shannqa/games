@@ -1,18 +1,18 @@
 function getFullCoords(start, size, direction) {
   // gets full coordinates of every square in a single ship
-  const [x, y] = start;
+  const [r, c] = start;
   let fullCoords = [];
-    
+
   if (direction === "vertical") {
-    for (let i = x; i < x + size; i++) {
-      fullCoords.push([i, y]);
+    for (let i = r; i < r + size; i++) {
+      fullCoords.push([i, c]);
     }
   } else if (direction === "horizontal") {
-    for (let i = y; i < y + size; i++) {
-      fullCoords.push([x, i]);
+    for (let i = c; i < c + size; i++) {
+      fullCoords.push([r, i]);
     }
   }
   return fullCoords;
 }
 
-export default getFullCoords
+export default getFullCoords;

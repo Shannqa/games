@@ -1,10 +1,17 @@
-import { dragStart, dragEnd } from "./dragAndDrop.js";
 import getFullCoords from "./getFullCoords.js";
 
 function Ship({ size, grid, prepShipList, setPrepShipList }) {
   let singleShip = [];
   for (let i = 0; i < size; i++) {
     singleShip.push(<div className="cell" key={size + i} id={i} data-cell={i + 1} data-size={size}></div>);
+  }
+
+  function dragStart(ev) {
+    ev.dataTransfer.setData("text/plain", ev.target.id);
+  }
+  
+  function dragEnd() {
+    //areAllShipsPlaced();
   }
 
   function doubleClick(ev) {
