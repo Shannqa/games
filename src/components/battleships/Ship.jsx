@@ -1,6 +1,10 @@
+import { useContext } from "react"
+import { BattleshipsContext } from "./Battleships.jsx"
 import getFullCoords from "./getFullCoords.js";
 
-function Ship({ size, grid, prepShipList, setPrepShipList }) {
+function Ship({ size }) {
+  const { playerGrid, playerShipList, setPlayerShipList } = useContext(BattleshipsContext);
+
   let singleShip = [];
   for (let i = 0; i < size; i++) {
     singleShip.push(<div className="cell" key={size + i} id={i} data-cell={i + 1} data-size={size}></div>);
@@ -27,8 +31,8 @@ function Ship({ size, grid, prepShipList, setPrepShipList }) {
   
     // parent data-row, parent data-column
     const fullCoords = getFullCoords([row, column], shipSize, direction);
-    setPrepShipList({
-      ...prepShipList,
+    setPlayerShipList({
+      ...playerShipList,
       [shipSize]: fullCoords
     })
   }

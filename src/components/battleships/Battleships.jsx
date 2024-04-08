@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
 
+
+export const BattleshipsContext = createContext({
+  stage: "",
+  setStage: () => {},
+  playerGrid: [],
+  setPlayerGrid: () => {},
+  computerGrid: [],
+  setComputerGrid: () => {},
+  playerShipList: {},
+  setPlayerShipList: () => {},
+  computerShipList: {},
+  setComputerShipList: () => {}
+});
+
 function Battleships() {
   const [stage, setStage] = useState("preparing");
-  const [prepGrid, setPrepGrid] = useState(() => createGrid());
   const [playerGrid, setPlayerGrid] = useState(() => createGrid());
   const [computerGrid, setComputerGrid] = useState(() => createGrid());
-  const [prepShipList, setPrepShipList] = useState({
+  const [playerShipList, setPlayerShipList] = useState({
     2: [],
     3: [],
     4: [],
@@ -29,10 +42,22 @@ function Battleships() {
   }
 
   return(
-    <div className={styles.gameWindow}>
-    {stage === "preparing" ? <Pregame grid={prepGrid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} setStage={setStage} playerGrid={playerGrid} setPlayerGrid={setPlayerGrid} computerShipList={computerShipList} setComputerShipList={setComputerShipList} computerGrid={computerGrid} setComputerGrid={setComputerGrid}/> : <Game playerGrid={playerGrid} setPlayerGrid={setPlayerGrid} computerGrid={computerGrid} setComputerGrid={setComputerGrid} prepShipList={prepShipList} computerShipList={computerShipList} />}
-    
-    </div>
+    <BattleshipsContext.Provider value={{
+      stage,
+      setStage,
+      playerGrid,
+      setPlayerGrid,
+      computerGrid,
+      setComputerGrid,
+      playerShipList,
+      setPlayerShipList,
+      computerShipList,
+      setComputerShipList
+    }}>
+      <div className={styles.gameWindow}>
+        {stage === "preparing" ? <Pregame /> : <Game />}
+      </div>
+    </BattleshipsContext.Provider>
   )
   
   

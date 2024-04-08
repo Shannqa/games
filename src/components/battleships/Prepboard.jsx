@@ -1,6 +1,9 @@
+import { useContext } from "react"
+import { BattleshipsContext } from "./Battleships.jsx"
 import getFullCoords from "./getFullCoords.js";
 
-function Prepboard({ grid, prepShipList, setPrepShipList  }) {
+function Prepboard({ owner }) {
+  const { playerGrid, playerShipList, setPlayerShipList } = useContext(BattleshipsContext);
 
   function drop(ev) {
     // catch an error happening if the user tries to drag and drop the ship in a wrong place, e.g. in the middle of multiple squares
@@ -27,8 +30,8 @@ function Prepboard({ grid, prepShipList, setPrepShipList  }) {
       }
       draggedShip.classList.add("ship-on-board");
       ev.target.appendChild(draggedShip);
-      setPrepShipList({
-        ...prepShipList,
+      setPlayerShipList({
+        ...playerShipList,
         [shipSize]: fullCoords
       })
     } catch {
@@ -60,8 +63,8 @@ function Prepboard({ grid, prepShipList, setPrepShipList  }) {
   }
 
   return(
-    <div className="board">
-      {grid.map((row, rindex) => (
+    <div className={owner == "player" ? "board own-board" : "board enemy-board"}>
+      {playerGrid.map((row, rindex) => (
         row.map((column, cindex) => (<div className="cell" data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}></div>))
       ))}
     </div>

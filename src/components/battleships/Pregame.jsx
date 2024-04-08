@@ -1,18 +1,21 @@
+import { useContext } from "react"
+import { BattleshipsContext } from "./Battleships.jsx"
 import Prepboard from "./Prepboard";
 import ShipPlacer from "./ShipPlacer";
 import StartButton from "./StartButton";
 import RandomizeButton from "./RandomizeButton";
-import styles from "./Pregame.module.css";
+import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
 
-function Pregame({ grid, prepShipList, setPrepShipList, setStage, playerGrid, setPlayerGrid, computerShipList, setComputerShipList, computerGrid, setComputerGrid }) {
-  
+function Pregame() {
+  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList } = useContext(BattleshipsContext);
+
   function areWeReady() {
     console.log(playerGrid);
-    const playerCheck = checkPlacements(prepShipList);
+    const playerCheck = checkPlacements(playerShipList);
     if (playerCheck) {
-      addToBoard(playerGrid, setPlayerGrid, prepShipList);
-      // generateComputerShips();
+      addToBoard(playerGrid, setPlayerGrid, playerShipList);
+      generateComputerShips();
       setStage("playing");
     } else {
       console.log("error") 
@@ -33,7 +36,7 @@ function Pregame({ grid, prepShipList, setPrepShipList, setStage, playerGrid, se
   }
 
   function checkPlacements(shipList) {
-    // check if there are any coordinate duplicates by flattening the prepShipList array and then seeing if any coordinate is the same as another one
+    // check if there are any coordinate duplicates by flattening the playerShipList array and then seeing if any coordinate is the same as another one
     const check = Object.values(shipList);
     const flat = check.flat(1);
     console.log(flat);
@@ -105,8 +108,8 @@ function Pregame({ grid, prepShipList, setPrepShipList, setStage, playerGrid, se
   return(
     <div className={styles.pregame}>
       <p>Place all your ships on the board:</p>
-      <Prepboard grid={grid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} />
-      <ShipPlacer grid={grid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} />
+      <Prepboard owner="player" />
+      <ShipPlacer />
       <StartButton onClick={areWeReady} />
       <RandomizeButton onClick={getRandomPlacements} />
     </div>

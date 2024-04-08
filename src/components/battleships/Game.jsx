@@ -1,13 +1,16 @@
+import { useContext } from "react"
+import { BattleshipsContext } from "./Battleships.jsx"
 import Board from "./Board";
 
-function Game({ playerGrid, computerGrid, prepShipList, computerShipList }) {
+function Game() {
+  const { playerGrid, computerGrid } = useContext(BattleshipsContext);
   
   return(
     <div>
       <h2>Player:</h2>
-      <Board grid={playerGrid} shipList={prepShipList} />
+      <Board grid={playerGrid} owner="player" />
       <h2>Computer:</h2>
-      <Board grid={computerGrid} shipList={computerShipList} />
+      <Board grid={computerGrid} owner="enemy"/>
     </div>
   )
 }
