@@ -55,21 +55,20 @@ function Pregame({ grid, prepShipList, setPrepShipList }) {
   }
   
   
-  function addToBoard(fullCoords, id, grid, gridSetter, coord) {
-    // add a single ship cell to the board
-    const [x, y] = coord;
-    gridSetter(
-      grid.map((column, colIndex) => {
-        if (colIndex === y) {
-          column.map((row, rowIndex) => {
-            if (rowIndex === x) {
-              row = id;
-            }
-          });
-        }
+  function addToBoard(grid, gridSetter) {
+    const keys = Object.keys(prepShipList);
+    let newGrid = [...grid];
+    
+    keys.forEach((key) => {
+      prepShipList[key].forEach((coord) => {
+        const [x, y] = coord;
+        newGrid[x][y] = parseInt(key);
       })
-    );
+    })
+    
+    gridSetter(newGrid);
   }
+  
   
 
 

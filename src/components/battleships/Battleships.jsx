@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
+import Game from "./Game";
 
 function Battleships() {
   
@@ -28,7 +29,7 @@ function Battleships() {
 
   return(
     <div className={styles.gameWindow}>
-    {stage === "preparing" ? <div><Pregame grid={prepGrid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} /> <p>aa</p></div> : null}
+    {stage === "preparing" ? <Pregame grid={prepGrid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} /> : <Game />}
     </div>
   )
   
