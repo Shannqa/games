@@ -1,42 +1,40 @@
 import Prepboard from "./Prepboard";
 import ShipPlacer from "./ShipPlacer";
 import StartButton from "./StartButton";
+import RandomizeButton from "./RandomizeButton";
 import styles from "./Pregame.module.css";
+import getFullCoords from "./getFullCoords.js";
 
-function Pregame({ grid, prepShipList, setPrepShipList }) {
-  
-  function dragStart(ev) {
-    ev.dataTransfer.setData("text/plain", ev.target.id);
-  }
-  
-  function dragEnd() {
-    //areAllShipsPlaced();
-  }
-  
-
-  
-  function removeHoverClass() {
-    // remove styling of cell(s) that are being hovered over once the event ends
-    const hoveredCells = document.querySelectorAll(".dragover-ship");
-    if (hoveredCells) {
-      for (let cell of hoveredCells) {
-        cell.classList.remove("dragover-ship");
-      }
-    }
-  }
+function Pregame({ grid, prepShipList, setPrepShipList, setStage, playerGrid, setPlayerGrid, computerShipList, setComputerShipList, computerGrid, setComputerGrid }) {
   
   function areWeReady() {
-    const check = checkPlacements();
-    if (check) {
-      // add to the grid
+    console.log(playerGrid);
+    const playerCheck = checkPlacements(prepShipList);
+    if (playerCheck) {
+      addToBoard(playerGrid, setPlayerGrid, prepShipList);
+      // generateComputerShips();
+      setStage("playing");
     } else {
-      // error placing ships
+      console.log("error") 
     }
-
   }
-  function checkPlacements() {
+
+  function generateComputerShips() {
+    const newShipList = getRandomPlacements();
+    console.log("newcomp" + newShipList);
+    checkPlacements(newShipList);
+    if (checkPlacements) {
+      setComputerShipList(newShipList);
+      addToBoard(computerGrid, setComputerGrid, newShipList);
+      return;
+    } else {
+      generateComputerShips();
+    }
+  }
+
+  function checkPlacements(shipList) {
     // check if there are any coordinate duplicates by flattening the prepShipList array and then seeing if any coordinate is the same as another one
-    const check = Object.values(prepShipList);
+    const check = Object.values(shipList);
     const flat = check.flat(1);
     console.log(flat);
     if (flat.length !== 14) return false;
@@ -54,53 +52,63 @@ function Pregame({ grid, prepShipList, setPrepShipList }) {
     return true;
   }
   
-  
-  function addToBoard(grid, gridSetter) {
-    const keys = Object.keys(prepShipList);
+  function addToBoard(grid, gridSetter, shipList) {
+    const keys = Object.keys(shipList);
+
     let newGrid = [...grid];
-    
+    console.log(newGrid);
+    // bug - adds sometimes more grid fields for some reason. maybe a problem with the difference between vertical and horizontal, x and y
     keys.forEach((key) => {
-      prepShipList[key].forEach((coord) => {
+      shipList[key].forEach((coord) => {
         const [x, y] = coord;
         newGrid[x][y] = parseInt(key);
       })
     })
-    
+    console.log(newGrid);
     gridSetter(newGrid);
   }
   
-  
 
-
-  //////////////
-
-/*
-  placeShip(length, coordsStart, coordsEnd) {
-    const id = this.shipsList.length;
-    const placedShip = new Ship(length, id);
-
-    // if the ship's length > 2, mark the other squares too
-    this.shipsList.push(placedShip);
-    if (coordsStart[0] !== coordsEnd[0]) {
-      for (let i = coordsStart[0]; i <= coordsEnd[0]; i++) {
-        this.grid[i][coordsStart[1]] = id;
+  /* randomize placement of ships */
+  function getRandomPlacements() {
+    const lengths = [2, 3, 4, 5];
+    let randomShipList = {};
+    lengths.forEach((shipLength) => {
+      let coords = getNewCoords(shipLength);
+      randomShipList = {
+        ...randomShipList,
+        [shipLength]: coords
       }
-    }
-    if (coordsStart[1] !== coordsEnd[1]) {
-      for (let i = coordsStart[1]; i <= coordsEnd[1]; i++) {
-        this.grid[coordsStart[0]][i] = id;
-      }
-    }
-    this.grid[coordsStart[0]][coordsStart[1]] = id;
-    this.grid[coordsEnd[0]][coordsEnd[1]] = id;
+    });
+    
+    return randomShipList;
   }
-*/
+  
+  function getNewCoords(shipLength) {
+    //randomize - horizontal or vertical
+    let direction;
+    let startCoord = [];
+    let random1 = Math.floor(Math.random() * 10);
+    let random2 = Math.floor(Math.random() * (10 - shipLength)); 
+    let chance = Math.random() * 1;
+    if (chance < 0.5) {
+      direction = "vertical";
+      startCoord = [random2, random1];
+    } else {
+      direction = "horizontal";
+      startCoord = [random1, random2]
+    }
+    let fullCoords = getFullCoords(startCoord, shipLength, direction);
+    return fullCoords;
+  }
+
   return(
     <div className={styles.pregame}>
       <p>Place all your ships on the board:</p>
       <Prepboard grid={grid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} />
       <ShipPlacer grid={grid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} />
-      <StartButton onClick={checkPlacements} />
+      <StartButton onClick={areWeReady} />
+      <RandomizeButton onClick={getRandomPlacements} />
     </div>
   )
 }

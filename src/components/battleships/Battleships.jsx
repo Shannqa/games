@@ -4,7 +4,6 @@ import Pregame from "./Pregame";
 import Game from "./Game";
 
 function Battleships() {
-  
   const [stage, setStage] = useState("preparing");
   const [prepGrid, setPrepGrid] = useState(() => createGrid());
   const [playerGrid, setPlayerGrid] = useState(() => createGrid());
@@ -14,7 +13,9 @@ function Battleships() {
     3: [],
     4: [],
     5: []
-  }) 
+  });
+  const [computerShipList, setComputerShipList] = useState();
+
   function createGrid() {
     const gridSize = 10;
     let gridArray = [];
@@ -29,7 +30,8 @@ function Battleships() {
 
   return(
     <div className={styles.gameWindow}>
-    {stage === "preparing" ? <Pregame grid={prepGrid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} /> : <Game />}
+    {stage === "preparing" ? <Pregame grid={prepGrid} prepShipList={prepShipList} setPrepShipList={setPrepShipList} setStage={setStage} playerGrid={playerGrid} setPlayerGrid={setPlayerGrid} computerShipList={computerShipList} setComputerShipList={setComputerShipList} computerGrid={computerGrid} setComputerGrid={setComputerGrid}/> : <Game playerGrid={playerGrid} setPlayerGrid={setPlayerGrid} computerGrid={computerGrid} setComputerGrid={setComputerGrid} prepShipList={prepShipList} computerShipList={computerShipList} />}
+    
     </div>
   )
   
