@@ -4,14 +4,14 @@ import Prepboard from "./Prepboard";
 import ShipPlacer from "./ShipPlacer";
 import StartButton from "./StartButton";
 import RandomizeButton from "./RandomizeButton";
+import ResetBoardButton from "./ResetBoardButton";
 import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
 
-function Pregame() {
-  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList } = useContext(BattleshipsContext);
+function Pregame({ createGrid }) {
+  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer } = useContext(BattleshipsContext);
 
   function areWeReady() {
-    console.log(playerGrid);
     const playerCheck = checkPlacements(playerShipList);
     if (playerCheck) {
       addToBoard(playerGrid, setPlayerGrid, playerShipList);
@@ -22,9 +22,23 @@ function Pregame() {
     }
   }
 
+  function getRandomPlayerShips() {
+    let emptyGrid = createGrid();
+    const randomShipList = getRandomPlacementsSmart();
+    setPlayerShipList(randomShipList);
+    console.log(randomShipList);
+    setPlayerRandomizer(true);
+    addToBoard(emptyGrid, setPlayerGrid, randomShipList);
+  }
+
+  function resetBoard() {
+    setPlayerShipList({});
+    setPlayerGrid(() => createGrid()); // resets the grid
+    setPlayerRandomizer(false);
+  }
+
   function generateComputerShips() {
     const newShipList = getRandomPlacements();
-    console.log("newcomp" + newShipList);
     checkPlacements(newShipList);
     if (checkPlacements) {
       setComputerShipList(newShipList);
@@ -39,7 +53,6 @@ function Pregame() {
     // check if there are any coordinate duplicates by flattening the playerShipList array and then seeing if any coordinate is the same as another one
     const check = Object.values(shipList);
     const flat = check.flat(1);
-    console.log(flat);
     if (flat.length !== 14) return false;
 
     const obj = {};    
@@ -47,11 +60,9 @@ function Pregame() {
       const key = JSON.stringify(item);
       obj[key] = (obj[key] || 0) + 1;
       if (obj[key] > 1) {
-        console.log(false);
         return false;
       }
     }
-    console.log(true);
     return true;
   }
   
@@ -171,9 +182,7 @@ function getRandomPlacementsSmart() {
       
     })
     
-    eliminatedFields.push(
-      ...
-      )
+    eliminatedFields.push(...adjacentCells);
     return fullCoords;
   }
   
@@ -181,9 +190,10 @@ function getRandomPlacementsSmart() {
     <div className={styles.pregame}>
       <p>Place all your ships on the board:</p>
       <Prepboard owner="player" />
-      <ShipPlacer />
+      {playerRandomizer ? null : <ShipPlacer />}
       <StartButton onClick={areWeReady} />
-      <RandomizeButton onClick={getRandomPlacements} />
+      <RandomizeButton onClick={getRandomPlayerShips} />
+      <ResetBoardButton onClick={resetBoard} />
     </div>
   )
 }

@@ -14,7 +14,9 @@ export const BattleshipsContext = createContext({
   playerShipList: {},
   setPlayerShipList: () => {},
   computerShipList: {},
-  setComputerShipList: () => {}
+  setComputerShipList: () => {},
+  playerRandomizer: "",
+  setPlayerRandomizer: () => {}
 });
 
 function Battleships() {
@@ -28,6 +30,7 @@ function Battleships() {
     5: []
   });
   const [computerShipList, setComputerShipList] = useState();
+  const [playerRandomizer, setPlayerRandomizer] = useState(false);
 
   function createGrid() {
     const gridSize = 10;
@@ -52,10 +55,12 @@ function Battleships() {
       playerShipList,
       setPlayerShipList,
       computerShipList,
-      setComputerShipList
+      setComputerShipList,
+      playerRandomizer,
+      setPlayerRandomizer
     }}>
       <div className={styles.gameWindow}>
-        {stage === "preparing" ? <Pregame /> : <Game />}
+        {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
       </div>
     </BattleshipsContext.Provider>
   )

@@ -65,7 +65,7 @@ function Prepboard({ owner }) {
   return(
     <div className={owner == "player" ? "board own-board" : "board enemy-board"}>
       {playerGrid.map((row, rindex) => (
-        row.map((column, cindex) => (<div className="cell" data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}></div>))
+        row.map((column, cindex) => (<div className={column === null ? "cell" : "cell random-ship-on-board"} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}>{column}</div>))
       ))}
     </div>
   )
