@@ -5,11 +5,12 @@ import ShipPlacer from "./ShipPlacer";
 import StartButton from "./StartButton";
 import RandomizeButton from "./RandomizeButton";
 import ResetBoardButton from "./ResetBoardButton";
+import PlacementError from "./PlacementError";
 import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
 
 function Pregame({ createGrid }) {
-  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer } = useContext(BattleshipsContext);
+  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer, placementError, setPlacementError } = useContext(BattleshipsContext);
 
   function onStartClick() {
     if (playerRandomizer) {
@@ -22,9 +23,10 @@ function Pregame({ createGrid }) {
       if (playerCheck) {
         addToBoard(playerGrid, setPlayerGrid, playerShipList);
         getRandomComputerShips();
-        setStage("playing");
+        setStage("playing");        
       } else {
         console.log("placement error");
+        setPlacementError(true);
       }
     }
   }
@@ -36,6 +38,7 @@ function Pregame({ createGrid }) {
     setPlayerShipList(randomShipList);
     setPlayerRandomizer(true);
     addToBoard(emptyGrid, setPlayerGrid, randomShipList);
+    if (placementError) setPlacementError(false);
   }
 
   function resetPlayerBoard() {
@@ -149,6 +152,7 @@ function getRandomPlacements() {
       <StartButton onClick={onStartClick} />
       <RandomizeButton onClick={getRandomPlayerShips} />
       <ResetBoardButton onClick={resetPlayerBoard} />
+      {placementError ? <PlacementError /> : null}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useState, createContext } from "react";
 import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
+import PlacementError from "./PlacementError";
 
 
 export const BattleshipsContext = createContext({
@@ -16,7 +17,9 @@ export const BattleshipsContext = createContext({
   computerShipList: {},
   setComputerShipList: () => {},
   playerRandomizer: "",
-  setPlayerRandomizer: () => {}
+  setPlayerRandomizer: () => {},
+  placementError: "",
+  setPlacementError: () => {}
 });
 
 function Battleships() {
@@ -31,6 +34,7 @@ function Battleships() {
   });
   const [computerShipList, setComputerShipList] = useState();
   const [playerRandomizer, setPlayerRandomizer] = useState(false);
+  const [placementError, setPlacementError] = useState(false);
 
   function createGrid() {
     const gridSize = 10;
@@ -57,7 +61,9 @@ function Battleships() {
       computerShipList,
       setComputerShipList,
       playerRandomizer,
-      setPlayerRandomizer
+      setPlayerRandomizer,
+      placementError,
+      setPlacementError
     }}>
       <div className={styles.gameWindow}>
         {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
