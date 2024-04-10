@@ -4,24 +4,10 @@
   box-sizing: border-box;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(10, 40px);
-  column-gap: 0px;
-  row-gap: 0px;
-  justify-items: stretch;
-  font-size: 12px;
-  margin: 6px 12px;
-  width: 400px;
-}
 
 
-.cell {
-  width: 40px;
-  height: 40px;
-  border: 1px #dca85d solid;
-  margin: 0px;
-}
+
+
 
 .ship-placer {
   display: grid;
@@ -50,18 +36,9 @@ body {
   background-color: green;
   position: absolute;
 }
-.random-ship-on-board {
-  background-color: green;
-}
+
 
 .flex-toggle {
   flex-direction: column;
 }
 
-.own-board {
-  background-color: #234e66;
-}
-
-.enemy-board {
-  background-color: rgb(58, 39, 104);
-}

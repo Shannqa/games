@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { BattleshipsContext } from "./Battleships.jsx"
 import getFullCoords from "./getFullCoords.js";
+import styles from "./Battleships.module.css";
 
 function Prepboard({ owner }) {
   const { playerGrid, playerShipList, setPlayerShipList } = useContext(BattleshipsContext);
@@ -28,7 +29,7 @@ function Prepboard({ owner }) {
         removeHoverClass();
         return;
       }
-      draggedShip.classList.add("ship-on-board");
+      draggedShip.classList.add(styles.shipOnBoard);
       ev.target.appendChild(draggedShip);
       setPlayerShipList({
         ...playerShipList,
@@ -49,25 +50,29 @@ function Prepboard({ owner }) {
   function onDragOver(ev) {
     // style cell that's being hovered over
     ev.preventDefault();
-    ev.target.classList.add("dragover-ship");
+    ev.target.classList.add(styles.dragoverShip);
   }
 
   function removeHoverClass() {
     // remove styling of cell(s) that are being hovered over once the event ends
-    const hoveredCells = document.querySelectorAll(".dragover-ship");
+    const hoveredCells = document.querySelectorAll(`.${styles.dragoverShip}`);
     if (hoveredCells) {
       for (let cell of hoveredCells) {
-        cell.classList.remove("dragover-ship");
+        cell.classList.remove(`.${styles.dragoverShip}`);
       }
     }
   }
 
   return(
-    <div className={owner == "player" ? "board own-board" : "board enemy-board"}>
-      {playerGrid.map((row, rindex) => (
-        row.map((column, cindex) => (<div className={column === null ? "cell" : "cell random-ship-on-board"} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}>{column}</div>))
-      ))}
+    <div>
+      <h2>Your board</h2>
+      <div className={owner == "player" ? `${styles.board} ${styles.ownBoard}` : `${styles.board} ${styles.enemyBoard}`}>
+        {playerGrid.map((row, rindex) => (
+          row.map((column, cindex) => (<div className={column === null ? styles.cell : `${styles.cell} ${styles.randomShipOnBoard}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}>{column}</div>))
+        ))}
+      </div>
     </div>
+
   )
 }
 

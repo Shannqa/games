@@ -1,5 +1,8 @@
 .gameWindow {
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
 }
 
 
@@ -22,3 +25,61 @@
   background-color: rgb(56 9 135);
 }
 
+.pregameInfo {
+  padding: 4px;
+  max-width: 50%;
+}
+
+.pregameInfo p {
+  margin: 4px 0;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  column-gap: 0px;
+  row-gap: 0px;
+  justify-items: stretch;
+  font-size: 12px;
+  margin: 6px 12px;
+  width: 400px;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px #dca85d solid;
+  margin: 0px;
+}
+
+.ownBoard {
+  background-color: #234e66;
+}
+
+.enemyBoard {
+  background-color: rgb(58, 39, 104);
+}
+
+.randomShipOnBoard {
+  background-color: green;
+}
+
+.gameWindow h2 {
+  text-align: center;
+}
+
+/* .shipPlacer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+} */
+
+.shipToPlace {
+  display: flex;
+}
+
+.shipToPlace .cell {
+  background-color: #2f7ba4;
+}

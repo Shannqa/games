@@ -145,15 +145,19 @@ function getRandomPlacements() {
   }
   
   return(
-    <div className={styles.pregame}>
-      <p>Place all your ships on the board:</p>
+    <>
       <Prepboard owner="player" />
-      {playerRandomizer ? null : <ShipPlacer />}
-      <StartButton onClick={onStartClick} />
-      <RandomizeButton onClick={getRandomPlayerShips} />
-      <ResetBoardButton onClick={resetPlayerBoard} />
-      {placementError ? <PlacementError /> : null}
-    </div>
+      <div className={styles.pregameInfo}>
+        <p>Drag & drop the ships onto your board. Double-click a ship to rotate it. Alternatively, click the randomize ships button in order to generate a random placement of ships.</p>
+        <p>Once you're happy with your set-up, click the start button to begin the game. Good luck!</p>
+        {playerRandomizer ? null : <ShipPlacer />}
+        <StartButton onClick={onStartClick} />
+        <RandomizeButton onClick={getRandomPlayerShips} />
+        <ResetBoardButton onClick={resetPlayerBoard} />
+        {placementError ? <PlacementError /> : null}
+      </div>
+    </>
+    
   )
 }
 

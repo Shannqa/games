@@ -1,13 +1,14 @@
 import { useContext } from "react"
 import { BattleshipsContext } from "./Battleships.jsx"
 import getFullCoords from "./getFullCoords.js";
+import styles from "./Battleships.module.css";
 
 function Ship({ size }) {
   const { playerGrid, playerShipList, setPlayerShipList } = useContext(BattleshipsContext);
 
   let singleShip = [];
   for (let i = 0; i < size; i++) {
-    singleShip.push(<div className="cell" key={size + i} id={i} data-cell={i + 1} data-size={size}></div>);
+    singleShip.push(<div className={styles.cell} key={size + i} id={i} data-cell={i + 1} data-size={size}></div>);
   }
 
   function dragStart(ev) {
@@ -21,9 +22,9 @@ function Ship({ size }) {
   function doubleClick(ev) {
     const targetShip = ev.currentTarget;
 
-    targetShip.classList.toggle("flex-toggle");
+    targetShip.classList.toggle(styles.flexToggle);
     const shipSize = parseInt(targetShip.id.slice(-1));
-    const direction = targetShip.classList.contains("flex-toggle")
+    const direction = targetShip.classList.contains(styles.flexToggle)
     ? "vertical"
     : "horizontal";
     const row = parseInt(targetShip.parentNode.dataset.row);
@@ -38,7 +39,7 @@ function Ship({ size }) {
   }
 
   return(
-    <div className="ship-to-place" id={"to-place-" + size} draggable="true" onDragStart={dragStart} onDoubleClick={doubleClick} onDragEnd={dragEnd}>
+    <div className={styles.shipToPlace} id={"to-place-" + size} draggable="true" onDragStart={dragStart} onDoubleClick={doubleClick} onDragEnd={dragEnd}>
       {singleShip}
     </div>
   )
