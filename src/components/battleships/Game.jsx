@@ -4,7 +4,7 @@ import Board from "./Board";
 
 function Game() {
   const { playerGrid, computerGrid, currentMove, setCurrentMove } = useContext(BattleshipsContext);
-  
+  /*
   receiveAttack(coords) {
     let square;
     let id = this.grid[coords[0]][coords[1]];
@@ -144,7 +144,7 @@ function Game() {
   }
   
   
-  
+  */
   
   return(
     <>
