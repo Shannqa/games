@@ -10,20 +10,22 @@ import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
 
 function Pregame({ createGrid }) {
-  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer, placementError, setPlacementError } = useContext(BattleshipsContext);
+  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer, placementError, setPlacementError, setCurrentMove } = useContext(BattleshipsContext);
 
   function onStartClick() {
     if (playerRandomizer) {
       // if the player chose a random ship placement
       getRandomComputerShips();
       setStage("playing");
+      setCurrentMove("player");
     } else {
       // if the player placed the ships themselves
       const playerCheck = checkPlayerPlacements(playerShipList);
       if (playerCheck) {
         addToBoard(playerGrid, setPlayerGrid, playerShipList);
         getRandomComputerShips();
-        setStage("playing");        
+        setStage("playing");
+        setCurrentMove("player");
       } else {
         console.log("placement error");
         setPlacementError(true);
