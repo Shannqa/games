@@ -107,6 +107,84 @@ function Board({ grid, owner }) {
   }
   
   
+  
+  let aiqueue = [];
+  let aihits = [];
+  let aisunk = [];
+  
+////////////
+function compAttack() {
+  let coords;
+  if (attackQueue.length === 0) {
+    coords = randomAtt();
+  } else {
+    // random cell from the queue
+    let randomNr = Math.floor(Math.random() * attackQueue.length)
+    coords = attackQueue.splice(randomNr, 1);
+  }
+  const [row, column] = coords;
+  const target = playerGrid[row][column];
+  let newCellValue;
+  
+  if (target === "hit" || target === "miss") {
+    // invalid move
+    return compAttack();
+  } else if (target === null) {
+    // miss
+    newCellValue = "miss";
+    // update grid
+    if (attackQueue.length === 0) {
+      // if the queue has been emptied, stop hunting adjacent spots
+      // check how many hits we got, and add this number as a possibly sunk ship
+      //aisunk.push(aihits.length);
+      attackHits = [];
+    }
+  } else {
+    // hit
+    newCellValue = "hit";
+    setAttackHits(...attackHits, coords);
+    if (attackHits.length === 1) {
+      // add four adjacent cells to the queue
+      setAttackQueue(...attackQueue, [row - 1, column], [row + 1, column], [row, column - 1], [row, column + 1]);
+    } else {
+      let previousHit = attackHits[attackHits.length - 1];
+      const [prevRow, prevCol] = previousHit;
+      if (prevRow === row) {
+        // row is the same
+        let queue = ()
+        setAttackQueue(attackQueue.map)
+        attackQueue.push([row, column - 1]);
+        attackQueue.push([row, column + 1]);
+        attackQueue.filter((item) => item[0] === row);
+      } else if (prevCol === column) {
+        // column is the same
+        aiqueue.push([row - 1, column]);
+        aiqueue.push([row + 1, column]);
+        aiqueue.filter((item) => item[1] === column);
+      }
+    }
+    
+  }
+  
+}
+  
+function randomAtt() {
+  const row = Math.floor(Math.random() * 9);
+  const column = Math.floor(Math.random() * 9)
+  const target = playerGrid[row][column];
+  if (target === "hit" || target === "miss") {
+    // invalid move, randomize again
+    return randomAtt();
+  }
+  return [row, column]
+}
+  
+  
+  
+  
+  
+  
+  
   if (owner === "player") {
     return(
       <div className={`${styles.board} ${styles.ownBoard}`}>
