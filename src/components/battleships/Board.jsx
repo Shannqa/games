@@ -228,7 +228,7 @@ function randomAtt() {
     return(
       <div className={`${styles.board} ${styles.ownBoard}`}>
         {grid.map((row, rindex) => (
-          row.map((column, cindex) => (<div className={styles.cell} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}>{column}</div>))))
+          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}>{column}</div>))))
         }
       </div>
     ) 
@@ -236,7 +236,7 @@ function randomAtt() {
     return(
       <div className={`${styles.board} ${styles.enemyBoard}`}>
         {grid.map((row, rindex) => (
-          row.map((column, cindex) => (<div className={styles.cell} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex} onClick={() => playerAttack([rindex, cindex])}>{column}</div>))
+          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex} onClick={() => playerAttack([rindex, cindex])}>{column}</div>))
       ))}
     </div>
     )

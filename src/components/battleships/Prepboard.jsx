@@ -15,7 +15,7 @@ function Prepboard({ owner }) {
       const shipSize = parseInt(shipID.slice(-1));
       const targetR = parseInt(ev.target.dataset.row); 
       const targetC = parseInt(ev.target.dataset.column); 
-      const direction = draggedShip.classList.contains("flex-toggle")
+      const direction = draggedShip.classList.contains(styles.flexToggle)
         ? "vertical"
         : "horizontal";
       const fullCoords = getFullCoords([targetR, targetC], shipSize, direction);
@@ -58,7 +58,7 @@ function Prepboard({ owner }) {
     const hoveredCells = document.querySelectorAll(`.${styles.dragoverShip}`);
     if (hoveredCells) {
       for (let cell of hoveredCells) {
-        cell.classList.remove(`.${styles.dragoverShip}`);
+        cell.classList.remove(styles.dragoverShip);
       }
     }
   }

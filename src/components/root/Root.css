@@ -28,7 +28,6 @@ a:active {
 h1 {
   font-size: 1.4rem;
   margin: 2px;
-  background-color: rgb(103 58 183 / 46%);
   padding: 4px 8px;
   margin-bottom: 4px;
   display: inline-block;
@@ -43,4 +42,3 @@ header {
   margin-left: 4px;
   max-width: 150px;
 }
-

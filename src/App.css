@@ -6,39 +6,3 @@
 
 
 
-
-
-
-.ship-placer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-}
-
-.ship-to-place {
-  display: flex;
-}
-
-.ship-to-place .cell {
-  background-color: #2f7ba4;
-}
-
-body {
-  background-color: #0d1e26;
-  color: #dca85d;
-}
-
-.dragover-ship {
-  background-color: red;
-}
-
-.ship-on-board {
-  background-color: green;
-  position: absolute;
-}
-
-
-.flex-toggle {
-  flex-direction: column;
-}
-
