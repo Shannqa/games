@@ -38,12 +38,12 @@ function Board({ grid, owner }) {
     })));
 
     setCurrentMove("computer");
-    computerAttack();
+    compAttack(attackQueue);
    } else {
      return;
    }
  }
-    
+    /*
   function computerAttack() {
     let coords;
     let newCellValue;
@@ -111,66 +111,105 @@ function Board({ grid, owner }) {
   let aiqueue = [];
   let aihits = [];
   let aisunk = [];
-  
+  */
 ////////////
-function compAttack() {
+function compAttack(queue) { 
   let coords;
-  if (attackQueue.length === 0) {
+  let newQueue = [...queue];
+  let newCellValue;
+
+  if (newQueue.length === 0) {
     coords = randomAtt();
   } else {
     // random cell from the queue
-    let randomNr = Math.floor(Math.random() * attackQueue.length)
-    coords = attackQueue.splice(randomNr, 1);
+    console.log(newQueue);
+    let randomNr = Math.floor(Math.random() * newQueue.length)
+    coords = newQueue[randomNr];
+    console.log(coords);
+    newQueue = newQueue.filter((item, index) => index !== randomNr);
   }
   const [row, column] = coords;
-  const target = playerGrid[row][column];
-  let newCellValue;
-  
+  console.log(row);
+  console.log(column);
+  console.log(playerGrid[row][column])
+  console.log(coords)
+  const target = playerGrid[row][column];  
   if (target === "hit" || target === "miss") {
     // invalid move
-    return compAttack();
+    return compAttack(newQueue);
   } else if (target === null) {
     // miss
     newCellValue = "miss";
     // update grid
-    if (attackQueue.length === 0) {
+    if (newQueue.length === 0) {
       // if the queue has been emptied, stop hunting adjacent spots
       // check how many hits we got, and add this number as a possibly sunk ship
       //aisunk.push(aihits.length);
-      attackHits = [];
+      setAttackHits([]);
     }
   } else {
     // hit
     newCellValue = "hit";
-    setAttackHits(...attackHits, coords);
-    if (attackHits.length === 1) {
+    setAttackHits(attackHits.concat([coords]));
+    if (attackHits.length === 0) {
       // add four adjacent cells to the queue
-      setAttackQueue(...attackQueue, [row - 1, column], [row + 1, column], [row, column - 1], [row, column + 1]);
+    if (row > 0) {
+      newQueue.push([row - 1, column]);
+    }
+    if (row < 9) {
+      newQueue.push([row + 1, column])
+    }
+    if (column > 0) {
+      newQueue.push([row, column - 1])
+    }
+    if (column < 9) {
+      newQueue.push([row, column + 1])
+    }
+    setAttackQueue([...newQueue]);
+      // setAttackQueue(...attackQueue, [row - 1, column], [row + 1, column], [row, column - 1], [row, column + 1]);
     } else {
       let previousHit = attackHits[attackHits.length - 1];
+      console.log(attackHits);
+      console.log(previousHit);
       const [prevRow, prevCol] = previousHit;
+
       if (prevRow === row) {
         // row is the same
-        let queue = ()
-        setAttackQueue(attackQueue.map)
-        attackQueue.push([row, column - 1]);
-        attackQueue.push([row, column + 1]);
-        attackQueue.filter((item) => item[0] === row);
+        if (column > 0) {
+          newQueue.push([row, column - 1])
+        }
+        if (column < 9) {
+          newQueue.push([row, column + 1])
+        }
+        newQueue = newQueue.filter((item) => item[0] === row);
+        setAttackQueue([...newQueue]);
       } else if (prevCol === column) {
         // column is the same
-        aiqueue.push([row - 1, column]);
-        aiqueue.push([row + 1, column]);
-        aiqueue.filter((item) => item[1] === column);
+        if (row > 0) {
+          newQueue.push([row - 1, column]);
+        }
+        if (row < 9) {
+          newQueue.push([row + 1, column])
+        }
+        newQueue = newQueue.filter((item) => item[1] === column); // filter didnt work, had a coord with wrong column still
+        setAttackQueue([...newQueue]);
       }
     }
     
   }
-  
+  // update the state of the player's grid
+  setPlayerGrid(playerGrid.map((gridRow, rowIndex) => gridRow.map((gridColumn, colIndex) => {
+    if (rowIndex == row && colIndex == column) {
+      gridColumn = newCellValue;
+    }
+    return gridColumn;
+  })));
+  setCurrentMove("player");
 }
   
 function randomAtt() {
   const row = Math.floor(Math.random() * 9);
-  const column = Math.floor(Math.random() * 9)
+  const column = Math.floor(Math.random() * 9);
   const target = playerGrid[row][column];
   if (target === "hit" || target === "miss") {
     // invalid move, randomize again

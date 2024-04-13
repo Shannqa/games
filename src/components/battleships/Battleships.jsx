@@ -3,7 +3,7 @@ import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
 import PlacementError from "./PlacementError";
-
+import Test from "./Test";
 
 export const BattleshipsContext = createContext({
   stage: "",
@@ -72,6 +72,7 @@ function Battleships() {
     }}>
       <div className={styles.gameWindow}>
         {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
+        <Test />
       </div>
     </BattleshipsContext.Provider>
   )
