@@ -3,6 +3,7 @@ import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
 import PlacementError from "./PlacementError";
+import Endgame from "./Endgame";
 
 export const BattleshipsContext = createContext({
   stage: "",
@@ -20,7 +21,10 @@ export const BattleshipsContext = createContext({
   placementError: "",
   setPlacementError: () => {},
   currentMove: "", 
-  setCurrentMove: () => {}
+  setCurrentMove: () => {},
+  winner: "",
+  setWinner: () => {},
+  createGrid: () => {}
 });
 
 function Battleships() {
@@ -37,6 +41,7 @@ function Battleships() {
   const [playerRandomizer, setPlayerRandomizer] = useState(false);
   const [placementError, setPlacementError] = useState(false);
   const [currentMove, setCurrentMove] = useState(null);
+  const [winner, setWinner] = useState(null);
 
   function createGrid() {
     const gridSize = 10;
@@ -67,10 +72,14 @@ function Battleships() {
       placementError,
       setPlacementError,
       currentMove,
-      setCurrentMove
+      setCurrentMove,
+      winner,
+      setWinner,
+      createGrid
     }}>
       <div className={styles.gameWindow}>
         {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
+        {stage === "ending" ? <Endgame /> : null}
       </div>
     </BattleshipsContext.Provider>
   )
