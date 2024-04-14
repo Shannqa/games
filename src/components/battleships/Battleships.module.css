@@ -1,10 +1,13 @@
 .gameWindow {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 8px;
+  flex-direction: column;
 }
 
+.gameMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .button {
   margin: 10px;
@@ -21,7 +24,7 @@
   cursor: pointer;
 }
 
-.button:active, .default-btn:active {
+.button:active {
   background-color: rgb(56 9 135);
 }
 
@@ -31,7 +34,7 @@
 }
 
 .pregameInfo p {
-  margin: 4px 0;
+  margin: 8px 0;
 }
 
 .board {
@@ -78,19 +81,17 @@
 
 .shipToPlace {
   display: flex;
-}
-
-.shipToPlace .cell {
+  width: fit-content;
+  cursor: pointer;
   background-color: #2f7ba4;
 }
 
-.shipToPlace {
-  display: flex;
+
+.shipToPlace:hover {
+background-color: #3b8bb7;
 }
 
-.shipToPlace .cell {
-  background-color: #2f7ba4;
-}
+
 
 body {
   background-color: #0d1e26;
@@ -102,7 +103,6 @@ body {
 }
 
 .shipOnBoard {
-  background-color: green;
   position: absolute;
 }
 

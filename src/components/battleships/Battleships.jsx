@@ -78,8 +78,11 @@ function Battleships() {
       createGrid
     }}>
       <div className={styles.gameWindow}>
-        {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
-        {stage === "ending" ? <Endgame /> : null}
+        <h2>Battleships</h2>
+        <div className={styles.gameMain}>
+          {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
+          {stage === "ending" ? <Endgame /> : null}
+        </div>
       </div>
     </BattleshipsContext.Provider>
   )
