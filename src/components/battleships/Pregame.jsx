@@ -29,6 +29,7 @@ function Pregame({ createGrid }) {
       } else {
         console.log("placement error");
         setPlacementError(true);
+
       }
     }
   }
@@ -48,6 +49,7 @@ function Pregame({ createGrid }) {
     setPlayerShipList({});
     setPlayerGrid(() => createGrid());
     setPlayerRandomizer(false);
+    setPlacementError(false);
   }
 
   function getRandomComputerShips() {
@@ -150,12 +152,14 @@ function getRandomPlacements() {
     <>
       <Prepboard owner="player" />
       <div className={styles.pregameInfo}>
-        <p>Drag & drop the ships onto your board. Double-click a ship to rotate it. Alternatively, click the randomize ships button in order to generate a random placement of ships.</p>
-        <p>Once you're happy with your set-up, click the start button to begin the game. Good luck!</p>
+        <p>Drag & drop the ships onto your board. Double-click a ship to rotate it.</p>
+        <p>Alternatively, click the randomize board button to generate a random placement of ships.</p>
         {playerRandomizer ? null : <ShipPlacer />}
-        <StartButton onClick={onStartClick} />
-        <RandomizeButton onClick={getRandomPlayerShips} />
-        <ResetBoardButton onClick={resetPlayerBoard} />
+        <div className={styles.buttons}>
+          <StartButton onClick={onStartClick} />
+          <RandomizeButton onClick={getRandomPlayerShips} />
+          <ResetBoardButton onClick={resetPlayerBoard} />
+        </div>
         {placementError ? <PlacementError /> : null}
       </div>
     </>

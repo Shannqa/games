@@ -163,7 +163,7 @@ function Board({ grid, owner }) {
     return(
       <div className={`${styles.board} ${styles.ownBoard}`}>
         {grid.map((row, rindex) => (
-          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}>{column}</div>))))
+          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""} ${typeof column === "number" ? styles.ownShip : null}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}></div>))))
         }
       </div>
     ) 
@@ -171,7 +171,7 @@ function Board({ grid, owner }) {
     return(
       <div className={`${styles.board} ${styles.enemyBoard}`}>
         {grid.map((row, rindex) => (
-          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex} onClick={() => playerAttack([rindex, cindex])}>{column}</div>))
+          row.map((column, cindex) => (<div className={`${styles.cell} ${column == "miss" ? styles.miss : ""} ${column == "hit" ? styles.hit : ""}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex} onClick={() => playerAttack([rindex, cindex])}></div>))
       ))}
     </div>
     )

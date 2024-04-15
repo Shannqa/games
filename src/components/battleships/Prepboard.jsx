@@ -65,8 +65,8 @@ function Prepboard({ owner }) {
 
   return(
     <div>
-      <h2>Your board</h2>
-      <div className={owner == "player" ? `${styles.board} ${styles.ownBoard}` : `${styles.board} ${styles.enemyBoard}`}>
+      <h3>Your board</h3>
+      <div className={owner === "player" ? `${styles.board} ${styles.ownBoard}` : `${styles.board} ${styles.enemyBoard}`}>
         {playerGrid.map((row, rindex) => (
           row.map((column, cindex) => (<div className={column === null ? styles.cell : `${styles.cell} ${styles.randomShipOnBoard}`} data-row={rindex} data-column={cindex} key={rindex + "-" + cindex}  onDrop={drop} onDragOver={onDragOver} onDragLeave={onDragLeave}>{column}</div>))
         ))}

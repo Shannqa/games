@@ -3,7 +3,7 @@ import styles from "./Battleships.module.css";
 function StartButton({ onClick }) {
   
   return(
-    <button className={styles.button} onClick={onClick}>Start Game</button>
+    <button className={`${styles.button} ${styles.start}`} onClick={onClick}>Start Game</button>
     )
 }
 

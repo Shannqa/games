@@ -2,7 +2,6 @@ import { useState, createContext } from "react";
 import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
-import PlacementError from "./PlacementError";
 import Endgame from "./Endgame";
 
 export const BattleshipsContext = createContext({

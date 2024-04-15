@@ -8,14 +8,13 @@ function Game() {
   return(
     <>
       <div>
-        <h2>Player:</h2>
-        <Board grid={playerGrid} owner="player" />
-      </div>
-      <div>
-        <h2>Computer:</h2>
+        <h3>Enemy board:</h3>
         <Board grid={computerGrid} owner="enemy"/>
       </div>
-
+      <div>
+        <h3>Your board:</h3>
+        <Board grid={playerGrid} owner="player" />
+      </div>
     </>
   )
 }
