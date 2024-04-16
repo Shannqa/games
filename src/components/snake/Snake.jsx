@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import styles from "./Snake.module.css";
 import SnakeBody from "./SnakeBody.jsx";
+import Food from "./Food";
 
 export const SnakeContext = createContext({
   snake: [],
@@ -13,15 +14,15 @@ export const SnakeContext = createContext({
   setSpeed: () => {}
 });
 
-function SnakeGame() {
+function Snake() {
   const [snake, setSnake] = useState([
-    [50, 48],
-    [50, 49],
+    [50, 46], 
+    [50, 50],
     [50, 50]
   ]);
   const [direction, setDirection] = useState("right");
-  const [food, setFood] = useState(() => getRandomFood);
-  const [speed, setSpeed] = useState(2000)
+  const [food, setFood] = useState(() => getRandomFood());
+  const [speed, setSpeed] = useState(1800)
   
   useEffect(() => {
     document.addEventListener("keydown", changeDirection);
@@ -36,7 +37,7 @@ function SnakeGame() {
     }, speed);
 
     return () => clearInterval(moveInterval);
-  }, [speed]);
+  }, [snake, speed, direction]);
 
   
   function getRandomFood() {
@@ -49,33 +50,41 @@ function SnakeGame() {
     switch (e.keyCode) {
       case 37:
         setDirection("left");
+        break;
       case 38:
         setDirection("up");
+        break;
       case 39:
         setDirection("right");
+        break;
       case 40:
         setDirection("down");
+        break;
     }
   }
   
   function moveSnake() {
     const newSnake = [...snake];
-    const head = snake[snake.length - 1];
-    
+    let head = newSnake[newSnake.length - 1];
+    let newHead;
+
     switch (direction) {
       case "right":
-        head = [head[0], head[1] + 1];
+        newHead = [head[0], head[1] + 2];
+        break;
       case "up":
-        head = [head[0] + 1, head[1]];
+        newHead = [head[0] - 2, head[1]];
+        break;
       case "left":
-        head = [head[0], head[1] - 1];
+        newHead = [head[0], head[1] - 2];
+        break;
       case "down":
-        head = [head[0] - 1, head[1]];
+        newHead = [head[0] + 2, head[1]];
     }
-    newSnake.push(head);
-    const isSnakeEating = isEating(head);
-    const isSnakeCrashed = isCrashed(head);
-    
+    newSnake.push(newHead);
+    const isSnakeEating = isEating(newHead);
+    const isSnakeCrashed = isCrashed(newHead);
+
     if (isSnakeCrashed) {
       return lostGame();
     }
@@ -87,7 +96,11 @@ function SnakeGame() {
       setSpeed(speed - 50);
       setFood(() => getRandomFood());
     }
-    
+    console.log(isSnakeEating);
+    console.log(newSnake);
+    console.log(direction);
+    console.log(head);
+    setSnake([...newSnake]);
   }
   
   function isEating(head) {
@@ -123,10 +136,11 @@ function SnakeGame() {
         <h2>Snake</h2>
         <div className={styles.board}>
           <SnakeBody />
+          <Food />
         </div>
       </div>
     </SnakeContext.Provider>
   )
 }
 
-export default SnakeGame
+export default Snake

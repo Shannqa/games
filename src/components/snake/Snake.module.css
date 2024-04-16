@@ -1,14 +1,27 @@
 .gameWindow {
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .board {
   width: 500px;
   height: 500px;
   position: relative;
+  background-color: #234e66;
 }
 
 .snakeBody div {
   position: absolute;
   background-color: green;
+  width: 2%;
+  height: 2%;
+  border: 1px black solid;
+}
+
+.food {
+  position: absolute;
+  background-color: red;
+  width: 2%;
+  height: 2%;
 }

@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./Root";
-import Battleships from "../battleships/Battleships"
+import Battleships from "../battleships/Battleships";
+import Snake from "../snake/Snake"
 
 function Router() {
   const router = createBrowserRouter([
@@ -11,6 +12,10 @@ function Router() {
         {
           path: "/battleships",
           element: <Battleships />
+        },
+        {
+          path: "/snake",
+          element: <Snake />
         }
       ]
     }

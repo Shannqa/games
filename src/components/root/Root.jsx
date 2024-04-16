@@ -8,9 +8,8 @@ function Root() {
   return(
     <div className="root">
       <Header />
-      {/* <Menu /> */}
-      {/* <Outlet /> */}
-      <Battleships />
+      <Menu /> 
+      <Outlet /> 
     </div>
   )
 }
