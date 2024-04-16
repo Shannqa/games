@@ -1,0 +1,14 @@
+.gameWindow {
+  
+}
+
+.board {
+  width: 500px;
+  height: 500px;
+  position: relative;
+}
+
+.snakeBody div {
+  position: absolute;
+  background-color: green;
+}
