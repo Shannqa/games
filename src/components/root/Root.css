@@ -42,3 +42,42 @@ header {
   margin-left: 4px;
   max-width: 150px;
 }
+
+.button {
+  margin: 10px;
+  background-color: #11364a;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  padding: 6px 18px;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.button:hover {
+  background-color: #234e66;
+  cursor: pointer;
+}
+
+.button:active {
+  background-color: rgb(56 9 135);
+}
+
+
+.menu-link {
+  margin: 10px;
+  background-color: #11364a;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  padding: 6px 18px;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.menu-link:hover {
+  background-color: #234e66;
+  cursor: pointer;
+}
+
+.menu-link:active {
+  background-color: rgb(56 9 135);
+}

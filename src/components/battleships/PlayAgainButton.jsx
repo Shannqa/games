@@ -3,7 +3,7 @@ import styles from "./Battleships.module.css";
 function PlayAgainButon({ onClick }) {
   
   return(
-    <button className={styles.button} onClick={onClick}>Play again</button>
+    <button className="button" onClick={onClick}>Play again</button>
     )
 }
 

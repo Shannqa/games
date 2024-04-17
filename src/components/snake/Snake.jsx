@@ -11,18 +11,21 @@ export const SnakeContext = createContext({
   food: [],
   setFood: () => {},
   speed: "",
-  setSpeed: () => {}
+  setSpeed: () => {},
+  stage: "",
+  setStage: () => {}
 });
 
 function Snake() {
   const [snake, setSnake] = useState([
     [50, 46], 
-    [50, 50],
+    [50, 48],
     [50, 50]
   ]);
   const [direction, setDirection] = useState("right");
   const [food, setFood] = useState(() => getRandomFood());
-  const [speed, setSpeed] = useState(1800)
+  const [speed, setSpeed] = useState(1800);
+  const [stage, setStage] = "playing";
   
   useEffect(() => {
     document.addEventListener("keydown", changeDirection);
@@ -31,11 +34,11 @@ function Snake() {
   }, []);
   
   useEffect(() => {
-    const moveInterval = setInterval(() => {
-      moveSnake();
-
-    }, speed);
-
+    if (stage === "playing") {
+      const moveInterval = setInterval(() => {
+        moveSnake();
+      }, speed);
+    }
     return () => clearInterval(moveInterval);
   }, [snake, speed, direction]);
 
