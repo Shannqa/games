@@ -2,6 +2,7 @@ import { useState, useEffect, createContext } from "react";
 import styles from "./Snake.module.css";
 import SnakeBody from "./SnakeBody.jsx";
 import Food from "./Food";
+import Endgame from "./Endgame";
 
 export const SnakeContext = createContext({
   snake: [],
@@ -12,8 +13,8 @@ export const SnakeContext = createContext({
   setFood: () => {},
   speed: "",
   setSpeed: () => {},
-  stage: "",
-  setStage: () => {}
+  gameOn: "",
+  setGameOn: () => {}
 });
 
 function Snake() {
@@ -24,8 +25,8 @@ function Snake() {
   ]);
   const [direction, setDirection] = useState("right");
   const [food, setFood] = useState(() => getRandomFood());
-  const [speed, setSpeed] = useState(1800);
-  const [stage, setStage] = "playing";
+  const [speed, setSpeed] = useState(500);
+  const [gameOn, setGameOn] = useState(true);
   
   useEffect(() => {
     document.addEventListener("keydown", changeDirection);
@@ -34,13 +35,12 @@ function Snake() {
   }, []);
   
   useEffect(() => {
-    if (stage === "playing") {
-      const moveInterval = setInterval(() => {
+    const moveInterval = gameOn && setInterval(() => {
         moveSnake();
       }, speed);
-    }
+    
     return () => clearInterval(moveInterval);
-  }, [snake, speed, direction]);
+  }, [snake, speed, direction, gameOn]);
 
   
   function getRandomFood() {
@@ -67,6 +67,8 @@ function Snake() {
   }
   
   function moveSnake() {
+    console.log("moving");
+    // clearInterval(moveInterval)
     const newSnake = [...snake];
     let head = newSnake[newSnake.length - 1];
     let newHead;
@@ -121,7 +123,7 @@ function Snake() {
   }
   
   function lostGame() {
-    
+    setGameOn(false);
   }
   
   return(
@@ -133,13 +135,16 @@ function Snake() {
       food,
       setFood,
       speed,
-      setSpeed
+      setSpeed,
+      gameOn,
+      setGameOn
     }}>
       <div className={styles.gameWindow}>
         <h2>Snake</h2>
         <div className={styles.board}>
           <SnakeBody />
           <Food />
+          {gameOn === false ? <Endgame /> : null}
         </div>
       </div>
     </SnakeContext.Provider>

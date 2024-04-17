@@ -81,3 +81,14 @@ header {
 .menu-link:active {
   background-color: rgb(56 9 135);
 }
+
+.home {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.home p {
+  margin: 10px;
+  align-items: center;
+}

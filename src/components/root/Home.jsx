@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 function Home() {
   
   return(
@@ -7,8 +9,11 @@ function Home() {
       <p>Have fun!</p>
     
       <p>Play a game:</p>
-      <Link className="menu-link" to="/battleships">Battleships</Link>
-      <Link className="menu-link" to="/snake">Snake</Link>
+      <div className="home-links">
+        <Link className="menu-link" to="/battleships">Battleships</Link>
+        <Link className="menu-link" to="/snake">Snake</Link>
+      </div>
+
     </div>
   )
 }
