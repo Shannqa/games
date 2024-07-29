@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import React, { useState, createContext } from "react";
 import styles from "./Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
@@ -19,11 +19,11 @@ export const BattleshipsContext = createContext({
   setPlayerRandomizer: () => {},
   placementError: "",
   setPlacementError: () => {},
-  currentMove: "", 
+  currentMove: "",
   setCurrentMove: () => {},
   winner: "",
   setWinner: () => {},
-  createGrid: () => {}
+  createGrid: () => {},
 });
 
 function Battleships() {
@@ -34,7 +34,7 @@ function Battleships() {
     2: [],
     3: [],
     4: [],
-    5: []
+    5: [],
   });
   const [computerShipList, setComputerShipList] = useState();
   const [playerRandomizer, setPlayerRandomizer] = useState(false);
@@ -54,39 +54,43 @@ function Battleships() {
     return gridArray;
   }
 
-  return(
-    <BattleshipsContext.Provider value={{
-      stage,
-      setStage,
-      playerGrid,
-      setPlayerGrid,
-      computerGrid,
-      setComputerGrid,
-      playerShipList,
-      setPlayerShipList,
-      computerShipList,
-      setComputerShipList,
-      playerRandomizer,
-      setPlayerRandomizer,
-      placementError,
-      setPlacementError,
-      currentMove,
-      setCurrentMove,
-      winner,
-      setWinner,
-      createGrid
-    }}>
+  return (
+    <BattleshipsContext.Provider
+      value={{
+        stage,
+        setStage,
+        playerGrid,
+        setPlayerGrid,
+        computerGrid,
+        setComputerGrid,
+        playerShipList,
+        setPlayerShipList,
+        computerShipList,
+        setComputerShipList,
+        playerRandomizer,
+        setPlayerRandomizer,
+        placementError,
+        setPlacementError,
+        currentMove,
+        setCurrentMove,
+        winner,
+        setWinner,
+        createGrid,
+      }}
+    >
       <div className={styles.gameWindow}>
         <h2>Battleships</h2>
         <div className={styles.gameMain}>
-          {stage === "preparing" ? <Pregame createGrid={createGrid} /> : <Game />}
+          {stage === "preparing" ? (
+            <Pregame createGrid={createGrid} />
+          ) : (
+            <Game />
+          )}
           {stage === "ending" ? <Endgame /> : null}
         </div>
       </div>
     </BattleshipsContext.Provider>
-  )
-  
-  
+  );
 }
 
-export default Battleships
+export default Battleships;

@@ -1,10 +1,22 @@
-import { useContext, useState } from "react"
-import { BattleshipsContext } from "./Battleships.jsx"
+import React, { useContext, useState } from "react";
+import { BattleshipsContext } from "./Battleships.jsx";
 import styles from "./Battleships.module.css";
 import PlayAgainButon from "./PlayAgainButton.jsx";
 
 function Endgame() {
-  const { setStage, setPlayerGrid, setComputerGrid, setCurrentMove,  setComputerShipList, setPlayerShipList, winner, setWinner, setPlacementError, setPlayerRandomizer, createGrid } = useContext(BattleshipsContext);
+  const {
+    setStage,
+    setPlayerGrid,
+    setComputerGrid,
+    setCurrentMove,
+    setComputerShipList,
+    setPlayerShipList,
+    winner,
+    setWinner,
+    setPlacementError,
+    setPlayerRandomizer,
+    createGrid,
+  } = useContext(BattleshipsContext);
 
   function playAgain() {
     setStage("preparing");
@@ -12,7 +24,7 @@ function Endgame() {
       2: [],
       3: [],
       4: [],
-      5: []
+      5: [],
     });
     setComputerShipList({});
     setPlayerRandomizer(false);
@@ -23,12 +35,16 @@ function Endgame() {
     setComputerGrid(() => createGrid());
   }
 
-  return(
+  return (
     <div className={styles.endgame}>
-      {winner === "player" ? <p>Congratulations, you won!</p> : <p>You lost, better luck next time!</p>}
-      <PlayAgainButon onClick={playAgain} />  
+      {winner === "player" ? (
+        <p>Congratulations, you won!</p>
+      ) : (
+        <p>You lost, better luck next time!</p>
+      )}
+      <PlayAgainButon onClick={playAgain} />
     </div>
-  )
+  );
 }
 
-export default Endgame
+export default Endgame;

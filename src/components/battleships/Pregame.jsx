@@ -1,5 +1,5 @@
-import { useContext } from "react"
-import { BattleshipsContext } from "./Battleships.jsx"
+import React, { useContext } from "react";
+import { BattleshipsContext } from "./Battleships.jsx";
 import Prepboard from "./Prepboard";
 import ShipPlacer from "./ShipPlacer";
 import StartButton from "./StartButton";
@@ -10,7 +10,22 @@ import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
 
 function Pregame({ createGrid }) {
-  const { setStage, playerGrid, setPlayerGrid, computerGrid, setComputerGrid, playerShipList, setPlayerShipList, computerShipList, setComputerShipList, playerRandomizer, setPlayerRandomizer, placementError, setPlacementError, setCurrentMove } = useContext(BattleshipsContext);
+  const {
+    setStage,
+    playerGrid,
+    setPlayerGrid,
+    computerGrid,
+    setComputerGrid,
+    playerShipList,
+    setPlayerShipList,
+    computerShipList,
+    setComputerShipList,
+    playerRandomizer,
+    setPlayerRandomizer,
+    placementError,
+    setPlacementError,
+    setCurrentMove,
+  } = useContext(BattleshipsContext);
 
   function onStartClick() {
     if (playerRandomizer) {
@@ -29,7 +44,6 @@ function Pregame({ createGrid }) {
       } else {
         console.log("placement error");
         setPlacementError(true);
-
       }
     }
   }
@@ -55,8 +69,8 @@ function Pregame({ createGrid }) {
   function getRandomComputerShips() {
     // randomize ship placements for the AI
     const randomShipList = getRandomPlacements();
-      setComputerShipList(randomShipList);
-      addToBoard(computerGrid, setComputerGrid, randomShipList);
+    setComputerShipList(randomShipList);
+    addToBoard(computerGrid, setComputerGrid, randomShipList);
   }
 
   function checkPlayerPlacements(shipList) {
@@ -67,7 +81,7 @@ function Pregame({ createGrid }) {
     // if not all ships placed
     if (flatCoords.length !== 14) return false;
 
-    const obj = {};    
+    const obj = {};
     for (const item of flatCoords) {
       const key = JSON.stringify(item);
       obj[key] = (obj[key] || 0) + 1;
@@ -77,7 +91,7 @@ function Pregame({ createGrid }) {
     }
     return true;
   }
-  
+
   function addToBoard(grid, gridSetter, shipList) {
     // add coordinates from the ship list to the grid
     const keys = Object.keys(shipList);
@@ -87,24 +101,24 @@ function Pregame({ createGrid }) {
       shipList[key].forEach((coord) => {
         const [r, c] = coord;
         newGrid[r][c] = parseInt(key);
-      })
-    })
+      });
+    });
     gridSetter(newGrid);
   }
 
-function getRandomPlacements() {
-  // randomize placements for all ship lengths one by one
-  const lengths = [2, 3, 4, 5];
-  let randomShipList = {};
-  // eliminatedFields = coords already occupied + cells immediately adjacent to them
-  let eliminatedFields = [];
+  function getRandomPlacements() {
+    // randomize placements for all ship lengths one by one
+    const lengths = [2, 3, 4, 5];
+    let randomShipList = {};
+    // eliminatedFields = coords already occupied + cells immediately adjacent to them
+    let eliminatedFields = [];
 
-  lengths.forEach((shipLength) => {
+    lengths.forEach((shipLength) => {
       let coords = getNewCoords(shipLength, eliminatedFields);
       randomShipList = {
         ...randomShipList,
-        [shipLength]: coords
-      }
+        [shipLength]: coords,
+      };
     });
 
     return randomShipList;
@@ -115,45 +129,56 @@ function getRandomPlacements() {
     let direction;
     let startCoord = [];
     let random1 = Math.floor(Math.random() * 10);
-    let random2 = Math.floor(Math.random() * (10 - shipLength)); 
+    let random2 = Math.floor(Math.random() * (10 - shipLength));
     let chance = Math.random() * 1;
     if (chance < 0.5) {
       direction = "vertical";
       startCoord = [random2, random1];
     } else {
       direction = "horizontal";
-      startCoord = [random1, random2]
+      startCoord = [random1, random2];
     }
     // get full coordinates for the new ship
     let fullCoords = getFullCoords(startCoord, shipLength, direction);
-    
+
     // check if any of the full coordinates of the new ship are the same as ones on the eliminated list; if so, se recursion to run the function to randomize new coords
     for (const coord1 of eliminatedFields) {
       for (const coord2 of fullCoords) {
         if (coord1[0] === coord2[0] && coord1[1] === coord2[1]) {
           console.log("duplicate");
           return getNewCoords(shipLength, eliminatedFields);
-          } 
         }
-      }  
+      }
+    }
     // adjacent cells are all cells immediately next to a ship cell
     let adjacentCells = [];
     fullCoords.forEach((coord) => {
       let [r, c] = coord;
-      let newAdjacents = [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]]
+      let newAdjacents = [
+        [r - 1, c],
+        [r + 1, c],
+        [r, c - 1],
+        [r, c + 1],
+      ];
       adjacentCells.push(...newAdjacents);
     });
-    
+
     eliminatedFields.push(...adjacentCells);
     return fullCoords;
   }
-  
-  return(
+
+  return (
     <>
       <Prepboard owner="player" />
       <div className={styles.pregameInfo}>
-        <p>Drag & drop the ships onto your board. Double-click a ship to rotate it.</p>
-        <p>Alternatively, click the randomize board button to generate a random placement of ships.</p>
+        <p>
+          Drag & drop the ships onto your board. Double-click a ship to rotate
+          it.
+        </p>
+        <p>
+          Alternatively, click the randomize board button to generate a random
+          placement of ships.
+        </p>
         {playerRandomizer ? null : <ShipPlacer />}
         <div className={styles.buttons}>
           <StartButton onClick={onStartClick} />
@@ -163,8 +188,7 @@ function getRandomPlacements() {
         {placementError ? <PlacementError /> : null}
       </div>
     </>
-    
-  )
+  );
 }
 
-export default Pregame
+export default Pregame;
