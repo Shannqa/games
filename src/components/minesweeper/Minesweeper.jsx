@@ -1,17 +1,31 @@
-import React from "react";
+import React, { useState, createContext } from "react";
 import Board from "./Board";
 import "./minesweeper.css";
 
-function Minesweeper() {
-  const difficultyLevels = [
-    {
-      level: "beginner",
-      boardSize: 9,
-      mineAmount: 20,
-    },
-  ];
+export const MinesweeperContext = createContext({
+  chosenDifficulty: {},
+  setChosenDificulty: () => {},
+  gameStart: "",
+  setGameStart: () => {}
+})
 
-  return <Board />;
+function Minesweeper() {
+  const [chosenDifficulty, setChosenDificulty] = useState(availableDifficulties.intermediate);
+  
+  function startGame() {
+    setGameStart(true);
+  }
+  
+  
+  return <BattleshipsContext.Provider
+  value = {{
+    chosenDifficulty,
+    setChosenDificulty
+  }}
+  >
+  <Counters />
+  <Board />
+  </BattleshipsContext.Provider>
 }
 
 export default Minesweeper;
