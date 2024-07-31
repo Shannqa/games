@@ -1,0 +1,75 @@
+body {
+  background-color: white;
+}
+
+.minesweeper {
+  background-color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(16, 36px);
+}
+
+.box {
+  width: 36px;
+  height: 36px;
+  background-color: rgb(193, 217, 216);
+  border: 1px rgb(160, 160, 160) solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.mine {
+  background-color: rgb(100, 0, 0);
+}
+
+.red {
+  color: rgb(105, 0, 0);
+}
+
+.red {
+  color: red;
+}
+
+.darkpurple {
+  color: rgb(88, 0, 88);
+}
+
+.purple {
+  color: purple;
+}
+
+.darkblue {
+  color: rgb(0, 0, 100);
+}
+
+.blue {
+  color: blue;
+}
+
+.lightblue {
+  color: rgb(43, 98, 117);
+}
+
+.green {
+  color: green;
+}
+
+.beginner {
+  grid-template-columns: repeat(9, 36px);
+}
+
+.intermediate {
+  grid-template-columns: repeat(16, 36px);
+}
+
+.expert {
+  grid-template-columns: repeat(22, 36px);
+}
