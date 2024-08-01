@@ -9,12 +9,30 @@ export const MinesweeperContext = createContext({
   setChosenDificulty: () => {},
   gameStart: "",
   setGameStart: () => {},
+  playerBoard: [],
+  setPlayerBoard: () => {},
+  createEmptyBoard: () => {},
 });
 
 function Minesweeper() {
   const [chosenDifficulty, setChosenDifficulty] = useState(
     availableDifficulties.intermediate
   );
+  const [playerBoard, setPlayerBoard] = useState(() =>
+    createEmptyBoard(chosenDifficulty.boardSize)
+  );
+  console.log(playerBoard);
+
+  function createEmptyBoard(boardSize) {
+    let board = [];
+    for (let c = 0; c < boardSize; c++) {
+      board.push([]);
+      for (let r = 0; r < boardSize; r++) {
+        board[c].push(0);
+      }
+    }
+    return board;
+  }
 
   function startGame() {
     setGameStart(true);
@@ -25,6 +43,9 @@ function Minesweeper() {
       value={{
         chosenDifficulty,
         setChosenDifficulty,
+        playerBoard,
+        setPlayerBoard,
+        createEmptyBoard,
       }}
     >
       <DifficultyChooser />

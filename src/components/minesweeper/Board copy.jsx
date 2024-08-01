@@ -115,30 +115,57 @@ function Board() {
   // clicks
 
   function handleTileClick(e, row, column) {
-    let board = [...playerBoard];
-    let boardSize = chosenDifficulty.boardSize;
     if (hiddenBoard[row][column] === 100) {
       // clicked on a mine, game over
-      board[row][column] = "x";
-    } else if (board[row][column] === "x") {
+      setPlayerBoard(
+        playerBoard.map((boardRow, rindex) =>
+          boardRow.map((boardColumn, cindex) => {
+            if (rindex == row && cindex == column) {
+              boardColumn = "M";
+            }
+            return boardColumn;
+          })
+        )
+      );
+    } else if (playerBoard[row][column] === "x") {
       // already clicked here, do nothing
       return;
     } else if (hiddenBoard[row][column] > 0 && hiddenBoard[row][column] <= 8) {
       // clicked on a tile which is adjacent to a mine - open only this tile
-      board[row][column] = "x";
+      setPlayerBoard(
+        playerBoard.map((boardRow, rindex) =>
+          boardRow.map((boardColumn, cindex) => {
+            if (rindex == row && cindex == column) {
+              boardColumn = "x";
+            }
+            return boardColumn;
+          })
+        )
+      );
     } else if (hiddenBoard[row][column] === 0) {
       // clicked on a tile which is not adjacent to a mine, open surrounding tiles
       let queue = [];
       queue.push([row, column]);
-      function openAdjacents(queue) {
+
+      function openAdjacentCells(queue) {
         if (queue.length === 0) {
+          // base case
           return;
         }
-        console.log(queue);
-        let [row, column] = queue.pop();
-        console.log(row, column);
-        //open clicked on tile
-        board[row][column] = "x";
+        let currentCell = queue.pop();
+        console.log(currentCell);
+
+        // open current tile
+        setPlayerBoard(
+          playerBoard.map((boardRow, rindex) =>
+            boardRow.map((boardColumn, cindex) => {
+              if (rindex == currentCell[0] && cindex == currentCell[1]) {
+                boardColumn = "x";
+              }
+              return boardColumn;
+            })
+          )
+        );
 
         const adjacentCells = [
           [1, 0],
@@ -152,33 +179,39 @@ function Board() {
         ];
 
         adjacentCells.forEach((cell) => {
-          let x = row + cell[0];
-          let y = column + cell[1];
+          let x = currentCell[0] + cell[0];
+          let y = currentCell[1] + cell[1];
 
-          if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
-            // if cell [x, y] exists on the board
-            if (
-              queue.length === 0 ||
-              (queue.length > 0 && !queue.includes([x, y]))
-            ) {
-              // if it's not in the queue already
-              if (board[x][y] !== "x") {
-                //if its not already revealed
-                if (hiddenBoard[x][y] === 0) {
-                  queue.push([x, y]);
-                } else {
-                  // reveal the tile if its between 1 and 8
-                  board[x][y] = "x";
-                }
-              }
+          if (
+            x >= 0 &&
+            x < chosenDifficulty.boardSize &&
+            y >= 0 &&
+            y < chosenDifficulty.boardSize
+          ) {
+            // exists on the board
+            if (hiddenBoard[x][y] === 0 && playerBoard[x][y] !== "x") {
+              // if it's a 0 but it hasnt been revealed yet
+              queue.push([x, y]);
+            } else if (hiddenBoard[x][y] > 0 && hiddenBoard[x][y] <= 8) {
+              // if it's a number between 1 and 8, open this tile
+              setPlayerBoard(
+                playerBoard.map((boardRow, rindex) =>
+                  boardRow.map((boardColumn, cindex) => {
+                    if (rindex == x && cindex == y) {
+                      boardColumn = "x";
+                    }
+                    return boardColumn;
+                  })
+                )
+              );
             }
           }
+          // do the queue
         });
-        openAdjacents(queue);
+        openAdjacentCells(queue);
       }
-      openAdjacents(queue);
+      openAdjacentCells(queue);
     }
-    setPlayerBoard([...board]);
   }
   console.log(playerBoard);
   return (
@@ -191,9 +224,7 @@ function Board() {
               className={classStyle[column]}
               onClick={(e) => handleTileClick(e, rindex, cindex)}
             >
-              {playerBoard[rindex][cindex] === "x"
-                ? `${hiddenBoard[rindex][cindex]}`
-                : column}
+              {column}
             </div>
           ))
         )}
