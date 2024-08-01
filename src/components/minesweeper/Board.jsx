@@ -83,8 +83,8 @@ function Board() {
     chosenDifficulty.mines
   );
   const emptyBoard = createEmptyBoard(chosenDifficulty.boardSize);
-  const fullBoard = placeMinesOnBoard(emptyBoard, coordinateList);
-  const ready = numberBoard(chosenDifficulty.boardSize, fullBoard);
+  const playerBoard = placeMinesOnBoard(emptyBoard, coordinateList);
+  const hiddenBoard = numberBoard(chosenDifficulty.boardSize, playerBoard);
   // console.log("ready", ready);
 
   const classStyle = {
@@ -108,11 +108,61 @@ function Board() {
 
   console.log(boardStyles.beginner);
 
+
+// clicks
+
+
+function handleTileClick(e, row, column) {
+  if (hiddenBoard[row][column] === 100) {
+    // clicked on a mine, game over
+  } else if (playerBoard[row][column] === "x") {
+    // already clicked here, do nothing
+    return;
+  } else if (hiddenBoard[row][column] > 0 && hiddenBoard[row][column] <= 8) {
+    // clicked on a tile which is adjacent to a mine - open only this tile
+    playerBoard[row][column] = "x";
+  } else if (hiddenBoard[row][column] === 0){
+    // clicked on a tile which is not adjacent to a mine, open surrounding tiles
+    function openAdjacentCells(queue = [])
+      if (queue.length === 0) {
+        // base case
+        return;
+      }
+    const adjacentCells = [
+      [1, 0],
+      [-1, 0],
+      [0, -1],
+      [0, 1],
+      [1, 1],
+      [-1, -1],
+      [1, -1],
+      [-1, 1],
+    ];
+    
+    adjacentCells.forEach((cell) => {
+      let x = row + cell[0];
+      let y = col + cell[1];
+
+      if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
+        // exists on the board
+          if (hiddenBoard[x][y] === 0) {
+            queue.push([x, y]);
+            playerBoard[x][y] = "x";
+          } else if (hiddenBoard[row][column] > 0 && hiddenBoard[row][column] <= 8) {
+            playerBoard[x][y]= "x";
+          }
+      }
+      // do the queue
+  }
+}
+
+
+
   return (
     <div className={boardStyles[chosenDifficulty.name]}>
       {ready.map((row, rindex) =>
         row.map((column, cindex) => (
-          <div className={classStyle[column]}>{column}</div>
+          <div className={classStyle[column]} onClick={(e) => handleTileClick(e, row, column)}>{column}</div>
         ))
       )}
     </div>
