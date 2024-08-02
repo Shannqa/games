@@ -13,7 +13,7 @@ export const MinesweeperContext = createContext({
   setPlayerBoard: () => {},
   createEmptyBoard: () => {},
   markCount: "",
-  setMarkCount: () => {}
+  setMarkCount: () => {},
 });
 
 function Minesweeper() {
@@ -41,29 +41,29 @@ function Minesweeper() {
   function startGame() {
     setGameStage("playing");
   }
-  
+
   function resetGame() {
     setGameStage("ready");
     setMarkCount(chosenDifficulty.mines);
   }
-  
+
   function gameWin() {
     setGameStage("loss");
     // showModal
   }
-  
+
   function gameLose() {
     setGameStage("win");
     // showModal
   }
-  
-  // states of the game:
-  - loaded the page, counter not running, no moves made / reset the game after winning or losing
-  - game is running, after the first click
-  - clicked on a mine, game over,
-  - clicked on every other tile except for the mines - game won
-  
-  gameStage: "ready", "playing", "win", "lose"
+
+  // // states of the game:
+  // - loaded the page, counter not running, no moves made / reset the game after winning or losing
+  // - game is running, after the first click
+  // - clicked on a mine, game over,
+  // - clicked on every other tile except for the mines - game won
+
+  // gameStage: "ready", "playing", "win", "lose"
 
   return (
     <MinesweeperContext.Provider
@@ -74,7 +74,9 @@ function Minesweeper() {
         setPlayerBoard,
         createEmptyBoard,
         markCount,
-        setMarkCount
+        setMarkCount,
+        gameStage,
+        setGameStage,
       }}
     >
       <DifficultyChooser />

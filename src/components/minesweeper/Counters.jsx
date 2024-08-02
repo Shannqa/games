@@ -1,26 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
+import { MinesweeperContext } from "./Minesweeper.jsx";
 
 function Counters() {
-  const { chosenDifficulty, playerBoard, setPlayerBoard, markCount, setMarkCount, gameStart } =
-    useContext(MinesweeperContext);
-  
+  const {
+    chosenDifficulty,
+    playerBoard,
+    setPlayerBoard,
+    markCount,
+    setMarkCount,
+    gameStage,
+  } = useContext(MinesweeperContext);
+
   const [timeCounter, setTimeCounter] = useState(0);
-  
+
   useEffect(() => {
     let timerId;
-    if (gameStart) {
+    if (gameStage === "playing") {
       timerId = setInterval(() => {
-      
-      setTimeCounter(c => c + 1)
-    }, 1000)
-    
-    
+        setTimeCounter((c) => c + 1);
+      }, 1000);
     }
-    return () => clearInterval(timerId)
-    
-    
-  }, [gameStart]); 
-  
+    return () => clearInterval(timerId);
+  }, [gameStage]);
+
   return (
     <div>
       <div>

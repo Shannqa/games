@@ -3,12 +3,19 @@ import { MinesweeperContext } from "./Minesweeper.jsx";
 import styles from "../../styles/minesweeper.module.css";
 
 function Board() {
-  const { chosenDifficulty, playerBoard, setPlayerBoard, markCount, setMarkCount, gameStart, setGameStart } =
-    useContext(MinesweeperContext);
+  const {
+    chosenDifficulty,
+    playerBoard,
+    setPlayerBoard,
+    markCount,
+    setMarkCount,
+    gameStage,
+    setGameStage,
+  } = useContext(MinesweeperContext);
   const [emptyBoard, setEmptyBoard] = useState(() =>
     createEmptyBoard(chosenDifficulty.boardSize)
   );
-  const [coordinateList, setCoordinateList] = useState(() =>
+  const [coordinateList] = useState(() =>
     generateMineList(chosenDifficulty.boardSize, chosenDifficulty.mines)
   );
   const [minesBoard, setMinesBoard] = useState(() =>
@@ -115,14 +122,14 @@ function Board() {
   // clicks
 
   function handleTileClick(e, row, column) {
-    
-    if (!gameStart) {
-      setGameStart(true);
+    if (gameStage === "ready") {
+      setGameStage("playing");
     }
     let board = [...playerBoard];
     if (e.type === "contextmenu") {
       // right click
-      
+      e.preventDefault();
+
       if (board[row][column] === "x") {
         // tile already revealed, do nothing
       } else if (board[row][column] === "o") {
@@ -138,69 +145,72 @@ function Board() {
     } else {
       // left click
       let boardSize = chosenDifficulty.boardSize;
-    if (hiddenBoard[row][column] === 100) {
-      // clicked on a mine, game over
-      board[row][column] = "x";
-    } else if (board[row][column] === "x") {
-      // already clicked here, do nothing
-      return;
-    } else if (hiddenBoard[row][column] > 0 && hiddenBoard[row][column] <= 8) {
-      // clicked on a tile which is adjacent to a mine - open only this tile
-      board[row][column] = "x";
-    } else if (hiddenBoard[row][column] === 0) {
-      // clicked on a tile which is not adjacent to a mine, open surrounding tiles
-      let queue = [];
-      queue.push([row, column]);
-      function openAdjacents(queue) {
-        if (queue.length === 0) {
-          return;
-        }
-        console.log(queue);
-        let [row, column] = queue.pop();
-        console.log(row, column);
-        //open clicked on tile
+      if (hiddenBoard[row][column] === 100) {
+        // clicked on a mine, game over
         board[row][column] = "x";
+      } else if (board[row][column] === "x") {
+        // already clicked here, do nothing
+        return;
+      } else if (
+        hiddenBoard[row][column] > 0 &&
+        hiddenBoard[row][column] <= 8
+      ) {
+        // clicked on a tile which is adjacent to a mine - open only this tile
+        board[row][column] = "x";
+      } else if (hiddenBoard[row][column] === 0) {
+        // clicked on a tile which is not adjacent to a mine, open surrounding tiles
+        let queue = [];
+        queue.push([row, column]);
+        function openAdjacents(queue) {
+          if (queue.length === 0) {
+            return;
+          }
+          console.log(queue);
+          let [row, column] = queue.pop();
+          console.log(row, column);
+          //open clicked on tile
+          board[row][column] = "x";
 
-        const adjacentCells = [
-          [1, 0],
-          [-1, 0],
-          [0, -1],
-          [0, 1],
-          [1, 1],
-          [-1, -1],
-          [1, -1],
-          [-1, 1],
-        ];
+          const adjacentCells = [
+            [1, 0],
+            [-1, 0],
+            [0, -1],
+            [0, 1],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
+          ];
 
-        adjacentCells.forEach((cell) => {
-          let x = row + cell[0];
-          let y = column + cell[1];
+          adjacentCells.forEach((cell) => {
+            let x = row + cell[0];
+            let y = column + cell[1];
 
-          if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
-            // if cell [x, y] exists on the board
-            if (
-              queue.length === 0 ||
-              (queue.length > 0 && !queue.includes([x, y]))
-            ) {
-              // if it's not in the queue already
-              if (board[x][y] !== "x") {
-                //if its not already revealed
-                if (hiddenBoard[x][y] === 0) {
-                  queue.push([x, y]);
-                } else {
-                  // reveal the tile if its between 1 and 8
-                  board[x][y] = "x";
+            if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
+              // if cell [x, y] exists on the board
+              if (
+                queue.length === 0 ||
+                (queue.length > 0 && !queue.includes([x, y]))
+              ) {
+                // if it's not in the queue already
+                if (board[x][y] !== "x") {
+                  //if its not already revealed
+                  if (hiddenBoard[x][y] === 0) {
+                    queue.push([x, y]);
+                  } else {
+                    // reveal the tile if its between 1 and 8
+                    board[x][y] = "x";
+                  }
                 }
               }
             }
-          }
-        });
+          });
+          openAdjacents(queue);
+        }
         openAdjacents(queue);
       }
-      openAdjacents(queue);
     }
-    }
-    
+
     setPlayerBoard([...board]);
   }
   console.log(playerBoard);
@@ -212,7 +222,8 @@ function Board() {
             <div
               key={`${rindex}-${cindex}`}
               className={classStyle[column]}
-              onClick={(e) => handleTileClick(e, rindex, cindex)}  onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
+              onClick={(e) => handleTileClick(e, rindex, cindex)}
+              onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
             >
               {playerBoard[rindex][cindex] === "x"
                 ? `${hiddenBoard[rindex][cindex]}`
