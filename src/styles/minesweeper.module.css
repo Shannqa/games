@@ -30,6 +30,10 @@ body {
   background-color: rgb(100, 0, 0);
 }
 
+.mark {
+  background-color: rgb(251, 248, 33);
+}
+
 .red {
   color: rgb(105, 0, 0);
 }
@@ -67,7 +71,7 @@ body {
 }
 
 .intermediate {
-  grid-template-columns: repeat(9, 36px);
+  grid-template-columns: repeat(16, 36px);
 }
 
 .expert {

@@ -11,92 +11,8 @@ function Board() {
     setMarkCount,
     gameStage,
     setGameStage,
+    hiddenBoard,
   } = useContext(MinesweeperContext);
-  const [emptyBoard, setEmptyBoard] = useState(() =>
-    createEmptyBoard(chosenDifficulty.boardSize)
-  );
-  const [coordinateList] = useState(() =>
-    generateMineList(chosenDifficulty.boardSize, chosenDifficulty.mines)
-  );
-  const [minesBoard, setMinesBoard] = useState(() =>
-    placeMinesOnBoard(emptyBoard, coordinateList)
-  );
-  const [hiddenBoard, setHiddenBoard] = useState(() =>
-    numberBoard(chosenDifficulty.boardSize, minesBoard)
-  );
-
-  function createEmptyBoard(boardSize) {
-    let board = [];
-    for (let c = 0; c < boardSize; c++) {
-      board.push([]);
-      for (let r = 0; r < boardSize; r++) {
-        board[c].push(0);
-      }
-    }
-    return board;
-  }
-
-  // generate a list of unique coordinates where mines will be placed
-  function generateMineList(boardSize, mineAmount, coordinateList = []) {
-    // base case
-    if (coordinateList.length === mineAmount) return coordinateList;
-
-    let row = Math.floor(Math.random() * boardSize);
-    let col = Math.floor(Math.random() * boardSize);
-
-    if (!coordinateList.some((coord) => coord[0] === row && coord[1] === col)) {
-      //coordinate is unique
-      coordinateList.push([row, col]);
-    } else {
-      // console.log("duplicate", [row, col]);
-    }
-    return generateMineList(boardSize, mineAmount, coordinateList);
-  }
-
-  function placeMinesOnBoard(board, coordinateList) {
-    let fullBoard = [...board];
-    coordinateList.forEach((coord) => {
-      fullBoard[coord[0]][coord[1]] = 100;
-    });
-    return fullBoard;
-  }
-
-  // full hidden matrix with mines and numbers signifying proximity
-  function numberBoard(boardSize, boardWithMines) {
-    let board = [...boardWithMines];
-
-    const adjacentCells = [
-      [1, 0],
-      [-1, 0],
-      [0, -1],
-      [0, 1],
-      [1, 1],
-      [-1, -1],
-      [1, -1],
-      [-1, 1],
-    ];
-
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        // check cell
-        adjacentCells.forEach((cell) => {
-          let x = row + cell[0];
-          let y = col + cell[1];
-
-          if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
-            // exists on the board
-            if (board[x][y] === 100 && board[row][col] !== 100) {
-              // adjacentc cell is a mine, and current cell is not a mine
-              console.log("adj");
-              board[row][col] += 1;
-            }
-          }
-        });
-      }
-    }
-    // console.log(board);
-    return board;
-  }
 
   const classStyle = {
     100: `${styles.box} ${styles.mine}`,
@@ -218,20 +134,34 @@ function Board() {
     <>
       <div className={boardStyles[chosenDifficulty.name]}>
         {playerBoard.map((row, rindex) =>
-          row.map((column, cindex) => (
-            <div
-              key={`${rindex}-${cindex}`}
-              className={classStyle[column]}
-              onClick={(e) => handleTileClick(e, rindex, cindex)}
-              onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
-            >
-              {playerBoard[rindex][cindex] === "x"
-                ? `${hiddenBoard[rindex][cindex]}`
-                : column}
-            </div>
-          ))
+          row.map((column, cindex) => {
+            {
+              return playerBoard[rindex][cindex] === "x" ? (
+                <div
+                  key={`${rindex}-${cindex}`}
+                  className={classStyle[hiddenBoard[rindex][cindex]]}
+                  onClick={(e) => handleTileClick(e, rindex, cindex)}
+                  onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
+                >
+                  {hiddenBoard[rindex][cindex]}
+                </div>
+              ) : (
+                <div
+                  key={`${rindex}-${cindex}`}
+                  className={
+                    playerBoard[rindex][cindex] === "o"
+                      ? `${styles.mark}`
+                      : `${styles.box}`
+                  } // is it a marked field or just hidden
+                  onClick={(e) => handleTileClick(e, rindex, cindex)}
+                  onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
+                ></div>
+              );
+            }
+          })
         )}
       </div>
+
       <hr />
       <div className={boardStyles[chosenDifficulty.name]}>
         {hiddenBoard.map((row, rindex) =>

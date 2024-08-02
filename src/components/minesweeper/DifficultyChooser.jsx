@@ -10,8 +10,8 @@ const availableDifficulties = {
   },
   intermediate: {
     name: "intermediate",
-    boardSize: 9,
-    mines: 16,
+    boardSize: 16,
+    mines: 40,
   },
   expert: {
     name: "expert",
@@ -21,17 +21,29 @@ const availableDifficulties = {
 };
 
 function DifficultyChooser() {
-  const { chosenDifficulty, setChosenDifficulty } =
+  const { chosenDifficulty, setChosenDifficulty, getBoardsForSize } =
     useContext(MinesweeperContext);
 
   function handleRadioSelect(e) {
     console.log(e.target.value);
     if (e.target.value === "beginner") {
       setChosenDifficulty(availableDifficulties.beginner);
+      getBoardsForSize(
+        availableDifficulties.beginner.boardSize,
+        availableDifficulties.beginner.mines
+      );
     } else if (e.target.value === "intermediate") {
       setChosenDifficulty(availableDifficulties.intermediate);
+      getBoardsForSize(
+        availableDifficulties.intermediate.boardSize,
+        availableDifficulties.intermediate.mines
+      );
     } else if (e.target.value === "expert") {
       setChosenDifficulty(availableDifficulties.expert);
+      getBoardsForSize(
+        availableDifficulties.expert.boardSize,
+        availableDifficulties.expert.mines
+      );
     }
   }
 
