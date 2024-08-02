@@ -3,7 +3,7 @@ import { MinesweeperContext } from "./Minesweeper.jsx";
 import styles from "../../styles/minesweeper.module.css";
 
 function Board() {
-  const { chosenDifficulty, playerBoard, setPlayerBoard } =
+  const { chosenDifficulty, playerBoard, setPlayerBoard, markCount, setMarkCount, gameStart, setGameStart } =
     useContext(MinesweeperContext);
   const [emptyBoard, setEmptyBoard] = useState(() =>
     createEmptyBoard(chosenDifficulty.boardSize)
@@ -115,8 +115,29 @@ function Board() {
   // clicks
 
   function handleTileClick(e, row, column) {
+    
+    if (!gameStart) {
+      setGameStart(true);
+    }
     let board = [...playerBoard];
-    let boardSize = chosenDifficulty.boardSize;
+    if (e.type === "contextmenu") {
+      // right click
+      
+      if (board[row][column] === "x") {
+        // tile already revealed, do nothing
+      } else if (board[row][column] === "o") {
+        // remove mark
+        board[row][column] = "0";
+        setMarkCount(markCount + 1);
+      } else {
+        // add mark
+        if (markCount < 1) return;
+        board[row][column] = "o";
+        setMarkCount(markCount - 1);
+      }
+    } else {
+      // left click
+      let boardSize = chosenDifficulty.boardSize;
     if (hiddenBoard[row][column] === 100) {
       // clicked on a mine, game over
       board[row][column] = "x";
@@ -178,6 +199,8 @@ function Board() {
       }
       openAdjacents(queue);
     }
+    }
+    
     setPlayerBoard([...board]);
   }
   console.log(playerBoard);
@@ -189,7 +212,7 @@ function Board() {
             <div
               key={`${rindex}-${cindex}`}
               className={classStyle[column]}
-              onClick={(e) => handleTileClick(e, rindex, cindex)}
+              onClick={(e) => handleTileClick(e, rindex, cindex)}  onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
             >
               {playerBoard[rindex][cindex] === "x"
                 ? `${hiddenBoard[rindex][cindex]}`
@@ -198,6 +221,7 @@ function Board() {
           ))
         )}
       </div>
+      <hr />
       <div className={boardStyles[chosenDifficulty.name]}>
         {hiddenBoard.map((row, rindex) =>
           row.map((column, cindex) => (

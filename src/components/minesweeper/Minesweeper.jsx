@@ -7,11 +7,13 @@ import DifficultyChooser, { availableDifficulties } from "./DifficultyChooser";
 export const MinesweeperContext = createContext({
   chosenDifficulty: {},
   setChosenDificulty: () => {},
-  gameStart: "",
-  setGameStart: () => {},
+  gameStage: "",
+  setGameStage: () => {},
   playerBoard: [],
   setPlayerBoard: () => {},
   createEmptyBoard: () => {},
+  markCount: "",
+  setMarkCount: () => {}
 });
 
 function Minesweeper() {
@@ -21,6 +23,8 @@ function Minesweeper() {
   const [playerBoard, setPlayerBoard] = useState(() =>
     createEmptyBoard(chosenDifficulty.boardSize)
   );
+  const [gameStage, setGameStage] = useState("ready");
+  const [markCount, setMarkCount] = useState(chosenDifficulty.mines);
   console.log(playerBoard);
 
   function createEmptyBoard(boardSize) {
@@ -35,8 +39,31 @@ function Minesweeper() {
   }
 
   function startGame() {
-    setGameStart(true);
+    setGameStage("playing");
   }
+  
+  function resetGame() {
+    setGameStage("ready");
+    setMarkCount(chosenDifficulty.mines);
+  }
+  
+  function gameWin() {
+    setGameStage("loss");
+    // showModal
+  }
+  
+  function gameLose() {
+    setGameStage("win");
+    // showModal
+  }
+  
+  // states of the game:
+  - loaded the page, counter not running, no moves made / reset the game after winning or losing
+  - game is running, after the first click
+  - clicked on a mine, game over,
+  - clicked on every other tile except for the mines - game won
+  
+  gameStage: "ready", "playing", "win", "lose"
 
   return (
     <MinesweeperContext.Provider
@@ -46,6 +73,8 @@ function Minesweeper() {
         playerBoard,
         setPlayerBoard,
         createEmptyBoard,
+        markCount,
+        setMarkCount
       }}
     >
       <DifficultyChooser />
