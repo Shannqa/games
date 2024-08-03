@@ -26,23 +26,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.menus {
+  display: flex;
+  height: 70px;
 }
 
 .difficultyChooser {
   background-color: #234e66;
   border: #dca85d 1px solid;
   color: #dca85d;
-  padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  padding: 8px 16px;
+  /* margin-top: 10px; */
+  /* margin-bottom: 20px; */
 }
 
 .difficultyChooser input {
   margin-right: 3px;
+  cursor: pointer;
 }
 
 .difficultyChooser label {
   margin-right: 6px;
+  cursor: pointer;
 }
 
 .difficultyChooser legend {
@@ -56,6 +64,7 @@
   color: #dca85d;
   padding: 8px;
   display: flex;
+  align-items: center;
 }
 
 .counters > div {
@@ -67,6 +76,60 @@
 
 .counters span {
   font-weight: bold;
+}
+
+.counters .restart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #530b75;
+  padding: 8px 8px;
+  cursor: pointer;
+  margin: 2px;
+  box-shadow: inset #761e9e 2px 2px 2px;
+  border: #dca85d 1px solid;
+}
+
+.counters .restart:hover {
+  box-shadow: inset #103549 2px 2px 2px;
+}
+
+.counters .restart:active {
+  background-color: #843a22;
+}
+
+.modal {
+  position: absolute;
+  z-index: 10;
+  top: calc(50% - 50px);
+  left: calc(50% - 100px);
+  padding: 12px 18px;
+  background-color: #234e66;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  box-shadow: #0a2839 6px 7px 5px 0px, #051b25b8 0px 0px 6px 3px;
+}
+
+.modal button {
+  margin: 10px;
+  background-color: #11364a;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  padding: 6px 18px;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.modal button:hover {
+  background-color: #234e66;
+  cursor: pointer;
+}
+
+.modal button:active {
+  background-color: rgb(56 9 135);
 }
 
 .mine {
@@ -89,7 +152,6 @@
 
 .red {
   background-color: #6893a9;
-
   color: maroon;
 }
 

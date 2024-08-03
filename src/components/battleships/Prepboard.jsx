@@ -65,7 +65,7 @@ function Prepboard({ owner }) {
   }
 
   return (
-    <div>
+    <div className={styles.boardContainer}>
       <h3>Your board</h3>
       <div
         className={

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { MinesweeperContext } from "./Minesweeper.jsx";
 import styles from "../../styles/minesweeper.module.css";
 
-function Board() {
+function Board({ handleLoss, handleWin }) {
   const {
     chosenDifficulty,
     playerBoard,
@@ -43,11 +43,12 @@ function Board() {
     }
     let board = [...playerBoard];
     if (e.type === "contextmenu") {
-      // right click
+      // right mouse click
       e.preventDefault();
 
       if (board[row][column] === "x") {
         // tile already revealed, do nothing
+        return;
       } else if (board[row][column] === "o") {
         // remove mark
         board[row][column] = "0";
@@ -59,14 +60,16 @@ function Board() {
         setMarkCount(markCount - 1);
       }
     } else {
-      // left click
+      // left mouse click
       let boardSize = chosenDifficulty.boardSize;
-      if (hiddenBoard[row][column] === 100) {
+      if (board[row][column] === "x" || board[row][column] === "o") {
+        // already clicked here OR it's a marked field, do nothing
+        return;
+      } else if (hiddenBoard[row][column] === 100) {
         // clicked on a mine, game over
         board[row][column] = "x";
-      } else if (board[row][column] === "x") {
-        // already clicked here, do nothing
-        return;
+        handleLoss();
+        console.log("mine");
       } else if (
         hiddenBoard[row][column] > 0 &&
         hiddenBoard[row][column] <= 8
@@ -161,7 +164,7 @@ function Board() {
           })
         )}
       </div>
-
+      {/* 
       <hr />
       <div className={boardStyles[chosenDifficulty.name]}>
         {hiddenBoard.map((row, rindex) =>
@@ -171,7 +174,7 @@ function Board() {
             </div>
           ))
         )}
-      </div>
+      </div> */}
     </>
   );
 }

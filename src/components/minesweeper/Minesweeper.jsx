@@ -3,6 +3,7 @@ import Board from "./Board";
 import Counters from "./Counters";
 import styles from "../../styles/minesweeper.module.css";
 import DifficultyChooser, { availableDifficulties } from "./DifficultyChooser";
+import Modal from "./Modal";
 
 export const MinesweeperContext = createContext({
   chosenDifficulty: {},
@@ -59,6 +60,8 @@ function Minesweeper() {
   function resetGame() {
     setGameStage("ready");
     setMarkCount(chosenDifficulty.mines);
+    console.log("reset");
+    getBoardsForSize(chosenDifficulty.boardSize, chosenDifficulty.mines);
   }
 
   function gameWin() {
@@ -66,8 +69,9 @@ function Minesweeper() {
     // showModal
   }
 
-  function gameLose() {
+  function gameLoss() {
     setGameStage("loss");
+    console.log("loss", gameStage);
     // showModal
   }
 
@@ -179,9 +183,12 @@ function Minesweeper() {
     >
       <div className={styles.gameWindow}>
         <h2>Minesweeper</h2>
-        <DifficultyChooser />
-        <Counters />
-        <Board />
+        <div className={styles.menus}>
+          <DifficultyChooser />
+          <Counters restart={resetGame} />
+        </div>
+        <Board handleLoss={gameLoss} handleWin={gameWin} />
+        <Modal stage={gameStage} restart={resetGame} />
       </div>
     </MinesweeperContext.Provider>
   );

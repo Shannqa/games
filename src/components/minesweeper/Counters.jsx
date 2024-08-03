@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { MinesweeperContext } from "./Minesweeper.jsx";
 import styles from "../../styles/minesweeper.module.css";
 
-function Counters() {
+function Counters({ restart }) {
   const {
     chosenDifficulty,
     playerBoard,
@@ -20,6 +20,9 @@ function Counters() {
       timerId = setInterval(() => {
         setTimeCounter((c) => c + 1);
       }, 1000);
+    } else if (gameStage === "ready") {
+      setTimeCounter(0);
+      clearInterval(timerId);
     }
     return () => clearInterval(timerId);
   }, [gameStage]);
@@ -29,6 +32,9 @@ function Counters() {
       <div>
         <span>Marks left</span>
         <div>{markCount}</div>
+      </div>
+      <div onClick={restart} className={styles.restart}>
+        <img src="./replay_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg" />
       </div>
       <div>
         <span>Time elapsed</span>
