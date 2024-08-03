@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap");
 
 .gameWindow {
   display: flex;
@@ -88,17 +88,14 @@
   background-color: #2f7ba4;
 }
 
-
 .shipToPlace:hover {
-background-color: #3b8bb7;
+  background-color: #3b8bb7;
 }
 
-
-
-body {
+/* body {
   background-color: #0d1e26;
   color: #dca85d;
-}
+} */
 
 .dragoverShip {
   background-color: red;
@@ -112,17 +109,17 @@ body {
   flex-direction: column;
 }
 
-.enemyBoard .cell:hover { 
-  background-color: rgb(69 41 137)
+.enemyBoard .cell:hover {
+  background-color: rgb(69 41 137);
 }
 
-.enemyBoard .cell:active { 
+.enemyBoard .cell:active {
   background-color: rgb(239 190 130);
 }
 
 .enemyBoard .miss,
 .enemyBoard .miss:hover {
-  background-color: rgb(122 121 127)
+  background-color: rgb(122 121 127);
 }
 
 .enemyBoard .hit,
@@ -131,7 +128,7 @@ body {
 }
 
 .ownBoard .miss {
-  background-color: rgb(122 121 127)
+  background-color: rgb(122 121 127);
 }
 
 .ownBoard .hit {
@@ -142,7 +139,7 @@ body {
   cursor: pointer;
 }
 
-.buttons { 
+.buttons {
   display: grid;
 }
 
@@ -178,15 +175,4 @@ body {
   margin: 8px;
 }
 
-h2 {
-  margin: 8px;
-  font-size: 1.8rem;
-  font-family: "Cinzel", sans-serif;
-}
-
-h3 {
-  margin: 8px;
-  font-size: 1.6rem;
-  font-family: "Cinzel", sans-serif;
-  text-align: center;
-}
+/*  */

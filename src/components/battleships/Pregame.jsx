@@ -6,8 +6,8 @@ import StartButton from "./StartButton";
 import RandomizeButton from "./RandomizeButton";
 import ResetBoardButton from "./ResetBoardButton";
 import PlacementError from "./PlacementError";
-import styles from "./Battleships.module.css";
 import getFullCoords from "./getFullCoords.js";
+import styles from "../../styles/Battleships.module.css";
 
 function Pregame({ createGrid }) {
   const {

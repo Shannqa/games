@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { BattleshipsContext } from "./Battleships.jsx";
-import styles from "./Battleships.module.css";
+import styles from "../../styles/Battleships.module.css";
 
 function Board({ grid, owner }) {
   const {

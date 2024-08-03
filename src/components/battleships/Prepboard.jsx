@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { BattleshipsContext } from "./Battleships.jsx";
 import getFullCoords from "./getFullCoords.js";
-import styles from "./Battleships.module.css";
+import styles from "../../styles/Battleships.module.css";
 
 function Prepboard({ owner }) {
   const { playerGrid, playerShipList, setPlayerShipList } =

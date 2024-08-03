@@ -1,6 +1,6 @@
 import React from "react";
 import Ship from "./Ship";
-import styles from "./Battleships.module.css";
+import styles from "../../styles/Battleships.module.css";
 
 function ShipPlacer() {
   const shipSizes = [2, 3, 4, 5];

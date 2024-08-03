@@ -1,4 +1,4 @@
-* { 
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -9,7 +9,7 @@
   grid-template-columns: 150px 1fr;
   grid-template-areas: "header header"
                        "menu main"; */
-  color: #dca85d;
+  /* color: #dca85d; */
 }
 
 a {

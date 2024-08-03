@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { BattleshipsContext } from "./Battleships.jsx";
 import Board from "./Board";
+import styles from "../../styles/Battleships.module.css";
 
 function Game() {
   const { playerGrid, computerGrid, currentMove, setCurrentMove } =

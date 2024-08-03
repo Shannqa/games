@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { MinesweeperContext } from "./Minesweeper.jsx";
 export { availableDifficulties };
+import styles from "../../styles/minesweeper.module.css";
 
 const availableDifficulties = {
   beginner: {
@@ -48,9 +49,9 @@ function DifficultyChooser() {
   }
 
   return (
-    <div>
-      <form>
-        <legend>Choose difficulty</legend>
+    <form className={styles.difficultyChooser}>
+      <legend>Choose difficulty</legend>
+      <label htmlFor="beginner">
         <input
           type="radio"
           name="difficulty"
@@ -59,7 +60,9 @@ function DifficultyChooser() {
           id="beginner"
           checked={chosenDifficulty.name === "beginner"}
         />
-        <label htmlFor="beginner">Beginner</label>
+        Beginner
+      </label>
+      <label htmlFor="intermediate">
         <input
           type="radio"
           name="difficulty"
@@ -68,7 +71,9 @@ function DifficultyChooser() {
           id="intermediate"
           checked={chosenDifficulty.name === "intermediate"}
         />
-        <label htmlFor="intermediate">Intermediate</label>
+        Intermediate
+      </label>
+      <label htmlFor="expert">
         <input
           type="radio"
           name="difficulty"
@@ -77,9 +82,9 @@ function DifficultyChooser() {
           id="expert"
           checked={chosenDifficulty.name === "expert"}
         />
-        <label htmlFor="expert">Expert</label>
-      </form>
-    </div>
+        Expert
+      </label>
+    </form>
   );
 }
 

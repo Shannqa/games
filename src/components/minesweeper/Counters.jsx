@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MinesweeperContext } from "./Minesweeper.jsx";
+import styles from "../../styles/minesweeper.module.css";
 
 function Counters() {
   const {
@@ -24,13 +25,13 @@ function Counters() {
   }, [gameStage]);
 
   return (
-    <div>
+    <div className={styles.counters}>
       <div>
         <span>Marks left</span>
         <div>{markCount}</div>
       </div>
       <div>
-        <span>Time</span>
+        <span>Time elapsed</span>
         <div>{timeCounter}</div>
       </div>
     </div>

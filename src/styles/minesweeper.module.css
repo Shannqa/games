@@ -1,6 +1,4 @@
-body {
-  background-color: white;
-}
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
 .minesweeper {
   background-color: white;
@@ -13,16 +11,61 @@ body {
 .board {
   display: grid;
   grid-template-columns: repeat(16, 36px);
+  background-color: #2f7ba4;
+  border: #dca85d 1px solid;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 700;
 }
 
 .box {
   width: 36px;
   height: 36px;
-  background-color: rgb(193, 217, 216);
-  border: 1px rgb(160, 160, 160) solid;
+  border: #dca85d 1px solid;
+  /* background-color: rgb(193, 217, 216);
+  border: 1px rgb(160, 160, 160) solid; */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.difficultyChooser {
+  background-color: #234e66;
+  border: #dca85d 1px solid;
+  color: #dca85d;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.difficultyChooser input {
+  margin-right: 3px;
+}
+
+.difficultyChooser label {
+  margin-right: 6px;
+}
+
+.difficultyChooser legend {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.counters {
+  background-color: #234e66;
+  border: #dca85d 1px solid;
+  color: #dca85d;
+  padding: 8px;
+  display: flex;
+}
+
+.counters > div {
+  margin: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counters span {
   font-weight: bold;
 }
 
@@ -31,39 +74,53 @@ body {
 }
 
 .mark {
-  background-color: rgb(251, 248, 33);
+  background-color: #ffc107;
+}
+
+.red,
+.darkblue,
+.purple,
+.darkblue,
+.blue,
+.lightblue,
+.green {
+  box-shadow: inset #458077 2px 2px 2px 0px;
 }
 
 .red {
-  color: rgb(105, 0, 0);
-}
+  background-color: #6893a9;
 
-.red {
-  color: red;
+  color: maroon;
 }
 
 .darkpurple {
-  color: rgb(88, 0, 88);
+  background-color: #6893a9;
+  color: #530b75;
 }
 
 .purple {
-  color: purple;
+  background-color: #6893a9;
+  color: #74229c;
 }
 
 .darkblue {
-  color: rgb(0, 0, 100);
+  background-color: #6893a9;
+  color: #060238;
 }
 
 .blue {
-  color: blue;
+  background-color: #6893a9;
+  color: #2317b2;
 }
 
 .lightblue {
-  color: rgb(43, 98, 117);
+  background-color: #6893a9;
+  color: #ffc107;
 }
 
 .green {
-  color: green;
+  background-color: #6893a9;
+  color: #bdd4ba;
 }
 
 .beginner {
@@ -76,4 +133,10 @@ body {
 
 .expert {
   grid-template-columns: repeat(22, 36px);
+}
+
+.gameWindow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

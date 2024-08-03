@@ -1,5 +1,5 @@
 import React, { useState, createContext } from "react";
-import styles from "./Battleships.module.css";
+import styles from "../../styles/Battleships.module.css";
 import Pregame from "./Pregame";
 import Game from "./Game";
 import Endgame from "./Endgame";

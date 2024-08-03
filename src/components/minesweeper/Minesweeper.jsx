@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import Board from "./Board";
 import Counters from "./Counters";
-import "./minesweeper.css";
+import styles from "../../styles/minesweeper.module.css";
 import DifficultyChooser, { availableDifficulties } from "./DifficultyChooser";
 
 export const MinesweeperContext = createContext({
@@ -72,7 +72,9 @@ function Minesweeper() {
   }
 
   function changeBoardSize() {
-    setChosenDifficulty;
+    setChosenDifficulty();
+    // reset marks
+    // reset timer
   }
 
   function createEmptyBoard(boardSize) {
@@ -175,9 +177,12 @@ function Minesweeper() {
         hiddenBoard,
       }}
     >
-      <DifficultyChooser />
-      <Counters />
-      <Board />
+      <div className={styles.gameWindow}>
+        <h2>Minesweeper</h2>
+        <DifficultyChooser />
+        <Counters />
+        <Board />
+      </div>
     </MinesweeperContext.Provider>
   );
 }
