@@ -37,6 +37,7 @@ h1 {
 }
 h2 {
   font-size: 2rem;
+  margin-bottom: 6px;
 }
 a {
   color: black;
