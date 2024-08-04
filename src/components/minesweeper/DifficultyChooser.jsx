@@ -11,12 +11,12 @@ const availableDifficulties = {
   },
   intermediate: {
     name: "intermediate",
-    boardSize: 16,
+    boardSize: 14,
     mines: 40,
   },
   expert: {
     name: "expert",
-    boardSize: 22,
+    boardSize: 20,
     mines: 99,
   },
 };

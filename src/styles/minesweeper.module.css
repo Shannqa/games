@@ -133,11 +133,18 @@
 }
 
 .mine {
-  background-color: rgb(100, 0, 0);
+  background-color: #640000;
+  background-image: url(./bomb_24dp_000_FILL1_wght400_GRAD0_opsz24.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: inset rgb(67, 1, 1) 2px 2px 2px 0px;
 }
 
 .mark {
   background-color: #ffc107;
+  background-image: url(./personal_places_24dp_8B1A10_FILL1_wght400_GRAD0_opsz24.svg);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .red,
@@ -190,11 +197,11 @@
 }
 
 .intermediate {
-  grid-template-columns: repeat(16, 36px);
+  grid-template-columns: repeat(14, 36px);
 }
 
 .expert {
-  grid-template-columns: repeat(22, 36px);
+  grid-template-columns: repeat(20, 36px);
 }
 
 .gameWindow {

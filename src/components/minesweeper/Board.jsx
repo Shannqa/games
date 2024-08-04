@@ -66,8 +66,15 @@ function Board({ handleLoss, handleWin }) {
         // already clicked here OR it's a marked field, do nothing
         return;
       } else if (hiddenBoard[row][column] === 100) {
-        // clicked on a mine, game over
-        board[row][column] = "x";
+        // clicked on a mine, game over reveal all mines
+        for (let r = 0; r < boardSize; r++) {
+          for (let c = 0; c < boardSize; c++) {
+            if (hiddenBoard[r][c] === 100) {
+              board[r][c] = "x";
+            }
+          }
+        }
+        setPlayerBoard([...board]);
         handleLoss();
         console.log("mine");
       } else if (
@@ -146,7 +153,8 @@ function Board({ handleLoss, handleWin }) {
                   onClick={(e) => handleTileClick(e, rindex, cindex)}
                   onContextMenu={(e) => handleTileClick(e, rindex, cindex)}
                 >
-                  {hiddenBoard[rindex][cindex]}
+                  {hiddenBoard[rindex][cindex] !== 100 &&
+                    hiddenBoard[rindex][cindex]}
                 </div>
               ) : (
                 <div
