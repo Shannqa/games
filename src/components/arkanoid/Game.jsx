@@ -1,9 +1,30 @@
 import React, { useState } from "react";
 import Canvas from "./Canvas";
-
+import Modal from "./Modal";
 function Game() {
   const [collision, setCollision] = useState(false);
-  const [bricks, setBricks] = useState(() => buildBricks());
+  const [lives, setLives] = useState(3);
+  // stages: "ready", "playing", "loss", "win"
+  const [gameStage, setGameStage] = useState("ready");
+  // const [bricks, setBricks] = useState(() => buildBricks());
+
+  function start() {
+    setGameStage("playing");
+  }
+
+  function restart() {
+    setGameStage("ready");
+    setLives(3);
+  }
+
+  function loss() {
+    setGameStage("loss");
+  }
+
+  function win() {
+    setGameStage("win");
+  }
+
   const canvasW = 400;
   const canvasH = 300;
   let LEFT;
@@ -65,6 +86,7 @@ function Game() {
     }
     return bricks;
   }
+  let bricks = buildBricks();
 
   function drawBricks(ctx) {
     // blocks
@@ -100,8 +122,10 @@ function Game() {
     if (ball.y + ball.vy > canvasH - ball.radius) {
       // loss
       setCollision(true);
-      setBricks(() => buildBricks());
-      console.log("loss");
+      setLives(lives - 1);
+      if (lives < 1) {
+        loss();
+      }
     }
     if (ball.y + ball.vy < ball.radius) {
       ball.vy = -ball.vy;
@@ -155,7 +179,11 @@ function Game() {
     detectCollision(ball.x, ball.y);
   }
   return (
-    <Canvas draw={draw} collision={collision} setCollision={setCollision} />
+    <div>
+      <div>Lives: {lives}</div>
+      <Canvas draw={draw} collision={collision} setCollision={setCollision} />
+      <Modal stage={gameStage} restart={restart} />
+    </div>
   );
 }
 

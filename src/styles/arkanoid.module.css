@@ -1,0 +1,19 @@
+.modal {
+  position: absolute;
+  z-index: 10;
+  top: calc(50% - 50px);
+  left: calc(50% - 100px);
+  padding: 12px 18px;
+  background-color: #234e66;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  box-shadow: #0a2839 6px 7px 5px 0px, #051b25b8 0px 0px 6px 3px;
+}
+
+.win {
+}
+.loss {
+}
