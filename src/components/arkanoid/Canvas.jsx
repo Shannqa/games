@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 function Canvas(props) {
   const canvasRef = useRef(null);
-  const { draw, collision, ...rest } = props;
+  const { draw, collision, setCollision, ...rest } = props;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,6 +16,7 @@ function Canvas(props) {
       if (collision === true) {
         console.log("coll");
         window.cancelAnimationFrame(animationFrameId);
+        setCollision(false);
         return;
       } else {
         animationFrameId = window.requestAnimationFrame(render);

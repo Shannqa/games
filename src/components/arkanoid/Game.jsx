@@ -3,18 +3,19 @@ import Canvas from "./Canvas";
 
 function Game() {
   const [collision, setCollision] = useState(false);
+  const [bricks, setBricks] = useState(() => buildBricks());
   const canvasW = 400;
   const canvasH = 300;
   let LEFT;
   let RIGHT;
   document.onkeydown = function (e) {
-    if (e.keyCode === 37) LEFT = true;
-    if (e.keyCode === 39) RIGHT = true;
+    if (e.key === "Left" || e.key === "ArrowLeft") LEFT = true;
+    if (e.key === "Right" || e.key === "ArrowRight") RIGHT = true;
   };
 
   document.onkeyup = function (e) {
-    if (e.keyCode === 37) LEFT = false;
-    if (e.keyCode === 39) RIGHT = false;
+    if (e.key === "Left" || e.key === "ArrowLeft") LEFT = false;
+    if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
   };
 
   const ball = {
@@ -54,16 +55,42 @@ function Game() {
     },
   };
 
+  function buildBricks() {
+    const bricks = [];
+    for (let c = 0; c < 8; c++) {
+      bricks[c] = [];
+      for (let r = 0; r < 5; r++) {
+        bricks[c][r] = { x: 0 + c * 50, y: 0 + r * 20, painted: true };
+      }
+    }
+    return bricks;
+  }
+
+  function drawBricks(ctx) {
+    // blocks
+    for (let c = 0; c < 8; c++) {
+      for (let r = 0; r < 5; r++) {
+        // console.log(bricks);
+        if (bricks[c][r].painted === true) {
+          let xx = bricks[c][r].x;
+          let yy = bricks[c][r].y;
+          ctx.beginPath();
+          ctx.rect(xx, yy, 50, 20);
+          ctx.fillStyle = `rgb(${100 + c * 20}, ${10 + r * 30}, ${
+            200 - c * 10
+          })`;
+          ctx.fill();
+          ctx.stroke();
+          ctx.closePath();
+        }
+      }
+    }
+  }
+
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    // blocks
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 8; j++) {
-        ctx.fillStyle = `rgb(${100 + i * 30}, ${10 + j * 30}, ${20 + i * 15})`;
-        block.draw(ctx, i, j);
-      }
-    }
+    drawBricks(ctx);
 
     // ball
     ball.draw(ctx);
@@ -73,6 +100,7 @@ function Game() {
     if (ball.y + ball.vy > canvasH - ball.radius) {
       // loss
       setCollision(true);
+      setBricks(() => buildBricks());
       console.log("loss");
     }
     if (ball.y + ball.vy < ball.radius) {
@@ -87,10 +115,10 @@ function Game() {
 
     paddle.draw(ctx);
     // move paddle
-    if (RIGHT === true) {
+    if (RIGHT === true && paddle.x + paddle.w < canvasW) {
       paddle.x += paddle.vx;
     }
-    if (LEFT === true) {
+    if (LEFT === true && paddle.x > 0) {
       paddle.x -= paddle.vx;
     }
 
@@ -102,8 +130,33 @@ function Game() {
     ) {
       ball.vy = -ball.vy;
     }
+
+    function detectCollision(ballX, ballY) {
+      for (let c = 0; c < 8; c++) {
+        for (let r = 0; r < 5; r++) {
+          const brick = bricks[c][r];
+          if (
+            brick.painted === true &&
+            ballX > brick.x &&
+            ballX < brick.x + 50 &&
+            ballY > brick.y &&
+            ballY < brick.y + 20
+          ) {
+            let newBricks = [...bricks];
+            console.log(newBricks);
+            newBricks[c][r].painted = false;
+            console.log(newBricks[c][r]);
+            // setBricks([...newBricks]);
+            ball.vy = -ball.vy;
+          }
+        }
+      }
+    }
+    detectCollision(ball.x, ball.y);
   }
-  return <Canvas draw={draw} collision={collision} />;
+  return (
+    <Canvas draw={draw} collision={collision} setCollision={setCollision} />
+  );
 }
 
 export default Game;
