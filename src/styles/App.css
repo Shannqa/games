@@ -39,6 +39,7 @@ h2 {
   font-size: 2rem;
   margin-bottom: 6px;
 }
+
 a {
   color: black;
 }
@@ -114,4 +115,8 @@ a {
   width: 100%;
   margin: 8px;
   padding-bottom: 12px;
+}
+
+canvas {
+  border: 1px black solid;
 }

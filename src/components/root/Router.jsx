@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./Root";
 import Battleships from "../battleships/Battleships";
 import Minesweeper from "../minesweeper/Minesweeper";
+import Arkanoid from "../arkanoid/Arkanoid";
 import Home from "./Home";
 function Router() {
   const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function Router() {
         {
           path: "/minesweeper",
           element: <Minesweeper />,
+        },
+        {
+          path: "/arkanoid",
+          element: <Arkanoid />,
         },
       ],
     },

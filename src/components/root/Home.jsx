@@ -31,6 +31,9 @@ function Home() {
           <Link className="menu-link" to="/minesweeper">
             Minesweeper
           </Link>
+          <Link className="menu-link" to="/arkanoid">
+            Arkanoid
+          </Link>
         </div>
       </div>
     </div>
