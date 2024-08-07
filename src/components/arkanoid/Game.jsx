@@ -1,6 +1,7 @@
 import React, { useState, createContext } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
+import styles from "../../styles/arkanoid.module.css";
 
 
 export const ArkanoidContext = createContext({
@@ -18,35 +19,33 @@ function Game() {
   const [score, setScore] = useState(0);
   // stages: "ready", "playing", "loss", "win"
   const [gameStage, setGameStage] = useState("ready");
-  // const [bricks, setBricks] = useState(() => buildBricks());
 
-const settings = {
-  lives: 3,
-  ballSpeed: 1,
-  paddleSpeed: 1,
-  canvasW: 400,
-  canvasH: 300,
-  scoreWeight: 10,
-  specialBricksPercent: 10
-}
+  const settings = {
+    lives: 3,
+    canvasW: 800,
+    canvasH: 450,
+    scoreWeight: 10,
+    specialBricksPercent: 80
+  }
 
-const specialBricks = {
-  bigPaddle: "paddle size x2",
-  smallPaddle: "paddle size / 2",
-  twoBalls: "get another ball",
-  tripleBalls: "get three balls",
-  wormhole: "paddle can go through the wall and appear on the other side",
-  noDeath: "ball will bounce off the bottom of the canvas",
-  bigBall: "ball size x2",
-  smallBall: "ball size / 2",
-  gunMode: "you can shoot bricks",
-  stickyBall: "ball sticks to the paddle"
-}
-
-/*
-special brick - 10% of the time? 5?
-then, randomize which one
-*/
+  const canvasW = settings.canvasW;
+  const canvasH = settings.canvasH;
+  let LEFT;
+  let RIGHT;
+  let powerUpReleased = false;
+  let powerUpOn = false;
+  const specialBricks = {
+    bigPaddle: "paddle size x2",
+    smallPaddle: "paddle size / 2",
+    twoBalls: "get another ball",
+    tripleBalls: "get three balls",
+    wormhole: "paddle can go through the wall and appear on the other side",
+    noDeath: "ball will bounce off the bottom of the canvas",
+    bigBall: "ball size x2",
+    smallBall: "ball size / 2",
+    gunMode: "you can shoot bricks",
+    stickyBall: "ball sticks to the paddle"
+  }
 
   function start() {
     setGameStage("playing");
@@ -66,12 +65,6 @@ then, randomize which one
     setGameStage("win");
   }
 
-  const canvasW = 400;
-  const canvasH = 300;
-  let LEFT;
-  let RIGHT;
-  let powerUpReleased = false;
-  let powerUpOn = false;
   document.onkeydown = function (e) {
     if (e.key === "Left" || e.key === "ArrowLeft") LEFT = true;
     if (e.key === "Right" || e.key === "ArrowRight") RIGHT = true;
@@ -82,82 +75,97 @@ then, randomize which one
     if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
   };
 
-  const ball = {
-    x: canvasW / 2,
-    y: canvasH - 50,
-    vx: 1,
-    vy: -1,
-    radius: 5,
-    color: "blue",
-    draw(ctx) {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    },
-  };
-
   const paddle = {
-    x: canvasW / 2 - 30,
-    y: canvasH - 45,
-    w: 60,
-    h: 5,
+    x: settings.canvasW / 2 - 35,
+    y: settings.canvasH - 50,
+    w: 70,
+    h: 12,
     vx: 2,
     draw(ctx) {
-      ctx.fillRect(this.x, this.y, this.w, this.h);
+      ctx.beginPath();
+      ctx.strokeStyle = "#103549";
+      ctx.fillStyle = "#234e66";
+      ctx.rect(this.x, this.y, this.w, this.h);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
     },
   };
 
-  const block = {
-    x: 0,
-    y: 0,
-    w: 50,
-    h: 20,
-    draw(ctx, i, j) {
-      ctx.fillRect(this.x + j * this.w, this.y + i * this.h, this.w, this.h);
+  const ball = {
+    x: settings.canvasW / 2,
+    y: paddle.y - 8,
+    vx: 1.2,
+    vy: -1.2,
+    radius: 8,
+    draw(ctx) {
+      const radgrad = ctx.createRadialGradient(this.x, this.y, this.radius + 1, this.x, this.y, 1);
+      radgrad.addColorStop(0, "#dca85d");
+      radgrad.addColorStop(0.5, "#dca85d");
+      radgrad.addColorStop(0.9, "#f4d3a5");
+      radgrad.addColorStop(1, "#fee8c9");
+      ctx.beginPath();
+      ctx.fillStyle = radgrad;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+      ctx.fill();
+      ctx.closePath();
     },
   };
 
-  function buildBricks() {
-    const bricks = [];
-    for (let c = 0; c < 8; c++) {
-      bricks[c] = [];
-      for (let r = 0; r < 5; r++) {
-        bricks[c][r] = { x: 0 + c * 50, y: 0 + r * 20, painted: true };
-      }
-    }
-    return bricks;
-  }
-  let bricks = buildBricks();
-
-const powerUp = {
+  const powerUp = {
     x: 0,
     y: 0,
-    vy: 1,
-    w: 50,
+    vy: 0.9,
+    w: 80,
     h: 20,
     draw(ctx) {
-      ctx.fillRect(this.x, this.y, this.w, this.h);
+      const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.w, this.y + this.h);
+      gradient.addColorStop(0, "#2ea300");
+      gradient.addColorStop(0.5, "#6bb439");
+      gradient.addColorStop(1, "#2ea300");
+      ctx.beginPath();
+      ctx.strokeStyle = "#000"
+      ctx.fillStyle = gradient;
+      ctx.rect(this.x, this.y, this.w, this.h);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
     }
 }
 
+const brick = {
+  w: 80,
+  h: 20
+}
 
+function buildBricks() {
+  const bricks = [];
+  for (let c = 0; c < 10; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < 5; r++) {
+      bricks[c][r] = { x: 0 + c * brick.w, y: 0 + r * brick.h, painted: true };
+    }
+  }
+  return bricks;
+}
 
+let bricks = buildBricks();
 
   function drawBricks(ctx) {
-    // blocks
-    for (let c = 0; c < 8; c++) {
+    // bricks
+    for (let c = 0; c < 10; c++) {
       for (let r = 0; r < 5; r++) {
-        // console.log(bricks);
         if (bricks[c][r].painted === true) {
+          // brick is visible
           let xx = bricks[c][r].x;
           let yy = bricks[c][r].y;
           ctx.beginPath();
-          ctx.rect(xx, yy, 50, 20);
+          ctx.strokeStyle = "#000"
           ctx.fillStyle = `rgb(${100 + c * 20}, ${10 + r * 30}, ${
             200 - c * 10
           })`;
+          ctx.lineWidth = 2;
+          ctx.rect(xx, yy, brick.w, brick.h);
           ctx.fill();
           ctx.stroke();
           ctx.closePath();
@@ -169,6 +177,7 @@ const powerUp = {
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    // bricks
     drawBricks(ctx);
 
     // ball
@@ -176,8 +185,8 @@ const powerUp = {
     ball.x += ball.vx;
     ball.y += ball.vy;
 
-    if (ball.y + ball.vy > canvasH - ball.radius) {
-      // loss
+    if (ball.y + ball.vy > settings.canvasH - ball.radius) {
+      // bottom of canvas, loss
       setCollision(true);
       setLives(lives - 1);
       if (lives < 1) {
@@ -185,58 +194,66 @@ const powerUp = {
       }
     }
     if (ball.y + ball.vy < ball.radius) {
+      // top of canvas, reflect ball
       ball.vy = -ball.vy;
     }
     if (
-      ball.x + ball.vx > canvasW - ball.radius ||
+      ball.x + ball.vx > settings.canvasW - ball.radius ||
       ball.x + ball.vx < ball.radius
     ) {
+      // right and left of canvas, reflect ball
       ball.vx = -ball.vx;
     }
 
+    // paddle
     paddle.draw(ctx);
     // move paddle
-    if (RIGHT === true && paddle.x + paddle.w < canvasW) {
+    if (RIGHT === true && paddle.x + paddle.w < settings.canvasW) {
       paddle.x += paddle.vx;
     }
     if (LEFT === true && paddle.x > 0) {
       paddle.x -= paddle.vx;
     }
 
-    // collision ball - paddle
+    // bounce: ball - paddle
     if (
-      ball.y === paddle.y &&
-      ball.x > paddle.x &&
-      ball.x < paddle.x + paddle.w
+      // ball.y + ball.radius > paddle.y && // and maybe < paddle.y + paddle.h
+      // ball.x > paddle.x &&
+      // ball.x < paddle.x + paddle.w
+      ball.y + ball.radius > paddle.y &&
+      ball.y < paddle.y &&
+      ball.x + ball.radius > paddle.x &&
+      ball.x - ball.radius < paddle.x + paddle.w
     ) {
       ball.vy = -ball.vy;
     }
 
     
     function detectCollision(ballX, ballY) {
-      // collision - ball-brick
-      for (let c = 0; c < 8; c++) {
+      // collision - ball - brick
+      for (let c = 0; c < 10; c++) {
         for (let r = 0; r < 5; r++) {
-          const brick = bricks[c][r];
+          const br = bricks[c][r];
           if (
-            brick.painted === true &&
-            ballX > brick.x &&
-            ballX < brick.x + 50 &&
-            ballY > brick.y &&
-            ballY < brick.y + 20
+            br.painted === true &&
+            ballX + ball.radius > br.x &&
+            ballX - ball.radius < br.x + brick.w &&
+            ballY + ball.radius > br.y &&
+            ballY < br.y + brick.h // no radius
           ) {
+
             let newBricks = [...bricks];
             console.log(newBricks);
             newBricks[c][r].painted = false;
             console.log(newBricks[c][r]);
-            // setBricks([...newBricks]);
             
             // special bricks
             const isSpecialBrick = !powerUpReleased && Math.floor(Math.random() * 100) < settings.specialBricksPercent;
             if (isSpecialBrick) {
+              console.log("sp");
               powerUpReleased = true;
-              powerUp.x = brick.x;
-              powerUp.y = brick.y;
+              powerUp.x = br.x;
+              powerUp.y = br.y;
             }
             ball.vy = -ball.vy;
           }
@@ -252,13 +269,11 @@ const powerUp = {
       if (powerUp.y > canvasH) {
         // outside bottom canvas
         powerUpReleased = false;
-      } else if (
-        paddle.x < powerUp.x && paddle.x + paddle.w > paddle.x
-        //?
-        ) {
+      } else if (powerUp.x + powerUp.w > paddle.x && powerUp.x < paddle.x + paddle.w && powerUp.y + powerUp.h > paddle.y && powerUp.y > paddle.y) {
         // hit the paddle
         powerUpReleased = false;
         powerUpOn = true;
+        console.log("powerup");
       }
     }
   }
@@ -278,7 +293,7 @@ const powerUp = {
         <span>Lives: {lives}</span>
         <span>Score: {score}</span>
       </div>
-      <Canvas draw={draw} collision={collision} setCollision={setCollision} />
+      <Canvas draw={draw} collision={collision} setCollision={setCollision} width={settings.canvasW} height={settings.canvasH} />
       <Modal restart={restart} />
     </div>
     </ArkanoidContext.Provider>

@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 function Canvas(props) {
   const canvasRef = useRef(null);
-  const { draw, collision, setCollision, ...rest } = props;
+  const { draw, collision, setCollision, width, height, ...rest } = props;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,7 +30,7 @@ function Canvas(props) {
     };
   }, [draw, collision]);
 
-  return <canvas ref={canvasRef} width={400} height={300}></canvas>;
+  return <canvas ref={canvasRef} width={width} height={height}></canvas>;
 }
 
 export default Canvas;
