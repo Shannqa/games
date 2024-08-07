@@ -1,12 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
+
+
+export const ArkanoidContext = createContext({
+  gameStage: "",
+  setGameStage: () => {},
+  score: "",
+  setScore: () => {},
+  lives: "",
+  setLives: () => {}
+});
+
 function Game() {
   const [collision, setCollision] = useState(false);
   const [lives, setLives] = useState(3);
+  const [score, setScore] = useState(0);
   // stages: "ready", "playing", "loss", "win"
   const [gameStage, setGameStage] = useState("ready");
   // const [bricks, setBricks] = useState(() => buildBricks());
+
+const settings = {
+  lives: 3,
+  ballSpeed: 1,
+  paddleSpeed: 1,
+  canvasW: 400,
+  canvasH: 300,
+  scoreWeight: 10
+}
+
+const specialBricks = {
+  bigPaddle: "paddle size x2",
+  smallPaddle: "paddle size / 2",
+  twoBalls: "get another ball",
+  tripleBalls: "get three balls",
+  wormhole: "paddle can go through the wall and appear on the other side",
+  noDeath: "ball will bounce off the bottom of the canvas",
+  bigBall: "ball size x2",
+  smallBall: "ball size / 2",
+  gunMode: "you can shoot bricks",
+  stickyBall: "ball sticks to the paddle"
+}
 
   function start() {
     setGameStage("playing");
@@ -14,7 +48,8 @@ function Game() {
 
   function restart() {
     setGameStage("ready");
-    setLives(3);
+    setLives(settings.lives);
+    setScore(0);
   }
 
   function loss() {
@@ -179,11 +214,25 @@ function Game() {
     detectCollision(ball.x, ball.y);
   }
   return (
+    <ArkanoidContext.Provider
+      value={{
+      gameStage,
+      setGameStage,
+      score,
+      setScore,
+      lives,
+      setLives
+      }}
+    >
     <div>
-      <div>Lives: {lives}</div>
+      <div className={styles.menu}>
+        <span>Lives: {lives}</span>
+        <span>Score: {score}</span>
+      </div>
       <Canvas draw={draw} collision={collision} setCollision={setCollision} />
-      <Modal stage={gameStage} restart={restart} />
+      <Modal restart={restart} />
     </div>
+    </ArkanoidContext.Provider>
   );
 }
 
