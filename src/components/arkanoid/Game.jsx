@@ -26,7 +26,8 @@ const settings = {
   paddleSpeed: 1,
   canvasW: 400,
   canvasH: 300,
-  scoreWeight: 10
+  scoreWeight: 10,
+  specialBricksPercent: 10
 }
 
 const specialBricks = {
@@ -41,6 +42,11 @@ const specialBricks = {
   gunMode: "you can shoot bricks",
   stickyBall: "ball sticks to the paddle"
 }
+
+/*
+special brick - 10% of the time? 5?
+then, randomize which one
+*/
 
   function start() {
     setGameStage("playing");
@@ -64,6 +70,8 @@ const specialBricks = {
   const canvasH = 300;
   let LEFT;
   let RIGHT;
+  let powerUpReleased = false;
+  let powerUpOn = false;
   document.onkeydown = function (e) {
     if (e.key === "Left" || e.key === "ArrowLeft") LEFT = true;
     if (e.key === "Right" || e.key === "ArrowRight") RIGHT = true;
@@ -122,6 +130,20 @@ const specialBricks = {
     return bricks;
   }
   let bricks = buildBricks();
+
+const powerUp = {
+    x: 0,
+    y: 0,
+    vy: 1,
+    w: 50,
+    h: 20,
+    draw(ctx) {
+      ctx.fillRect(this.x, this.y, this.w, this.h);
+    }
+}
+
+
+
 
   function drawBricks(ctx) {
     // blocks
@@ -190,7 +212,9 @@ const specialBricks = {
       ball.vy = -ball.vy;
     }
 
+    
     function detectCollision(ballX, ballY) {
+      // collision - ball-brick
       for (let c = 0; c < 8; c++) {
         for (let r = 0; r < 5; r++) {
           const brick = bricks[c][r];
@@ -206,12 +230,37 @@ const specialBricks = {
             newBricks[c][r].painted = false;
             console.log(newBricks[c][r]);
             // setBricks([...newBricks]);
+            
+            // special bricks
+            const isSpecialBrick = !powerUpReleased && Math.floor(Math.random() * 100) < settings.specialBricksPercent;
+            if (isSpecialBrick) {
+              powerUpReleased = true;
+              powerUp.x = brick.x;
+              powerUp.y = brick.y;
+            }
             ball.vy = -ball.vy;
           }
         }
       }
     }
     detectCollision(ball.x, ball.y);
+    
+    if (powerUpReleased) {
+      powerUp.draw(ctx);
+      powerUp.y += powerUp.vy;
+      
+      if (powerUp.y > canvasH) {
+        // outside bottom canvas
+        powerUpReleased = false;
+      } else if (
+        paddle.x < powerUp.x && paddle.x + paddle.w > paddle.x
+        //?
+        ) {
+        // hit the paddle
+        powerUpReleased = false;
+        powerUpOn = true;
+      }
+    }
   }
   return (
     <ArkanoidContext.Provider
