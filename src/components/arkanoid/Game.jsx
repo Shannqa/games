@@ -3,14 +3,13 @@ import Canvas from "./Canvas";
 import Modal from "./Modal";
 import styles from "../../styles/arkanoid.module.css";
 
-
 export const ArkanoidContext = createContext({
   gameStage: "",
   setGameStage: () => {},
   score: "",
   setScore: () => {},
   lives: "",
-  setLives: () => {}
+  setLives: () => {},
 });
 
 function Game() {
@@ -25,8 +24,8 @@ function Game() {
     canvasW: 800,
     canvasH: 450,
     scoreWeight: 10,
-    specialBricksPercent: 80
-  }
+    specialBricksPercent: 80,
+  };
 
   const canvasW = settings.canvasW;
   const canvasH = settings.canvasH;
@@ -34,18 +33,39 @@ function Game() {
   let RIGHT;
   let powerUpReleased = false;
   let powerUpOn = false;
+  let powerUpKind = null;
+
   const specialBricks = {
-    bigPaddle: "paddle size x2",
-    smallPaddle: "paddle size / 2",
+    bigPaddle: {
+      desc: "paddle size x2",
+      color1: "#2ea300",
+      color2: "#6bb439",
+      run() {
+        paddle.w = paddle.w * 2;
+      },
+    },
+    smallPaddle: {
+      desc: "paddle size - 30%",
+      color1: "#850000",
+      color2: "#ac0404",
+      run() {
+        paddle.w = paddle * 0.7;
+      },
+    },
+    wormhole: {
+      desc: "paddle can go through the wall and appear on the other side",
+      color1: "#840075",
+      color2: "#a0008d",
+      run() {},
+    },
     twoBalls: "get another ball",
     tripleBalls: "get three balls",
-    wormhole: "paddle can go through the wall and appear on the other side",
     noDeath: "ball will bounce off the bottom of the canvas",
     bigBall: "ball size x2",
     smallBall: "ball size / 2",
     gunMode: "you can shoot bricks",
-    stickyBall: "ball sticks to the paddle"
-  }
+    stickyBall: "ball sticks to the paddle",
+  };
 
   function start() {
     setGameStage("playing");
@@ -80,7 +100,24 @@ function Game() {
     y: settings.canvasH - 50,
     w: 70,
     h: 12,
-    vx: 2,
+    vx: 3,
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.strokeStyle = "#103549";
+      ctx.fillStyle = "#234e66";
+      ctx.rect(this.x, this.y, this.w, this.h);
+      ctx.stroke();
+      ctx.fill();
+      ctx.closePath();
+    },
+  };
+
+  const paddle2 = {
+    x: 0,
+    y: paddle.y,
+    w: paddle.w,
+    h: paddle.h,
+    vx: paddle.vx,
     draw(ctx) {
       ctx.beginPath();
       ctx.strokeStyle = "#103549";
@@ -95,11 +132,18 @@ function Game() {
   const ball = {
     x: settings.canvasW / 2,
     y: paddle.y - 8,
-    vx: 1.2,
-    vy: -1.2,
+    vx: 1,
+    vy: -1,
     radius: 8,
     draw(ctx) {
-      const radgrad = ctx.createRadialGradient(this.x, this.y, this.radius + 1, this.x, this.y, 1);
+      const radgrad = ctx.createRadialGradient(
+        this.x,
+        this.y,
+        this.radius + 1,
+        this.x,
+        this.y,
+        1
+      );
       radgrad.addColorStop(0, "#dca85d");
       radgrad.addColorStop(0.5, "#dca85d");
       radgrad.addColorStop(0.9, "#f4d3a5");
@@ -118,38 +162,48 @@ function Game() {
     vy: 0.9,
     w: 80,
     h: 20,
-    draw(ctx) {
-      const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.w, this.y + this.h);
-      gradient.addColorStop(0, "#2ea300");
-      gradient.addColorStop(0.5, "#6bb439");
-      gradient.addColorStop(1, "#2ea300");
+    draw(ctx, kind) {
+      const gradient = ctx.createLinearGradient(
+        this.x,
+        this.y,
+        this.x + this.w,
+        this.y + this.h
+      );
+
+      gradient.addColorStop(0, kind.color1);
+      gradient.addColorStop(0.5, kind.color2);
+      gradient.addColorStop(1, kind.color1);
       ctx.beginPath();
-      ctx.strokeStyle = "#000"
+      ctx.strokeStyle = "#000";
       ctx.fillStyle = gradient;
       ctx.rect(this.x, this.y, this.w, this.h);
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
-    }
-}
+    },
+  };
 
-const brick = {
-  w: 80,
-  h: 20
-}
+  const brick = {
+    w: 80,
+    h: 20,
+  };
 
-function buildBricks() {
-  const bricks = [];
-  for (let c = 0; c < 10; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < 5; r++) {
-      bricks[c][r] = { x: 0 + c * brick.w, y: 0 + r * brick.h, painted: true };
+  function buildBricks() {
+    const bricks = [];
+    for (let c = 0; c < 10; c++) {
+      bricks[c] = [];
+      for (let r = 0; r < 5; r++) {
+        bricks[c][r] = {
+          x: 0 + c * brick.w,
+          y: 0 + r * brick.h,
+          painted: true,
+        };
+      }
     }
+    return bricks;
   }
-  return bricks;
-}
 
-let bricks = buildBricks();
+  let bricks = buildBricks();
 
   function drawBricks(ctx) {
     // bricks
@@ -160,7 +214,7 @@ let bricks = buildBricks();
           let xx = bricks[c][r].x;
           let yy = bricks[c][r].y;
           ctx.beginPath();
-          ctx.strokeStyle = "#000"
+          ctx.strokeStyle = "#000";
           ctx.fillStyle = `rgb(${100 + c * 20}, ${10 + r * 30}, ${
             200 - c * 10
           })`;
@@ -205,30 +259,63 @@ let bricks = buildBricks();
       ball.vx = -ball.vx;
     }
 
-    // paddle
+    // PADDLE
     paddle.draw(ctx);
-    // move paddle
-    if (RIGHT === true && paddle.x + paddle.w < settings.canvasW) {
-      paddle.x += paddle.vx;
-    }
-    if (LEFT === true && paddle.x > 0) {
-      paddle.x -= paddle.vx;
+
+    // PADDLE WORMHOLE
+    if (powerUpKind === "wormhole") {
+      // wormhole enabled
+      if (RIGHT === true) {
+        paddle.x += paddle.vx;
+      }
+      if (paddle.x + paddle.w > settings.canvasW) {
+        // paddle to the right of canvas boundary
+        let leftX = settings.canvasW - paddle.x;
+        paddle2.x = 0 - leftX;
+        paddle2.draw(ctx);
+      }
+      if (LEFT === true) {
+        paddle.x -= paddle.vx;
+        paddle2.x -= paddle2.vx;
+      }
+      if (paddle.x < 0) {
+        // paddle to the left of canvas boundary
+        let rightX = 0 - paddle.x;
+        paddle2.x = settings.canvasW - rightX;
+        paddle2.draw(ctx);
+      }
+    } else {
+      // paddle - normal moves
+      if (RIGHT === true && paddle.x + paddle.w < settings.canvasW) {
+        paddle.x += paddle.vx;
+      }
+      if (LEFT === true && paddle.x > 0) {
+        paddle.x -= paddle.vx;
+      }
     }
 
     // bounce: ball - paddle
+    // problem, at the left corner the ball doesnt bounce
     if (
-      // ball.y + ball.radius > paddle.y && // and maybe < paddle.y + paddle.h
-      // ball.x > paddle.x &&
-      // ball.x < paddle.x + paddle.w
-      ball.y + ball.radius > paddle.y &&
-      ball.y < paddle.y &&
-      ball.x + ball.radius > paddle.x &&
-      ball.x - ball.radius < paddle.x + paddle.w
+      ball.y + ball.radius >= paddle.y &&
+      ball.y + ball.radius <= paddle.y + paddle.h &&
+      // ball.y < paddle.y &&
+      ball.x + ball.radius >= paddle.x &&
+      ball.x - ball.radius <= paddle.x + paddle.w
     ) {
       ball.vy = -ball.vy;
     }
 
-    
+    // WORMHOLE, bounce ball vs paddle2
+    if (
+      ball.y + ball.radius >= paddle2.y &&
+      ball.y < paddle2.y &&
+      ball.x + ball.radius >= paddle2.x &&
+      ball.x - ball.radius <= paddle2.x + paddle2.w
+    ) {
+      ball.vy = -ball.vy;
+    }
+
     function detectCollision(ballX, ballY) {
       // collision - ball - brick
       for (let c = 0; c < 10; c++) {
@@ -241,17 +328,25 @@ let bricks = buildBricks();
             ballY + ball.radius > br.y &&
             ballY < br.y + brick.h // no radius
           ) {
-
             let newBricks = [...bricks];
             console.log(newBricks);
             newBricks[c][r].painted = false;
             console.log(newBricks[c][r]);
-            
+
             // special bricks
-            const isSpecialBrick = !powerUpReleased && Math.floor(Math.random() * 100) < settings.specialBricksPercent;
+            const isSpecialBrick =
+              !powerUpReleased &&
+              Math.floor(Math.random() * 100) < settings.specialBricksPercent;
             if (isSpecialBrick) {
               console.log("sp");
               powerUpReleased = true;
+
+              const keys = Object.keys(specialBricks);
+              const random = Math.floor(Math.random() * 3);
+              powerUpKind = specialBricks[keys[random]];
+
+              console.log(powerUpKind);
+
               powerUp.x = br.x;
               powerUp.y = br.y;
             }
@@ -261,18 +356,29 @@ let bricks = buildBricks();
       }
     }
     detectCollision(ball.x, ball.y);
-    
+
     if (powerUpReleased) {
-      powerUp.draw(ctx);
+      powerUp.draw(ctx, powerUpKind);
       powerUp.y += powerUp.vy;
-      
+
       if (powerUp.y > canvasH) {
         // outside bottom canvas
         powerUpReleased = false;
-      } else if (powerUp.x + powerUp.w > paddle.x && powerUp.x < paddle.x + paddle.w && powerUp.y + powerUp.h > paddle.y && powerUp.y > paddle.y) {
+      } else if (
+        (powerUp.x + powerUp.w > paddle.x &&
+          powerUp.x < paddle.x + paddle.w &&
+          powerUp.y + powerUp.h > paddle.y &&
+          powerUp.y > paddle.y) ||
+        // wormhole
+        (powerUp.x + powerUp.w > paddle2.x &&
+          powerUp.x < paddle2.x + paddle2.w &&
+          powerUp.y + powerUp.h > paddle2.y &&
+          powerUp.y > paddle2.y)
+      ) {
         // hit the paddle
         powerUpReleased = false;
         powerUpOn = true;
+        powerUpKind.run();
         console.log("powerup");
       }
     }
@@ -280,22 +386,28 @@ let bricks = buildBricks();
   return (
     <ArkanoidContext.Provider
       value={{
-      gameStage,
-      setGameStage,
-      score,
-      setScore,
-      lives,
-      setLives
+        gameStage,
+        setGameStage,
+        score,
+        setScore,
+        lives,
+        setLives,
       }}
     >
-    <div>
-      <div className={styles.menu}>
-        <span>Lives: {lives}</span>
-        <span>Score: {score}</span>
+      <div>
+        <div className={styles.menu}>
+          <span>Lives: {lives}</span>
+          <span>Score: {score}</span>
+        </div>
+        <Canvas
+          draw={draw}
+          collision={collision}
+          setCollision={setCollision}
+          width={settings.canvasW}
+          height={settings.canvasH}
+        />
+        <Modal restart={restart} />
       </div>
-      <Canvas draw={draw} collision={collision} setCollision={setCollision} width={settings.canvasW} height={settings.canvasH} />
-      <Modal restart={restart} />
-    </div>
     </ArkanoidContext.Provider>
   );
 }
