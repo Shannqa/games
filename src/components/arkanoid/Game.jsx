@@ -41,31 +41,36 @@ function Game() {
       color1: "#2ea300",
       color2: "#6bb439",
       run() {
-        paddle.w = paddle.w * 2;
+        paddle1.w = paddle1.w * 2;
+        setTimeout(() => specialBricks.bigPaddle.stop(), 5000);
       },
       stop() {
-        paddle.w = paddle.w / 2;
-      }
+        powerUpOn = false;
+        paddle1.w = paddle1.w / 2;
+      },
     },
     smallPaddle: {
       desc: "paddle size - 30%",
       color1: "#850000",
       color2: "#ac0404",
       run() {
-        paddle.w = paddle.w * 0.7;
-        
-        setTimeout(() => smallPaddle.stop(), 10000)
+        paddle1.w = paddle1.w * 0.7;
+        setTimeout(() => specialBricks.smallPaddle.stop(), 5000);
       },
       stop() {
-        paddle.w = paddle.w + paddle.w * 0.3;
-      }
+        paddle1.w = paddle1.w / 0.7;
+        powerUpOn = false;
+      },
     },
     wormhole: {
       desc: "paddle can go through the wall and appear on the other side",
       color1: "#840075",
       color2: "#a0008d",
-      run() {},
+      run() {
+        setTimeout(() => specialBricks.wormhole.stop(), 5000);
+      },
       stop() {
+        powerUpOn = false;
         if (!paddle1.active && paddle2.active) {
           // only second paddle active - make it the primary paddle
           paddle1.x = paddle2.x;
@@ -74,20 +79,68 @@ function Game() {
         } else if (paddle1.active && paddle2.active) {
           // both paddles active and on screen - remove 2nd, move 1st to be fully within canvas
           paddle2.active = false;
-          
+
           if (paddle1.x < 0) {
             paddle1.x = 0;
           } else if (paddle1.x + paddle1.w > settings.canvasW) {
-            paddle1.x = settings.canvasW - paddle1.w
+            paddle1.x = settings.canvasW - paddle1.w;
           }
         }
       },
     },
-    twoBalls: "get another ball",
+    twoBalls: {
+      desc: "get another ball",
+      color1: "#240d68",
+      color2: "#2c1081",
+      run() {
+        ball2.draw();
+        setTimeout(() => specialBricks.twoBalls.stop(), 5000);
+      },
+      stop() {
+        powerUpOn = false;
+      },
+    },
+    bigBall: {
+      desc: "ball size x2",
+      color1: "#0a515a",
+      color2: "#0d6470",
+      run() {
+        const balls = [ball1, ball2];
+        balls.forEach((ball) => {
+          ball.radius = ball.radius * 2;
+        });
+
+        setTimeout(() => specialBricks.bigBall.stop(), 5000);
+      },
+      stop() {
+        const balls = [ball1, ball2];
+        balls.forEach((ball) => {
+          ball.radius = ball.radius / 2;
+        });
+        powerUpOn = false;
+      },
+    },
+    smallBall: {
+      desc: "ball size / 2",
+      color1: "#9e4500",
+      color2: "#b34e01",
+      run() {
+        setTimeout(() => specialBricks.smallBall.stop(), 5000);
+        const balls = [ball1, ball2];
+        balls.forEach((ball) => {
+          ball.radius = ball.radius * 0.7;
+        });
+      },
+      stop() {
+        const balls = [ball1, ball2];
+        balls.forEach((ball) => {
+          ball.radius = ball.radius / 0.7;
+        });
+        powerUpOn = false;
+      },
+    },
     tripleBalls: "get three balls",
     noDeath: "ball will bounce off the bottom of the canvas",
-    bigBall: "ball size x2",
-    smallBall: "ball size / 2",
     gunMode: "you can shoot bricks",
     stickyBall: "ball sticks to the paddle",
   };
@@ -120,10 +173,10 @@ function Game() {
     if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
   };
 
-  const paddle = {
+  const paddle1 = {
     x: settings.canvasW / 2 - 35,
     y: settings.canvasH - 50,
-    w: 70,
+    w: 80,
     h: 12,
     vx: 3,
     draw(ctx) {
@@ -139,10 +192,10 @@ function Game() {
 
   const paddle2 = {
     x: 0,
-    y: paddle.y,
-    w: paddle.w,
-    h: paddle.h,
-    vx: paddle.vx,
+    y: paddle1.y,
+    w: paddle1.w,
+    h: paddle1.h,
+    vx: paddle1.vx,
     draw(ctx) {
       ctx.beginPath();
       ctx.strokeStyle = "#103549";
@@ -156,9 +209,9 @@ function Game() {
 
   const ball1 = {
     x: settings.canvasW / 2,
-    y: paddle.y - 8,
-    vx: 1,
-    vy: -1,
+    y: paddle1.y - 8,
+    vx: 1.2,
+    vy: -1.2,
     radius: 8,
     active: true,
     draw(ctx) {
@@ -181,15 +234,34 @@ function Game() {
       ctx.closePath();
     },
   };
-  
+
   const ball2 = {
     x: settings.canvasW / 2,
-    y: paddle.y - 8,
-    vx: -1,
-    vy: -1,
+    y: paddle1.y - 8,
+    vx: ball1.vx * -1,
+    vy: ball1.vy,
     radius: 8,
     active: false,
-  }
+    draw(ctx) {
+      const radgrad = ctx.createRadialGradient(
+        this.x,
+        this.y,
+        this.radius + 1,
+        this.x,
+        this.y,
+        1
+      );
+      radgrad.addColorStop(0, "#dca85d");
+      radgrad.addColorStop(0.5, "#dca85d");
+      radgrad.addColorStop(0.9, "#f4d3a5");
+      radgrad.addColorStop(1, "#fee8c9");
+      ctx.beginPath();
+      ctx.fillStyle = radgrad;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+      ctx.fill();
+      ctx.closePath();
+    },
+  };
 
   const powerUp = {
     x: 0,
@@ -262,13 +334,12 @@ function Game() {
       }
     }
   }
-  
-  
+
   function ballMoves() {
     // ball hiting edges of the canvas
     const balls = [ball1, ball2];
-    const paddles = [paddle1, paddle2]
-    
+    const paddles = [paddle1, paddle2];
+
     balls.forEach((ball) => {
       if (ball.y + ball.vy > settings.canvasH - ball.radius) {
         // bottom of canvas, loss of ball
@@ -281,7 +352,6 @@ function Game() {
             loss();
           }
         }
-        
       } else if (ball.y + ball.vy < ball.radius) {
         // top of canvas, reflect ball
         ball.vy = -ball.vy;
@@ -294,125 +364,112 @@ function Game() {
       }
     });
   }
-  
-  function paddleMoves() {
-        // PADDLE WORMHOLE
-    if (powerUpKind === "wormhole") {
+
+  function paddleMoves(ctx) {
+    // PADDLE WORMHOLE
+    if (powerUpKind === specialBricks.wormhole && powerUpOn) {
       // wormhole enabled
       if (RIGHT === true) {
-        paddle.x += paddle.vx;
+        paddle1.x += paddle1.vx;
       }
-      if (paddle.x + paddle.w > settings.canvasW) {
+      if (paddle1.x + paddle1.w > settings.canvasW) {
         // paddle to the right of canvas boundary
-        let leftX = settings.canvasW - paddle.x;
+        let leftX = settings.canvasW - paddle1.x;
         paddle2.x = 0 - leftX;
         paddle2.draw(ctx);
+        paddle2.active = true;
       }
       if (LEFT === true) {
-        paddle.x -= paddle.vx;
+        paddle1.x -= paddle1.vx;
         paddle2.x -= paddle2.vx;
       }
-      if (paddle.x < 0) {
+      if (paddle1.x < 0) {
         // paddle to the left of canvas boundary
-        let rightX = 0 - paddle.x;
+        let rightX = 0 - paddle1.x;
         paddle2.x = settings.canvasW - rightX;
         paddle2.draw(ctx);
+        paddle2.active = true;
       }
     } else {
       // paddle - normal moves
-      if (RIGHT === true && paddle.x + paddle.w < settings.canvasW) {
-        paddle.x += paddle.vx;
+      if (RIGHT === true && paddle1.x + paddle1.w < settings.canvasW) {
+        paddle1.x += paddle1.vx;
       }
-      if (LEFT === true && paddle.x > 0) {
-        paddle.x -= paddle.vx;
+      if (LEFT === true && paddle1.x > 0) {
+        paddle1.x -= paddle1.vx;
       }
     }
-
-    
-    
-    
   }
 
-  function draw(ctx, frameCount) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    // bricks
-    drawBricks(ctx);
-
-    // ball
-    ball.draw(ctx);
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-
-    ballMoves();
-    
-    // PADDLE
-    paddle.draw(ctx);
-    paddleMoves();
-
+  function paddleBall() {
     // bounce: ball - paddle
+    const balls = [ball1, ball2];
+    const paddles = [paddle1, paddle2];
+    balls.forEach((ball) => {
+      if (
+        ball.y + ball.radius >= paddle1.y &&
+        ball.y + ball.radius <= paddle1.y + paddle1.h &&
+        // ball.y < paddle.y &&
+        ball.x + ball.radius >= paddle1.x &&
+        ball.x - ball.radius <= paddle1.x + paddle1.w
+      ) {
+        ball.vy = -ball.vy;
+      }
+
+      // WORMHOLE, bounce ball vs paddle2
+      if (
+        ball.y + ball.radius >= paddle2.y &&
+        ball.y < paddle2.y &&
+        ball.x + ball.radius >= paddle2.x &&
+        ball.x - ball.radius <= paddle2.x + paddle2.w
+      ) {
+        ball.vy = -ball.vy;
+      }
+    });
     // problem, at the left corner the ball doesnt bounce
-    if (
-      ball.y + ball.radius >= paddle.y &&
-      ball.y + ball.radius <= paddle.y + paddle.h &&
-      // ball.y < paddle.y &&
-      ball.x + ball.radius >= paddle.x &&
-      ball.x - ball.radius <= paddle.x + paddle.w
-    ) {
-      ball.vy = -ball.vy;
-    }
+  }
 
-    // WORMHOLE, bounce ball vs paddle2
-    if (
-      ball.y + ball.radius >= paddle2.y &&
-      ball.y < paddle2.y &&
-      ball.x + ball.radius >= paddle2.x &&
-      ball.x - ball.radius <= paddle2.x + paddle2.w
-    ) {
-      ball.vy = -ball.vy;
-    }
+  function detectCollision(ball) {
+    // collision - ball - brick
+    for (let c = 0; c < 10; c++) {
+      for (let r = 0; r < 5; r++) {
+        const br = bricks[c][r];
+        if (
+          br.painted === true &&
+          ball.x + ball.radius > br.x &&
+          ball.x - ball.radius < br.x + brick.w &&
+          ball.y + ball.radius > br.y &&
+          ball.y < br.y + brick.h // no radius
+        ) {
+          let newBricks = [...bricks];
+          console.log(newBricks);
+          newBricks[c][r].painted = false;
+          console.log(newBricks[c][r]);
 
-    function detectCollision(ballX, ballY) {
-      // collision - ball - brick
-      for (let c = 0; c < 10; c++) {
-        for (let r = 0; r < 5; r++) {
-          const br = bricks[c][r];
-          if (
-            br.painted === true &&
-            ballX + ball.radius > br.x &&
-            ballX - ball.radius < br.x + brick.w &&
-            ballY + ball.radius > br.y &&
-            ballY < br.y + brick.h // no radius
-          ) {
-            let newBricks = [...bricks];
-            console.log(newBricks);
-            newBricks[c][r].painted = false;
-            console.log(newBricks[c][r]);
+          // special bricks
+          const isSpecialBrick =
+            !powerUpReleased &&
+            Math.floor(Math.random() * 100) < settings.specialBricksPercent;
+          if (isSpecialBrick) {
+            console.log("sp");
+            powerUpReleased = true;
 
-            // special bricks
-            const isSpecialBrick =
-              !powerUpReleased &&
-              Math.floor(Math.random() * 100) < settings.specialBricksPercent;
-            if (isSpecialBrick) {
-              console.log("sp");
-              powerUpReleased = true;
+            const keys = Object.keys(specialBricks);
+            const random = Math.floor(Math.random() * 3);
+            powerUpKind = specialBricks[keys[random]];
 
-              const keys = Object.keys(specialBricks);
-              const random = Math.floor(Math.random() * 3);
-              powerUpKind = specialBricks[keys[random]];
+            console.log(powerUpKind);
 
-              console.log(powerUpKind);
-
-              powerUp.x = br.x;
-              powerUp.y = br.y;
-            }
-            ball.vy = -ball.vy;
+            powerUp.x = br.x;
+            powerUp.y = br.y;
           }
+          ball.vy = -ball.vy;
         }
       }
     }
-    detectCollision(ball.x, ball.y);
+  }
 
+  function powerUpRelease(ctx) {
     if (powerUpReleased) {
       powerUp.draw(ctx, powerUpKind);
       powerUp.y += powerUp.vy;
@@ -421,10 +478,10 @@ function Game() {
         // outside bottom canvas
         powerUpReleased = false;
       } else if (
-        (powerUp.x + powerUp.w > paddle.x &&
-          powerUp.x < paddle.x + paddle.w &&
-          powerUp.y + powerUp.h > paddle.y &&
-          powerUp.y > paddle.y) ||
+        (powerUp.x + powerUp.w > paddle1.x &&
+          powerUp.x < paddle1.x + paddle1.w &&
+          powerUp.y + powerUp.h > paddle1.y &&
+          powerUp.y > paddle1.y) ||
         // wormhole
         (powerUp.x + powerUp.w > paddle2.x &&
           powerUp.x < paddle2.x + paddle2.w &&
@@ -438,6 +495,29 @@ function Game() {
         console.log("powerup");
       }
     }
+  }
+
+  function draw(ctx, frameCount) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    // bricks
+    drawBricks(ctx);
+
+    // ball
+    ball1.draw(ctx);
+    ball1.x += ball1.vx;
+    ball1.y += ball1.vy;
+
+    ballMoves();
+
+    // PADDLE
+    paddle1.draw(ctx);
+    paddleMoves(ctx);
+    paddleBall();
+
+    powerUpRelease(ctx);
+    detectCollision(ball1);
+    detectCollision(ball2);
   }
   return (
     <ArkanoidContext.Provider
