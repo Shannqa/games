@@ -43,20 +43,45 @@ function Game() {
       run() {
         paddle.w = paddle.w * 2;
       },
+      stop() {
+        paddle.w = paddle.w / 2;
+      }
     },
     smallPaddle: {
       desc: "paddle size - 30%",
       color1: "#850000",
       color2: "#ac0404",
       run() {
-        paddle.w = paddle * 0.7;
+        paddle.w = paddle.w * 0.7;
+        
+        setTimeout(() => smallPaddle.stop(), 10000)
       },
+      stop() {
+        paddle.w = paddle.w + paddle.w * 0.3;
+      }
     },
     wormhole: {
       desc: "paddle can go through the wall and appear on the other side",
       color1: "#840075",
       color2: "#a0008d",
       run() {},
+      stop() {
+        if (!paddle1.active && paddle2.active) {
+          // only second paddle active - make it the primary paddle
+          paddle1.x = paddle2.x;
+          paddle1.y = paddle2.y;
+          paddle2.active = false;
+        } else if (paddle1.active && paddle2.active) {
+          // both paddles active and on screen - remove 2nd, move 1st to be fully within canvas
+          paddle2.active = false;
+          
+          if (paddle1.x < 0) {
+            paddle1.x = 0;
+          } else if (paddle1.x + paddle1.w > settings.canvasW) {
+            paddle1.x = settings.canvasW - paddle1.w
+          }
+        }
+      },
     },
     twoBalls: "get another ball",
     tripleBalls: "get three balls",
@@ -129,12 +154,13 @@ function Game() {
     },
   };
 
-  const ball = {
+  const ball1 = {
     x: settings.canvasW / 2,
     y: paddle.y - 8,
     vx: 1,
     vy: -1,
     radius: 8,
+    active: true,
     draw(ctx) {
       const radgrad = ctx.createRadialGradient(
         this.x,
@@ -155,6 +181,15 @@ function Game() {
       ctx.closePath();
     },
   };
+  
+  const ball2 = {
+    x: settings.canvasW / 2,
+    y: paddle.y - 8,
+    vx: -1,
+    vy: -1,
+    radius: 8,
+    active: false,
+  }
 
   const powerUp = {
     x: 0,
@@ -227,42 +262,41 @@ function Game() {
       }
     }
   }
-
-  function draw(ctx, frameCount) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    // bricks
-    drawBricks(ctx);
-
-    // ball
-    ball.draw(ctx);
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-
-    if (ball.y + ball.vy > settings.canvasH - ball.radius) {
-      // bottom of canvas, loss
-      setCollision(true);
-      setLives(lives - 1);
-      if (lives < 1) {
-        loss();
+  
+  
+  function ballMoves() {
+    // ball hiting edges of the canvas
+    const balls = [ball1, ball2];
+    const paddles = [paddle1, paddle2]
+    
+    balls.forEach((ball) => {
+      if (ball.y + ball.vy > settings.canvasH - ball.radius) {
+        // bottom of canvas, loss of ball
+        ball.active = false;
+        if (!balls[0].active && !balls[1].active) {
+          // both balls fell down, loss of life
+          setCollision(true);
+          setLives(lives - 1);
+          if (lives < 1) {
+            loss();
+          }
+        }
+        
+      } else if (ball.y + ball.vy < ball.radius) {
+        // top of canvas, reflect ball
+        ball.vy = -ball.vy;
+      } else if (
+        ball.x + ball.vx > settings.canvasW - ball.radius ||
+        ball.x + ball.vx < ball.radius
+      ) {
+        // right and left of canvas, reflect ball
+        ball.vx = -ball.vx;
       }
-    }
-    if (ball.y + ball.vy < ball.radius) {
-      // top of canvas, reflect ball
-      ball.vy = -ball.vy;
-    }
-    if (
-      ball.x + ball.vx > settings.canvasW - ball.radius ||
-      ball.x + ball.vx < ball.radius
-    ) {
-      // right and left of canvas, reflect ball
-      ball.vx = -ball.vx;
-    }
-
-    // PADDLE
-    paddle.draw(ctx);
-
-    // PADDLE WORMHOLE
+    });
+  }
+  
+  function paddleMoves() {
+        // PADDLE WORMHOLE
     if (powerUpKind === "wormhole") {
       // wormhole enabled
       if (RIGHT === true) {
@@ -293,6 +327,28 @@ function Game() {
         paddle.x -= paddle.vx;
       }
     }
+
+    
+    
+    
+  }
+
+  function draw(ctx, frameCount) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    // bricks
+    drawBricks(ctx);
+
+    // ball
+    ball.draw(ctx);
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    ballMoves();
+    
+    // PADDLE
+    paddle.draw(ctx);
+    paddleMoves();
 
     // bounce: ball - paddle
     // problem, at the left corner the ball doesnt bounce
