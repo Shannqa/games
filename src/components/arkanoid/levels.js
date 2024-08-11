@@ -17,7 +17,7 @@ export function level1(brick) {
 
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
-      if (rId < 5) {
+      if (rId > 0 && rId < 6) {
         return {
           ...row,
           painted: true,

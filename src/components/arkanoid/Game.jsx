@@ -1,22 +1,16 @@
 import React, { useState, createContext, memo } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
-import Menu from "./Menu";
 import styles from "../../styles/arkanoid.module.css";
 import { base, level1, level2, level3 } from "./levels";
 export const ArkanoidContext = createContext({
-  score: "",
-  setScore: () => {},
   level: "",
   setLevel: () => {},
 });
 
 const Game = memo(function Game({setter}) {
   const [collision, setCollision] = useState(false);
-
-  const [score, setScore] = useState(0);
   // stages: "ready", "playing", "loss", "lifeLoss" "win"
-  // const [gameStage, setGameStage] = useState("ready");
   let gameStage = "ready";
   const [level, setLevel] = useState(1);
 
@@ -49,6 +43,18 @@ const Game = memo(function Game({setter}) {
   let powerUpReleased = false;
   let powerUpOn = false;
   let powerUpKind = null;
+  const livesScore = {
+    lives: 3,
+    score: 0,
+    level,
+    draw(ctx) {
+      ctx.font = "16px sans-serif";
+      ctx.fillStyle = "#000";
+      ctx.fillText(`Lives: ${this.lives}`, 5, 16);
+      const scoreSize = ctx.measureText(`Score: ${this.score}`)
+      ctx.fillText(`Score: ${this.score}`, settings.canvasW - scoreSize.width - 5, 16);
+    }
+  };
 
   const specialBricks = {
     bigPaddle: {
@@ -168,7 +174,6 @@ const Game = memo(function Game({setter}) {
   function restart() {
     setGameStage("ready");
     setLives(settings.lives);
-    setScore(0);
   }
 
   function lifeLoss() {
@@ -190,8 +195,7 @@ const Game = memo(function Game({setter}) {
     }
     powerUpOn = false;
     powerUpKind = null;
-    // setter();
-    // setLives(lives - 1);
+    livesScore.lives -= 1;
   }
 
   function gameLoss() {
@@ -344,22 +348,7 @@ const Game = memo(function Game({setter}) {
     h: 20,
   };
 
-  // function buildBricks() {
-  //   const bricks = [];
-  //   for (let c = 0; c < 11; c++) {
-  //     bricks[c] = [];
-  //     for (let r = 0; r < 5; r++) {
-  //       bricks[c][r] = {
-  //         x: 0 + c * brick.w,
-  //         y: 0 + r * brick.h,
-  //         painted: true,
-  //       };
-  //     }
-  //   }
-  //   return bricks;
-  // }
-
-  let bricks = level3(brick);
+  let bricks = level1(brick);
 
   function drawBricks(ctx) {
     // bricks
@@ -403,24 +392,13 @@ const Game = memo(function Game({setter}) {
 
     balls.forEach((ball) => {
       if (ball.y + ball.vy > settings.canvasH - ball.radius) {
-        // bottom of canvas, loss of ball
-        // ball.active = false;
-        // if (!balls[0].active && !balls[1].active) {
-        //   // both balls fell down, loss of life
-        //   // setCollision(true);
-        //   setLives(lives - 1);
-        //   if (lives < 1) {
-        //     gameLoss();
-        //     setCollision(true);
-        //   } else {
-        //     console.log("loss")
-        //     lifeLoss();
-        //   }
-        // }
-        // setGameStage("lifeLoss")
-        lifeLoss();
-
-        // ball.vy = -ball.vy;
+        // bottom of canvas, lose life
+        if (livesScore.lives < 1) {
+          gameLoss();
+        } else {
+          lifeLoss();
+        }
+       // ball.vy = -ball.vy;
       } else if (ball.y + ball.vy < ball.radius) {
         // top of canvas, reflect ball
         ball.vy = -ball.vy;
@@ -519,6 +497,7 @@ const Game = memo(function Game({setter}) {
           ball.y + ball.radius >= br.y &&
           ball.y - ball.radius <= br.y + brick.h
         ) {
+          livesScore.score += 10;
           let newBricks = [...bricks];
           console.log(newBricks);
           newBricks[c][r].painted = false;
@@ -567,6 +546,7 @@ const Game = memo(function Game({setter}) {
           powerUp.y > paddle2.y)
       ) {
         // hit the paddle
+        livesScore.score += 50;
         powerUpReleased = false;
         powerUpOn = true;
         powerUpKind.run();
@@ -577,7 +557,7 @@ const Game = memo(function Game({setter}) {
 
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+    livesScore.draw(ctx);
     // bricks
     drawBricks(ctx);
 
@@ -607,8 +587,6 @@ const Game = memo(function Game({setter}) {
   return (
     <ArkanoidContext.Provider
       value={{
-        score,
-        setScore,
         level,
         setLevel,
       }}
