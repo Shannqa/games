@@ -2,7 +2,7 @@ import React, { useState, createContext } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
 import styles from "../../styles/arkanoid.module.css";
-
+import { base, level1, level2, level3 } from "./levels";
 export const ArkanoidContext = createContext({
   gameStage: "",
   setGameStage: () => {},
@@ -10,6 +10,8 @@ export const ArkanoidContext = createContext({
   setScore: () => {},
   lives: "",
   setLives: () => {},
+  level: "",
+  setLevel: () => {},
 });
 
 function Game() {
@@ -18,11 +20,12 @@ function Game() {
   const [score, setScore] = useState(0);
   // stages: "ready", "playing", "loss", "win"
   const [gameStage, setGameStage] = useState("ready");
+  const [level, setLevel] = useState(1);
 
   const settings = {
     lives: 3,
-    canvasW: 800,
-    canvasH: 450,
+    canvasW: 792,
+    canvasH: 600,
     scoreWeight: 10,
     specialBricksPercent: 80,
   };
@@ -143,6 +146,7 @@ function Game() {
     noDeath: "ball will bounce off the bottom of the canvas",
     gunMode: "you can shoot bricks",
     stickyBall: "ball sticks to the paddle",
+    extraLife: "add an extra life",
   };
 
   function start() {
@@ -210,8 +214,8 @@ function Game() {
   const ball1 = {
     x: settings.canvasW / 2,
     y: paddle1.y - 8,
-    vx: 1.2,
-    vy: -1.2,
+    vx: 1.4,
+    vy: -1.4,
     radius: 8,
     active: true,
     draw(ctx) {
@@ -267,7 +271,7 @@ function Game() {
     x: 0,
     y: 0,
     vy: 0.9,
-    w: 80,
+    w: 72,
     h: 20,
     draw(ctx, kind) {
       const gradient = ctx.createLinearGradient(
@@ -291,31 +295,31 @@ function Game() {
   };
 
   const brick = {
-    w: 80,
+    w: 72,
     h: 20,
   };
 
-  function buildBricks() {
-    const bricks = [];
-    for (let c = 0; c < 10; c++) {
-      bricks[c] = [];
-      for (let r = 0; r < 5; r++) {
-        bricks[c][r] = {
-          x: 0 + c * brick.w,
-          y: 0 + r * brick.h,
-          painted: true,
-        };
-      }
-    }
-    return bricks;
-  }
+  // function buildBricks() {
+  //   const bricks = [];
+  //   for (let c = 0; c < 11; c++) {
+  //     bricks[c] = [];
+  //     for (let r = 0; r < 5; r++) {
+  //       bricks[c][r] = {
+  //         x: 0 + c * brick.w,
+  //         y: 0 + r * brick.h,
+  //         painted: true,
+  //       };
+  //     }
+  //   }
+  //   return bricks;
+  // }
 
-  let bricks = buildBricks();
+  let bricks = level3(brick);
 
   function drawBricks(ctx) {
     // bricks
-    for (let c = 0; c < 10; c++) {
-      for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 11; c++) {
+      for (let r = 0; r < 11; r++) {
         if (bricks[c][r].painted === true) {
           // brick is visible
           let xx = bricks[c][r].x;
@@ -325,6 +329,18 @@ function Game() {
           ctx.fillStyle = `rgb(${100 + c * 20}, ${10 + r * 30}, ${
             200 - c * 10
           })`;
+          ctx.lineWidth = 2;
+          ctx.rect(xx, yy, brick.w, brick.h);
+          ctx.fill();
+          ctx.stroke();
+          ctx.closePath();
+        } else if (bricks[c][r].painted === "solid") {
+          // brick is solid
+          let xx = bricks[c][r].x;
+          let yy = bricks[c][r].y;
+          ctx.beginPath();
+          ctx.strokeStyle = "#000";
+          ctx.fillStyle = "grey";
           ctx.lineWidth = 2;
           ctx.rect(xx, yy, brick.w, brick.h);
           ctx.fill();
@@ -429,17 +445,26 @@ function Game() {
     // problem, at the left corner the ball doesnt bounce
   }
 
-  function detectCollision(ball) {
+  function ballBricks(ball) {
     // collision - ball - brick
-    for (let c = 0; c < 10; c++) {
-      for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 11; c++) {
+      for (let r = 0; r < 11; r++) {
         const br = bricks[c][r];
         if (
+          br.painted === "solid" &&
+          ball.x + ball.radius >= br.x &&
+          ball.x - ball.radius <= br.x + brick.w &&
+          ball.y + ball.radius >= br.y &&
+          ball.y - ball.radius <= br.y + brick.h
+        ) {
+          // solid brick, reflect ball
+          ball.vy = -ball.vy;
+        } else if (
           br.painted === true &&
-          ball.x + ball.radius > br.x &&
-          ball.x - ball.radius < br.x + brick.w &&
-          ball.y + ball.radius > br.y &&
-          ball.y < br.y + brick.h // no radius
+          ball.x + ball.radius >= br.x &&
+          ball.x - ball.radius <= br.x + brick.w &&
+          ball.y + ball.radius >= br.y &&
+          ball.y - ball.radius <= br.y + brick.h
         ) {
           let newBricks = [...bricks];
           console.log(newBricks);
@@ -516,8 +541,8 @@ function Game() {
     paddleBall();
 
     powerUpRelease(ctx);
-    detectCollision(ball1);
-    detectCollision(ball2);
+    ballBricks(ball1);
+    ballBricks(ball2);
   }
   return (
     <ArkanoidContext.Provider
@@ -528,13 +553,16 @@ function Game() {
         setScore,
         lives,
         setLives,
+        level,
+        setLevel,
       }}
     >
-      <div>
+      <div className={styles.gameWindow}>
         <div className={styles.menu}>
           <span>Lives: {lives}</span>
           <span>Score: {score}</span>
         </div>
+
         <Canvas
           draw={draw}
           collision={collision}

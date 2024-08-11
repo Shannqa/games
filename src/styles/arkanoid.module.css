@@ -22,3 +22,9 @@
   display: flex;
   justify-content: space-between;
 }
+
+.gameWindow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
