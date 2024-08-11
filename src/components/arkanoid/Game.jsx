@@ -1,25 +1,23 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, memo } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
+import Menu from "./Menu";
 import styles from "../../styles/arkanoid.module.css";
 import { base, level1, level2, level3 } from "./levels";
 export const ArkanoidContext = createContext({
-  gameStage: "",
-  setGameStage: () => {},
   score: "",
   setScore: () => {},
-  lives: "",
-  setLives: () => {},
   level: "",
   setLevel: () => {},
 });
 
-function Game() {
+const Game = memo(function Game({setter}) {
   const [collision, setCollision] = useState(false);
-  const [lives, setLives] = useState(3);
+
   const [score, setScore] = useState(0);
-  // stages: "ready", "playing", "loss", "win"
-  const [gameStage, setGameStage] = useState("ready");
+  // stages: "ready", "playing", "loss", "lifeLoss" "win"
+  // const [gameStage, setGameStage] = useState("ready");
+  let gameStage = "ready";
   const [level, setLevel] = useState(1);
 
   const settings = {
@@ -28,9 +26,23 @@ function Game() {
     canvasH: 600,
     scoreWeight: 10,
     specialBricksPercent: 80,
+    ball: {
+      x: 792 / 2,
+      y: 600 - 58,
+      vx: 1.4,
+      vy: -1.4,
+      radius: 8,
+      active: true,
+    },
+    paddle: {
+      x: 792 / 2 - 40,
+      y: 600 - 50,
+      w: 80,
+      h: 12,
+      vx: 3,
+    }
   };
 
-  const canvasW = settings.canvasW;
   const canvasH = settings.canvasH;
   let LEFT;
   let RIGHT;
@@ -159,8 +171,31 @@ function Game() {
     setScore(0);
   }
 
-  function loss() {
-    setGameStage("loss");
+  function lifeLoss() {
+    gameStage = "lifeLoss";
+    console.log(gameStage);
+    ball1.x = settings.ball.x;
+    ball1.y = settings.ball.y;
+    ball1.vx = settings.ball.vx,
+    ball1.vy = settings.ball.vy,
+    ball1.radius = settings.ball.radius;
+    paddle1.x = settings.paddle.x;
+    paddle1.y = settings.paddle.y;
+    paddle1.vx = settings.paddle.vx;
+    paddle1.w = settings.paddle.w;
+
+    powerUpReleased = false;
+    if (powerUpKind && powerUpOn) {
+      powerUpKind.stop()
+    }
+    powerUpOn = false;
+    powerUpKind = null;
+    // setter();
+    // setLives(lives - 1);
+  }
+
+  function gameLoss() {
+    setGameStage("gameLoss");
   }
 
   function win() {
@@ -168,8 +203,18 @@ function Game() {
   }
 
   document.onkeydown = function (e) {
-    if (e.key === "Left" || e.key === "ArrowLeft") LEFT = true;
-    if (e.key === "Right" || e.key === "ArrowRight") RIGHT = true;
+    if (e.key === "Left" || e.key === "ArrowLeft") {
+      if (gameStage == "lifeLoss") {
+        gameStage = "playing"
+      }
+      LEFT = true;
+    } 
+    if (e.key === "Right" || e.key === "ArrowRight")  {
+      if (gameStage == "lifeLoss") {
+        gameStage = "playing"
+      }
+      RIGHT = true;
+    } 
   };
 
   document.onkeyup = function (e) {
@@ -178,11 +223,11 @@ function Game() {
   };
 
   const paddle1 = {
-    x: settings.canvasW / 2 - 35,
-    y: settings.canvasH - 50,
-    w: 80,
-    h: 12,
-    vx: 3,
+    x: settings.paddle.x,
+    y: settings.paddle.y,
+    w: settings.paddle.w,
+    h: settings.paddle.h,
+    vx: settings.paddle.vx,
     draw(ctx) {
       ctx.beginPath();
       ctx.strokeStyle = "#103549";
@@ -212,11 +257,11 @@ function Game() {
   };
 
   const ball1 = {
-    x: settings.canvasW / 2,
-    y: paddle1.y - 8,
-    vx: 1.4,
-    vy: -1.4,
-    radius: 8,
+    x: settings.ball.x,
+    y: settings.ball.y,
+    vx: settings.ball.vx,
+    vy: settings.ball.vy,
+    radius: settings.ball.radius,
     active: true,
     draw(ctx) {
       const radgrad = ctx.createRadialGradient(
@@ -240,11 +285,11 @@ function Game() {
   };
 
   const ball2 = {
-    x: settings.canvasW / 2,
-    y: paddle1.y - 8,
-    vx: ball1.vx * -1,
-    vy: ball1.vy,
-    radius: 8,
+    x: settings.ball.x,
+    y: settings.ball.y,
+    vx: settings.ball.vx,
+    vy: settings.ball.vy,
+    radius: settings.ball.radius,
     active: false,
     draw(ctx) {
       const radgrad = ctx.createRadialGradient(
@@ -359,15 +404,23 @@ function Game() {
     balls.forEach((ball) => {
       if (ball.y + ball.vy > settings.canvasH - ball.radius) {
         // bottom of canvas, loss of ball
-        ball.active = false;
-        if (!balls[0].active && !balls[1].active) {
-          // both balls fell down, loss of life
-          setCollision(true);
-          setLives(lives - 1);
-          if (lives < 1) {
-            loss();
-          }
-        }
+        // ball.active = false;
+        // if (!balls[0].active && !balls[1].active) {
+        //   // both balls fell down, loss of life
+        //   // setCollision(true);
+        //   setLives(lives - 1);
+        //   if (lives < 1) {
+        //     gameLoss();
+        //     setCollision(true);
+        //   } else {
+        //     console.log("loss")
+        //     lifeLoss();
+        //   }
+        // }
+        // setGameStage("lifeLoss")
+        lifeLoss();
+
+        // ball.vy = -ball.vy;
       } else if (ball.y + ball.vy < ball.radius) {
         // top of canvas, reflect ball
         ball.vy = -ball.vy;
@@ -530,10 +583,17 @@ function Game() {
 
     // ball
     ball1.draw(ctx);
-    ball1.x += ball1.vx;
-    ball1.y += ball1.vy;
 
-    ballMoves();
+    if (gameStage == "lifeLoss") {
+      // ball1.x = ball1.x;
+      // ball1.y = ball1.y;
+    } else {
+      ball1.x += ball1.vx;
+      ball1.y += ball1.vy;
+      ballMoves();
+    }
+
+
 
     // PADDLE
     paddle1.draw(ctx);
@@ -547,22 +607,14 @@ function Game() {
   return (
     <ArkanoidContext.Provider
       value={{
-        gameStage,
-        setGameStage,
         score,
         setScore,
-        lives,
-        setLives,
         level,
         setLevel,
       }}
     >
       <div className={styles.gameWindow}>
-        <div className={styles.menu}>
-          <span>Lives: {lives}</span>
-          <span>Score: {score}</span>
-        </div>
-
+        {/* <Menu lives={lives} score={score}/> */}
         <Canvas
           draw={draw}
           collision={collision}
@@ -574,6 +626,6 @@ function Game() {
       </div>
     </ArkanoidContext.Provider>
   );
-}
+});
 
 export default Game;

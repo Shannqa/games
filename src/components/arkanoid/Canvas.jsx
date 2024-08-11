@@ -16,7 +16,7 @@ function Canvas(props) {
       if (collision === true) {
         console.log("coll");
         window.cancelAnimationFrame(animationFrameId);
-        setCollision(false);
+        // setCollision(false);
         return;
       } else {
         animationFrameId = window.requestAnimationFrame(render);
