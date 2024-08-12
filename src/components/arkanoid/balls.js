@@ -1,16 +1,16 @@
 import { settings } from "./settings";
 import { livesScore } from "./score";
-import { paddles } from "./paddles";
+import { paddles, defaultPaddle } from "./paddles";
 import { brick } from "./bricks";
 import { powerUp, specialBricks } from "./powerups";
 import { lifeLoss, gameLoss } from "./stages";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
-  y: settings.canvasH - 58,
-  vx: 1.2,
-  vy: -1.2,
-  radius: 8,
+  y: settings.canvasH - 100,
+  vx: 1.8,
+  vy: -1.8,
+  radius: 10,
   active: true,
 };
 
@@ -69,11 +69,15 @@ export function moveBall() {
   // ball hiting edges of the canvas
   balls.forEach((ball) => {
     if (ball.y + ball.vy > settings.canvasH - ball.radius) {
-      // bottom of canvas, lose life
-      if (livesScore.lives < 1) {
-        gameLoss();
-      } else {
-        lifeLoss();
+      // bottom of canvas
+      ball.active = false;
+      if (!balls[0].active && !balls[1].active) {
+        // all balls are inactive, lose a life and/or game
+        if (livesScore.lives < 1) {
+          gameLoss();
+        } else {
+          lifeLoss();
+        }
       }
     } else if (ball.y + ball.vy < ball.radius) {
       // top of canvas, reflect ball
@@ -150,7 +154,7 @@ export function hitBallBrick(ball, bricks) {
           powerUp.released = true;
 
           const keys = Object.keys(specialBricks);
-          const random = Math.floor(Math.random() * 3);
+          const random = Math.floor(Math.random() * 6);
           powerUp.kind = specialBricks[keys[random]];
 
           console.log(powerUp.kind);

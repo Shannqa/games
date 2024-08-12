@@ -1,6 +1,10 @@
 import { paddles, defaultPaddle } from "./paddles.js";
+import { balls, defaultBall } from "./balls.js";
 import { settings } from "./settings.js";
 import { livesScore } from "./score.js";
+
+// bug: after changing size, later ball doesnt bounce properly from the paddle
+
 export const powerUpDefault = {
   x: 0,
   y: 0,
@@ -46,8 +50,9 @@ export const specialBricks = {
     color1: "#2ea300",
     color2: "#6bb439",
     run() {
-      paddles[0].w = paddles[0].w * 2;
-      setTimeout(() => specialBricks.bigPaddle.stop(), 5000);
+      paddles[0].w = paddles[0].w * 1.5;
+      console.log("big");
+      setTimeout(() => specialBricks.bigPaddle.stop(), 10000);
     },
     stop() {
       powerUp.on = false;
@@ -60,7 +65,8 @@ export const specialBricks = {
     color2: "#ac0404",
     run() {
       paddles[0].w = paddles[0].w * 0.7;
-      setTimeout(() => specialBricks.smallPaddle.stop(), 5000);
+      console.log("small");
+      setTimeout(() => specialBricks.smallPaddle.stop(), 10000);
     },
     stop() {
       paddles[0].w = defaultPaddle.w;
@@ -72,14 +78,14 @@ export const specialBricks = {
     color1: "#840075",
     color2: "#a0008d",
     run() {
-      setTimeout(() => specialBricks.wormhole.stop(), 5000);
+      setTimeout(() => specialBricks.wormhole.stop(), 10000);
     },
     stop() {
       powerUp.on = false;
-      if (!paddle1.active && paddle2.active) {
+      if (!paddles[0].active && paddles[1].active) {
         // only second paddle active - make it the primary paddle
         paddles[0].x = paddles[1].x;
-        paddle[0].y = paddles[1].y;
+        paddles[0].y = paddles[1].y;
         paddles[1].active = false;
       } else if (paddles[0].active && paddles[1].active) {
         // both paddles active and on screen - remove 2nd, move 1st to be fully within canvas
@@ -98,8 +104,10 @@ export const specialBricks = {
     color1: "#240d68",
     color2: "#2c1081",
     run() {
-      balls[1].draw();
-      setTimeout(() => specialBricks.twoBalls.stop(), 5000);
+      balls[1].active = true;
+      balls[1].x = paddles[0].x + paddles[0].w / 2;
+      balls[1].y = settings.canvasH - 100;
+      setTimeout(() => specialBricks.twoBalls.stop(), 10000);
     },
     stop() {
       powerUp.on = false;
@@ -111,10 +119,9 @@ export const specialBricks = {
     color2: "#0d6470",
     run() {
       balls.forEach((ball) => {
-        ball.radius = ball.radius * 2;
+        ball.radius = ball.radius * 1.8;
       });
-
-      setTimeout(() => specialBricks.bigBall.stop(), 5000);
+      setTimeout(() => specialBricks.bigBall.stop(), 10000);
     },
     stop() {
       balls.forEach((ball) => {
@@ -128,13 +135,12 @@ export const specialBricks = {
     color1: "#9e4500",
     color2: "#b34e01",
     run() {
-      setTimeout(() => specialBricks.smallBall.stop(), 5000);
+      setTimeout(() => specialBricks.smallBall.stop(), 10000);
       balls.forEach((ball) => {
         ball.radius = ball.radius * 0.7;
       });
     },
     stop() {
-      const balls = [ball1, ball2];
       balls.forEach((ball) => {
         ball.radius = defaultBall.radius;
       });

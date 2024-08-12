@@ -69,14 +69,17 @@ function Game() {
     drawBall(ctx, balls[0]);
 
     if (
-      gameStage == "lifeLoss" ||
-      gameStage == undefined ||
-      gameStage == "ready"
+      gameStage != "lifeLoss" ||
+      gameStage != undefined ||
+      gameStage != "ready"
     ) {
-      // don't move the ball
-    } else {
       balls[0].x += balls[0].vx;
       balls[0].y += balls[0].vy;
+      if (balls[1].active) {
+        drawBall(ctx, balls[1]);
+        balls[1].x += balls[1].vx;
+        balls[1].y += balls[1].vy;
+      }
       moveBall();
     }
 

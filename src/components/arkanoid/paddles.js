@@ -4,10 +4,10 @@ import { LEFT, RIGHT } from "./Game.jsx";
 import { gameStage } from "./stages.js";
 
 export const defaultPaddle = {
-  x: settings.canvasW / 2 - 40,
-  y: settings.canvasH - 50,
-  w: 80,
-  h: 12,
+  x: settings.canvasW / 2 - 45,
+  y: settings.canvasH - 90,
+  w: 90,
+  h: 14,
   vx: 3,
 };
 
@@ -43,15 +43,7 @@ export function resetPaddle() {
 }
 
 export function movePaddle(ctx, paddles) {
-  if (powerUp.kind !== "wormhole" && !powerUp.on) {
-    // normal paddle moves
-    if (RIGHT === true && paddles[0].x + paddles[0].w < settings.canvasW) {
-      paddles[0].x += paddles[0].vx;
-    }
-    if (LEFT === true && paddles[0].x > 0) {
-      paddles[0].x -= paddles[0].vx;
-    }
-  } else if (powerUp.kind === "wormhole" && powerUp.on) {
+  if (powerUp.kind === "wormhole" && powerUp.on) {
     // wormhole enabled
     if (RIGHT === true) {
       paddles[0].x += paddles[0].vx;
@@ -73,6 +65,14 @@ export function movePaddle(ctx, paddles) {
       paddles[1].x = settings.canvasW - rightX;
       drawPaddle(ctx, paddles[1]);
       paddles[1].active = true;
+    }
+  } else {
+    // normal paddle moves
+    if (RIGHT === true && paddles[0].x + paddles[0].w < settings.canvasW) {
+      paddles[0].x += paddles[0].vx;
+    }
+    if (LEFT === true && paddles[0].x > 0) {
+      paddles[0].x -= paddles[0].vx;
     }
   }
 }
