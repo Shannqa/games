@@ -1,44 +1,52 @@
-const defaultBall = {
-  x: 10,
-  y: 20,
-  vx: 3,
-  vy: 4,
-  radius: 5,
+import { settings } from "./settings";
+import { livesScore } from "./score";
+import { paddles } from "./paddles";
+import { brick } from "./bricks";
+import { powerUp, specialBricks } from "./powerups";
+import { lifeLoss, gameLoss } from "./stages";
+
+export const defaultBall = {
+  x: settings.canvasW / 2,
+  y: settings.canvasH - 58,
+  vx: 1.2,
+  vy: -1.2,
+  radius: 8,
   active: true,
-}
+};
 
-const balls = [{
-    x: ballInfo.x,
-    y: ballInfo.y,
-    vx: ballInfo.vx,
-    vy: ballInfo.vy,
-    radius: ballInfo.radius,
+export const balls = [
+  {
+    x: defaultBall.x,
+    y: defaultBall.y,
+    vx: defaultBall.vx,
+    vy: defaultBall.vy,
+    radius: defaultBall.radius,
   },
   {
-    x: ballInfo.x + 20,
-    y: ballInfo.y + 20,
-    vx: ballInfo.vx,
-    vy: ballInfo.vy,
-    radius: ballInfo.radius,
+    x: defaultBall.x + 20,
+    y: defaultBall.y + 20,
+    vx: defaultBall.vx,
+    vy: defaultBall.vy,
+    radius: defaultBall.radius,
   },
   {
-    x: ballInfo.x + 40,
-    y: ballInfo.y + 0,
-    vx: ballInfo.vx,
-    vy: ballInfo.vy,
-    radius: ballInfo.radius,
-  }
-]
+    x: defaultBall.x + 40,
+    y: defaultBall.y + 0,
+    vx: defaultBall.vx,
+    vy: defaultBall.vy,
+    radius: defaultBall.radius,
+  },
+];
 
-function drawBall(ctx, ball) {
+export function drawBall(ctx, ball) {
   const radgrad = ctx.createRadialGradient(
-      ball.x,
-      ball.y,
-      ball.radius + 1,
-      ball.x,
-      ball.y,
-      1
-    );
+    ball.x,
+    ball.y,
+    ball.radius + 1,
+    ball.x,
+    ball.y,
+    1
+  );
   radgrad.addColorStop(0, "#dca85d");
   radgrad.addColorStop(0.5, "#dca85d");
   radgrad.addColorStop(0.9, "#f4d3a5");
@@ -50,11 +58,14 @@ function drawBall(ctx, ball) {
   ctx.closePath();
 }
 
-function resetBall(ball) {
-  ball = {...defaultBall};
+export function resetBall() {
+  balls[0].x = defaultBall.x;
+  balls[0].y = defaultBall.y;
+  balls[0].vx = defaultBall.vx;
+  balls[0].vy = defaultBall.vy;
 }
 
-function moveBall() {
+export function moveBall() {
   // ball hiting edges of the canvas
   balls.forEach((ball) => {
     if (ball.y + ball.vy > settings.canvasH - ball.radius) {
@@ -74,5 +85,81 @@ function moveBall() {
       // right and left of canvas, reflect ball
       ball.vx = -ball.vx;
     }
-    });
+  });
+}
+
+export function hitBallPaddle() {
+  // bounce: ball - paddle
+  balls.forEach((ball) => {
+    if (
+      ball.y + ball.radius >= paddles[0].y &&
+      ball.y + ball.radius <= paddles[0].y + paddles[0].h &&
+      // ball.y < paddle.y &&
+      ball.x + ball.radius >= paddles[0].x &&
+      ball.x - ball.radius <= paddles[0].x + paddles[0].w
+    ) {
+      ball.vy = -ball.vy;
+    }
+
+    // WORMHOLE, bounce ball vs paddle2
+    if (
+      ball.y + ball.radius >= paddles[1].y &&
+      ball.y < paddles[1].y &&
+      ball.x + ball.radius >= paddles[1].x &&
+      ball.x - ball.radius <= paddles[1].x + paddles[1].w
+    ) {
+      ball.vy = -ball.vy;
+    }
+  });
+  // problem, at the left corner the ball doesnt bounce
+}
+
+export function hitBallBrick(ball, bricks) {
+  // collision - ball - brick
+  for (let c = 0; c < 11; c++) {
+    for (let r = 0; r < 11; r++) {
+      const br = bricks[c][r];
+      if (
+        br.painted === "solid" &&
+        ball.x + ball.radius >= br.x &&
+        ball.x - ball.radius <= br.x + brick.w &&
+        ball.y + ball.radius >= br.y &&
+        ball.y - ball.radius <= br.y + brick.h
+      ) {
+        // solid brick, reflect ball
+        ball.vy = -ball.vy;
+      } else if (
+        br.painted === true &&
+        ball.x + ball.radius >= br.x &&
+        ball.x - ball.radius <= br.x + brick.w &&
+        ball.y + ball.radius >= br.y &&
+        ball.y - ball.radius <= br.y + brick.h
+      ) {
+        livesScore.score += 10;
+        let newBricks = [...bricks];
+        console.log(newBricks);
+        newBricks[c][r].painted = false;
+        console.log(newBricks[c][r]);
+
+        // special bricks
+        const isSpecialBrick =
+          !powerUp.released &&
+          Math.floor(Math.random() * 100) < settings.specialBricksPercent;
+        if (isSpecialBrick) {
+          console.log("sp");
+          powerUp.released = true;
+
+          const keys = Object.keys(specialBricks);
+          const random = Math.floor(Math.random() * 3);
+          powerUp.kind = specialBricks[keys[random]];
+
+          console.log(powerUp.kind);
+
+          powerUp.x = br.x;
+          powerUp.y = br.y;
+        }
+        ball.vy = -ball.vy;
+      }
+    }
   }
+}

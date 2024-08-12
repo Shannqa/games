@@ -1,3 +1,5 @@
+import { brick } from "./bricks";
+
 export function base(brick) {
   const bricks = [];
   for (let c = 0; c < 11; c++) {
@@ -12,6 +14,7 @@ export function base(brick) {
   }
   return bricks;
 }
+
 export function level1(brick) {
   const brickBase = base(brick);
 
