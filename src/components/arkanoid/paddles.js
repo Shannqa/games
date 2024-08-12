@@ -5,7 +5,7 @@ import { gameStage } from "./stages.js";
 
 export const defaultPaddle = {
   x: settings.canvasW / 2 - 45,
-  y: settings.canvasH - 90,
+  y: settings.canvasH - 90, // 510
   w: 90,
   h: 14,
   vx: 3,

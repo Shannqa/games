@@ -62,34 +62,31 @@ function Game() {
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     livesScore.draw(ctx);
-    // bricks
     drawBricks(ctx, bricks);
-
-    // ball
+    drawPaddle(ctx, paddles[0]);
     drawBall(ctx, balls[0]);
+    if (balls[1].active) {
+      drawBall(ctx, balls[1]);
+    }
+    movePaddle(ctx, paddles);
 
-    if (
-      gameStage != "lifeLoss" ||
-      gameStage != undefined ||
-      gameStage != "ready"
-    ) {
-      balls[0].x += balls[0].vx;
-      balls[0].y += balls[0].vy;
+    if (gameStage === "lifeLoss" || gameStage === "ready") {
+      // dont move the ball
+    } else {
+      if (balls[0].active) {
+        balls[0].x += balls[0].vx;
+        balls[0].y += balls[0].vy;
+      }
       if (balls[1].active) {
-        drawBall(ctx, balls[1]);
         balls[1].x += balls[1].vx;
         balls[1].y += balls[1].vy;
       }
       moveBall();
     }
 
-    // PADDLE
-    drawPaddle(ctx, paddles[0]);
-    movePaddle(ctx, paddles);
-
     hitBallPaddle();
     hitBallBrick(balls[0], bricks);
-    hitBallBrick(balls[1], bricks);
+    // hitBallBrick(balls[1], bricks);
     powerUpRelease(ctx);
   }
   return (

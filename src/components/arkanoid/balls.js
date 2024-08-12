@@ -7,9 +7,9 @@ import { lifeLoss, gameLoss } from "./stages";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
-  y: settings.canvasH - 100,
-  vx: 1.8,
-  vy: -1.8,
+  y: settings.canvasH - 100, // 500
+  vx: 2,
+  vy: -2,
   radius: 10,
   active: true,
 };
@@ -21,20 +21,23 @@ export const balls = [
     vx: defaultBall.vx,
     vy: defaultBall.vy,
     radius: defaultBall.radius,
+    active: true,
   },
   {
-    x: defaultBall.x + 20,
-    y: defaultBall.y + 20,
+    x: defaultBall.x,
+    y: defaultBall.y,
     vx: defaultBall.vx,
     vy: defaultBall.vy,
     radius: defaultBall.radius,
+    active: false,
   },
   {
-    x: defaultBall.x + 40,
-    y: defaultBall.y + 0,
+    x: defaultBall.x,
+    y: defaultBall.y,
     vx: defaultBall.vx,
     vy: defaultBall.vy,
     radius: defaultBall.radius,
+    active: false,
   },
 ];
 
@@ -58,11 +61,12 @@ export function drawBall(ctx, ball) {
   ctx.closePath();
 }
 
-export function resetBall() {
-  balls[0].x = defaultBall.x;
-  balls[0].y = defaultBall.y;
-  balls[0].vx = defaultBall.vx;
-  balls[0].vy = defaultBall.vy;
+export function resetBall(ball) {
+  ball.x = defaultBall.x;
+  ball.y = defaultBall.y;
+  ball.vx = defaultBall.vx;
+  ball.vy = defaultBall.vy;
+  ball.radius = defaultBall.radius;
 }
 
 export function moveBall() {
@@ -107,6 +111,8 @@ export function hitBallPaddle() {
 
     // WORMHOLE, bounce ball vs paddle2
     if (
+      powerUp.kind === specialBricks.wormhole &&
+      powerUp.on === true &&
       ball.y + ball.radius >= paddles[1].y &&
       ball.y < paddles[1].y &&
       ball.x + ball.radius >= paddles[1].x &&

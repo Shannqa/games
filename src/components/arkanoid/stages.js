@@ -12,8 +12,8 @@ export function lifeLoss() {
   gameStage = "lifeLoss";
   console.log(gameStage);
   resetBall(balls[0]);
+  balls[0].active = true;
   resetPaddle(paddles[0]);
-  console.log(paddles[0]);
   if (powerUp.on) {
     powerUp.kind.stop();
   }
