@@ -1,19 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import styles from "../../styles/arkanoid.module.css";
-import { ArkanoidContext } from "./Game";
+import { nextLevel } from "./stages";
 
-function Modal({ restart }) {
-  const { gameStage, score } = useContext(ArkanoidContext);
-  
-  if (gameStage === "win") {
+function Modal({ restart, lives, score, gameStageSave }) {
+  if (gameStageSave === "modd") {
     return (
       <div className={`${styles.modal} ${styles.win}`}>
-        <div>Congratulations!</div>
-        <div>Your score: {score}</div>
-        <button onClick={restart}>Play again</button>
+        <div>Good job!</div>
+        <div>Current score: {score}</div>
+        <div>Lives left: {lives}</div>
+        <button onClick={() => nextLevel()}>Continue</button>
       </div>
     );
-  } else if (gameStage === "loss") {
+  } else if (gameStageSave === "gameLoss") {
     return (
       <div className={`${styles.modal} ${styles.loss}`}>
         <div>No lives left!</div>

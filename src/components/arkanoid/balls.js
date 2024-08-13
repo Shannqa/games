@@ -3,13 +3,14 @@ import { livesScore } from "./score";
 import { paddles, defaultPaddle } from "./paddles";
 import { brick } from "./bricks";
 import { powerUp, specialBricks } from "./powerups";
-import { lifeLoss, gameLoss } from "./stages";
+import { lifeLoss, gameLoss, winLevel } from "./stages";
+import { changeHitBricks, hitBricks, bricksInLevel } from "./Game";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
   y: settings.canvasH - 100, // 500
-  vx: 2,
-  vy: -2,
+  vx: 4,
+  vy: -4,
   radius: 10,
   active: true,
 };
@@ -141,7 +142,7 @@ export function hitBallPaddle() {
       let scaleFactor = distance / 45;
       let angle = scaleFactor * maxAngle;
       let angleRad = (angle * Math.PI) / 180;
-      let speed = Math.sqrt(2 * 2 + 2 * 2);
+      let speed = Math.sqrt(4 * 4 + 4 * 4);
       let tanTh = Math.tan(angleRad);
 
       ball.vy = Math.sqrt((speed * speed) / (tanTh * tanTh + 1));
@@ -192,6 +193,10 @@ export function hitBallBrick(ball, bricks) {
         console.log(newBricks);
         newBricks[c][r].painted = false;
         console.log(newBricks[c][r]);
+        changeHitBricks();
+        if (hitBricks == bricksInLevel) {
+          winLevel();
+        }
 
         // special bricks
         const isSpecialBrick =
