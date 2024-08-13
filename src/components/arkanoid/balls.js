@@ -42,20 +42,21 @@ export const balls = [
 ];
 
 export function drawBall(ctx, ball) {
-  const radgrad = ctx.createRadialGradient(
-    ball.x,
-    ball.y,
-    ball.radius + 1,
-    ball.x,
-    ball.y,
-    1
-  );
-  radgrad.addColorStop(0, "#dca85d");
-  radgrad.addColorStop(0.5, "#dca85d");
-  radgrad.addColorStop(0.9, "#f4d3a5");
-  radgrad.addColorStop(1, "#fee8c9");
+  // const radgrad = ctx.createRadialGradient(
+  //   Math.floor(ball.x),
+  //   Math.floor(ball.y),
+  //   ball.radius + 1,
+  //   Math.floor(ball.x),
+  //   Math.floor(ball.y),
+  //   1
+  // );
+  // radgrad.addColorStop(0, "#dca85d");
+  // radgrad.addColorStop(0.5, "#dca85d");
+  // radgrad.addColorStop(0.9, "#f4d3a5");
+  // radgrad.addColorStop(1, "#fee8c9");
   ctx.beginPath();
-  ctx.fillStyle = radgrad;
+  // ctx.fillStyle = radgrad;
+  ctx.fillStyle = "red";
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true);
   ctx.fill();
   ctx.closePath();
@@ -99,14 +100,17 @@ export function moveBall() {
 export function hitBallPaddle() {
   // bounce: ball - paddle
   balls.forEach((ball) => {
+    let bounce = false;
+    let paddle;
     if (
-      ball.y + ball.radius >= paddles[0].y &&
+      ball.y + ball.radius >= paddles[0].y + 2 &&
       ball.y + ball.radius <= paddles[0].y + paddles[0].h &&
       // ball.y < paddle.y &&
       ball.x + ball.radius >= paddles[0].x &&
       ball.x - ball.radius <= paddles[0].x + paddles[0].w
     ) {
-      ball.vy = -ball.vy;
+      bounce = true;
+      paddle = paddles[0];
     }
 
     // WORMHOLE, bounce ball vs paddle2
@@ -118,10 +122,48 @@ export function hitBallPaddle() {
       ball.x + ball.radius >= paddles[1].x &&
       ball.x - ball.radius <= paddles[1].x + paddles[1].w
     ) {
+      bounce = true;
+      paddle = paddles[1];
+    }
+
+    if (bounce) {
+      let maxAngle = settings.paddleAngle;
+      let distance = ball.x - (paddle.x + 45);
+
+      //for extreme edges of the paddle
+      if (distance < -45) {
+        distance = -45;
+      } else if (distance > 45) {
+        distance = 45;
+      }
+      // paddle from 100 tp 190, 145 is mid
+      // ball.x hits at 100
+      let scaleFactor = distance / 45;
+      let angle = scaleFactor * maxAngle;
+      let angleRad = (angle * Math.PI) / 180;
+      let speed = Math.sqrt(2 * 2 + 2 * 2);
+      let tanTh = Math.tan(angleRad);
+
+      ball.vy = Math.sqrt((speed * speed) / (tanTh * tanTh + 1));
+      ball.vx = tanTh * ball.vy;
       ball.vy = -ball.vy;
+      console.log(
+        "max",
+        maxAngle,
+        "dist",
+        distance,
+        "scale",
+        scaleFactor,
+        "angle",
+        angle,
+        "rad",
+        angleRad,
+        "tan",
+        tanTh
+      );
+      console.log("vx", ball.vx, "vy", ball.vy);
     }
   });
-  // problem, at the left corner the ball doesnt bounce
 }
 
 export function hitBallBrick(ball, bricks) {
