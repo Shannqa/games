@@ -46,7 +46,7 @@ export function level2(brick) {
         cId == 8 ||
         cId == 10
       ) {
-        if (rId < 7) {
+        if (rId < 7 && rId > 0) {
           return {
             ...row,
             painted: true,

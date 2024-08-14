@@ -1,7 +1,7 @@
 import { settings } from "./settings";
 
 export const livesScore = {
-  lives: 3,
+  lives: settings.lives,
   score: 0,
   draw(ctx) {
     ctx.font = "16px sans-serif";

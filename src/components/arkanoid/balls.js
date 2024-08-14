@@ -129,17 +129,18 @@ export function hitBallPaddle() {
 
     if (bounce) {
       let maxAngle = settings.paddleAngle;
-      let distance = ball.x - (paddle.x + 45);
+      let middle = paddle.w / 2;
+      let distance = ball.x - (paddle.x + middle);
 
       //for extreme edges of the paddle
-      if (distance < -45) {
-        distance = -45;
-      } else if (distance > 45) {
-        distance = 45;
+      if (distance < -middle) {
+        distance = -middle;
+      } else if (distance > middle) {
+        distance = middle;
       }
       // paddle from 100 tp 190, 145 is mid
       // ball.x hits at 100
-      let scaleFactor = distance / 45;
+      let scaleFactor = distance / middle;
       let angle = scaleFactor * maxAngle;
       let angleRad = (angle * Math.PI) / 180;
       let speed = Math.sqrt(4 * 4 + 4 * 4);
@@ -196,6 +197,7 @@ export function hitBallBrick(ball, bricks) {
         changeHitBricks();
         if (hitBricks == bricksInLevel) {
           winLevel();
+          return;
         }
 
         // special bricks

@@ -35,7 +35,7 @@ export function changeHitBricks() {
 }
 
 export function changeLevel() {
-  LEVEL = 2;
+  LEVEL += 1;
 }
 
 function Game() {
@@ -48,12 +48,31 @@ function Game() {
   // const [stateLives, setStateLives] = useState(3);
   LEVEL = 1;
   let bricks;
+  /* state stages:
+  loaded - game first opened
+  modalGameOver
+  modalNextLevel
+  startLevel
+  */
+  /* canvas stages:
+  ready
+  playing
+  gameLoss
+  lifeLoss
+  levelWin
+  modalWin
+  modalLoss
+  */
 
   if (levelSave == 1) {
     bricks = level1(brick);
     bricksInLevel = 11;
   } else if (levelSave == 2) {
     bricks = level2(brick);
+    bricksInLevel = 46;
+  } else if (levelSave == 3) {
+    bricks = level3(brick);
+    bricksInLevel = 46;
   }
 
   document.onkeydown = function (e) {
@@ -64,6 +83,13 @@ function Game() {
         gameStage == "ready"
       ) {
         changeGameStage("playing");
+      } else if (
+        gameStage == "gameLoss" ||
+        gameStage == "modalWin" ||
+        gameStage == "levelWin" ||
+        gameStage == "modalLoss"
+      ) {
+        return;
       }
       LEFT = true;
     }
@@ -74,6 +100,13 @@ function Game() {
         gameStage == "ready"
       ) {
         changeGameStage("playing");
+      } else if (
+        gameStage == "gameLoss" ||
+        gameStage == "modalWin" ||
+        gameStage == "levelWin" ||
+        gameStage == "modalLoss"
+      ) {
+        return;
       }
       RIGHT = true;
     }
@@ -88,28 +121,14 @@ function Game() {
     // if modal is visible - shouldnt be able to move the paddle
     // the ball doesnt move so thats good
     /*
-bug
-export function nextLevel() {
-  console.log("next");
-  changeGameStage("newLevel");
-  LEVEL = 2;
-  TypeError: Assignment to constant variable.
-    at nextLevel (http://localhost:5173/src/components/arkanoid/stages.js?t=1723577010954:50:9)
-    at onClick (http://localhost:5173/src/components/arkanoid/Modal.jsx?t=1723577010954:6:378)
-    at HTMLUnknownElement.callCallback2 (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:3672:22)
-    at Object.invokeGuardedCallbackDev (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:3697:24)
-    at invokeGuardedCallback (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:3731:39)
-    at invokeGuardedCallbackAndCatchFirstError (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:3734:33)
-    at executeDispatch (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:7012:11)
-    at processDispatchQueueItemsInOrder (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:7032:15)
-    at processDispatchQueue (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:7041:13)
-    at dispatchEventsForPlugins (http://localhost:5173/node_modules/.vite/deps/chunk-GGRJ7SSM.js?v=be96cc52:7049:11)
 
-
-
-
+    bug gameStage == newLevel
+    paddle moves, ball doesnt
 */
-
+    if (gameStageSave == "newLevel") {
+      setGameStageSave("playing");
+      changeGameStage("ready");
+    }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     livesScore.draw(ctx);
     drawBricks(ctx, bricks);
@@ -124,7 +143,7 @@ export function nextLevel() {
       gameStage === "lifeLoss" ||
       gameStage === "ready" ||
       gameStage == "newLevel" ||
-      gameStage == "modal"
+      gameStage == "modalWin"
     ) {
       // dont move the ball
     } else {
@@ -147,17 +166,18 @@ export function nextLevel() {
     if (gameStage === "gameLoss") {
       setGameStageSave("gameLoss");
       console.log("1");
-    } else if (gameStage === "modal") {
+    } else if (gameStage === "levelWin") {
       // winLevel();
-      changeGameStage("newLevel"); // omg it fucking works. reset the paddle though. and no modal visible
-      hitBricks = 0;
+      changeGameStage("modalWin");
       balls[0].x = defaultBall.x;
       balls[0].y = defaultBall.y;
       paddles[0].x = defaultPaddle.x;
-      setGameStageSave("modd");
+      setGameStageSave("modalNextLevel");
       setScoreSave(livesScore.score);
-      setLevelSave(LEVEL + 1);
+      setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
+      hitBricks = 0;
+      changeLevel();
       powerUp.kind = null;
       powerUp.released = false;
       powerUp.on = false;
@@ -181,6 +201,7 @@ export function nextLevel() {
         lives={livesScore.lives}
         score={livesScore.score}
         gameStageSave={gameStageSave}
+        setGameStageSave={setGameStageSave}
       />
     </div>
   );

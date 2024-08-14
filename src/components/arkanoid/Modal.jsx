@@ -1,9 +1,11 @@
 import React from "react";
 import styles from "../../styles/arkanoid.module.css";
-import { nextLevel } from "./stages";
 
-function Modal({ restart, lives, score, gameStageSave }) {
-  if (gameStageSave === "modd") {
+function Modal({ restart, lives, score, gameStageSave, setGameStageSave }) {
+  function nextLevel() {
+    setGameStageSave("newLevel");
+  }
+  if (gameStageSave === "modalNextLevel") {
     return (
       <div className={`${styles.modal} ${styles.win}`}>
         <div>Good job!</div>
