@@ -20,7 +20,8 @@ export function level1(brick) {
 
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
-      if (rId > 0 && rId < 2) {
+      if (rId > 0 && rId < 6) {
+        // 6
         return {
           ...row,
           painted: true,
@@ -79,15 +80,29 @@ export function level3(brick) {
 
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
-      if (rId < 11) {
-        return {
-          ...row,
-          painted: true,
-        };
-      } else {
+      if (cId < 2 || cId > 8) {
         return { ...row };
+      } else {
+        if (
+          (cId == 2 && rId >= 2 && rId <= 4) ||
+          (cId == 3 && rId >= 1 && rId <= 6) ||
+          (cId == 4 && rId >= 1 && rId <= 7) ||
+          (cId == 5 && rId >= 2 && rId <= 8) ||
+          (cId == 6 && rId >= 1 && rId <= 7) ||
+          (cId == 7 && rId >= 1 && rId <= 6) ||
+          (cId == 8 && rId >= 2 && rId <= 4)
+        ) {
+          return {
+            ...row,
+            painted: true,
+          };
+        } else {
+          return { ...row };
+        }
       }
     });
   });
   return bricks;
 }
+
+export function level4(brick) {}

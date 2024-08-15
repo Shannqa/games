@@ -1,12 +1,14 @@
 import { settings } from "./settings.js";
-import { powerUp } from "./powerups.js";
-import { LEFT, RIGHT } from "./Game.jsx";
+import { powerUp, specialBricks } from "./powerups.js";
+import { LEFT, RIGHT, stay } from "./Game.jsx";
 import { gameStage } from "./stages.js";
+import { balls } from "./balls.js";
+import { gun } from "./gun.js";
 
 export const defaultPaddle = {
-  x: settings.canvasW / 2 - 45,
-  y: settings.canvasH - 90, // 510
-  w: 90 * 3,
+  x: settings.canvasW / 2 - 50,
+  y: settings.canvasH - 80, // 510
+  w: 100,
   h: 14,
   vx: 5,
 };
@@ -43,7 +45,7 @@ export function resetPaddle() {
 }
 
 export function movePaddle(ctx, paddles) {
-  if (powerUp.kind === "wormhole" && powerUp.on) {
+  if (powerUp.kind === specialBricks.wormhole && powerUp.on) {
     // wormhole enabled
     if (RIGHT === true) {
       paddles[0].x += paddles[0].vx;
@@ -70,9 +72,27 @@ export function movePaddle(ctx, paddles) {
     // normal paddle moves
     if (RIGHT === true && paddles[0].x + paddles[0].w < settings.canvasW) {
       paddles[0].x += paddles[0].vx;
+      if (stay) {
+        // powerup sticky ball
+        balls[0].x += paddles[0].vx;
+      }
+      // if (powerUp.on && powerUp.kind == specialBricks.gunMode) {
+      //   // powerup gun
+      //   gun.x1 = paddles[0].x + gun.distance;
+      //   gun.x2 = paddles[0].x + paddles[0].w - gun.distance;
+      // }
     }
     if (LEFT === true && paddles[0].x > 0) {
       paddles[0].x -= paddles[0].vx;
+      if (stay) {
+        // powerup sticky ball
+        balls[0].x = paddles[0].x;
+      }
+      // if (powerUp.on && powerUp.kind == specialBricks.gunMode) {
+      //   // powerup gun
+      //   gun.x1 = paddles[0].x + gun.distance;
+      //   gun.x2 = paddles[0].x + paddles[0].w - gun.distance - gun.w;
+      // }
     }
   }
 }
