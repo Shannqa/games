@@ -14,13 +14,22 @@ export const gun = {
 export const ammo = [];
 
 export function addAmmo(paddle) {
+  console.log("ADD");
   if (ammo.length < 8) {
     ammo.push({
       x1: paddle.x + gun.distance,
       x2: paddle.x + paddle.w - gun.distance,
       y: settings.canvasH - 80,
-      active: true,
+      active1: true,
+      active2: true,
     });
+  }
+}
+
+export function deleteAmmo() {
+  while (ammo.length > 0) {
+    ammo.pop();
+    console.log(ammo);
   }
 }
 
@@ -28,8 +37,13 @@ export function drawGun(ctx, bullet) {
   ctx.beginPath();
   ctx.strokeStyle = "#fff";
   ctx.fillStyle = "#fff";
-  ctx.rect(bullet.x1, bullet.y, gun.w, gun.h);
-  ctx.rect(bullet.x2, bullet.y, gun.w, gun.h);
+  if (bullet.active1) {
+    ctx.rect(bullet.x1, bullet.y, gun.w, gun.h);
+  }
+  if (bullet.active2) {
+    ctx.rect(bullet.x2, bullet.y, gun.w, gun.h);
+  }
+
   ctx.stroke();
   ctx.fill();
   ctx.closePath();

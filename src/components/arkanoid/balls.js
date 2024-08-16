@@ -163,7 +163,7 @@ export function hitBallPaddle() {
       ball.vy = Math.sqrt((speed * speed) / (tanTh * tanTh + 1));
       ball.vx = tanTh * ball.vy;
       ball.vy = -ball.vy;
-      console.log("vx", ball.vx, "vy", ball.vy);
+      // console.log("vx", ball.vx, "vy", ball.vy);
     }
   });
 }
@@ -193,9 +193,9 @@ export function hitBallBrick(bricks) {
           ) {
             livesScore.score += 10;
             let newBricks = [...bricks];
-            console.log(newBricks);
+            // console.log(newBricks);
             newBricks[c][r].painted = false;
-            console.log(newBricks[c][r]);
+            // console.log(newBricks[c][r]);
             changeHitBricks();
             if (hitBricks == bricksInLevel) {
               winLevel();
@@ -207,7 +207,7 @@ export function hitBallBrick(bricks) {
               !powerUp.released &&
               Math.floor(Math.random() * 100) < settings.specialBricksPercent;
             if (isSpecialBrick) {
-              console.log("sp");
+              // console.log("sp");
               powerUp.released = true;
 
               const keys = Object.keys(specialBricks);
@@ -215,7 +215,7 @@ export function hitBallBrick(bricks) {
               // const random = 9;
               powerUp.kind = specialBricks[keys[random]];
 
-              console.log(powerUp.kind);
+              // console.log(powerUp.kind);
 
               powerUp.x = br.x;
               powerUp.y = br.y;

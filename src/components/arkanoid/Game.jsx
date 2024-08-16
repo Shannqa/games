@@ -205,15 +205,12 @@ function Game() {
     movePaddle(ctx, paddles);
     if (powerUp.kind == specialBricks.gunMode && powerUp.on) {
       // gunMode powerup
-      console.log(ammo);
+      // console.log(ammo);
 
       ammo.forEach((bullet) => {
-        if (bullet.active) {
+        if (bullet.active1 || bullet.active2) {
           drawGun(ctx, bullet);
           bullet.y += gun.vy;
-          if (bullet.y < 0) {
-            bullet.active = false;
-          }
         }
       });
       hitGunBricks(bricks);
