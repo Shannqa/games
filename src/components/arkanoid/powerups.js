@@ -303,8 +303,8 @@ export function hitGunBricks(bricks) {
             powerUp.released = true;
 
             const keys = Object.keys(specialBricks);
-            // const random = Math.floor(Math.random() * 9);
-            const random = 9;
+            const random = Math.floor(Math.random() * 9);
+            // const random = 9;
             powerUp.kind = specialBricks[keys[random]];
 
             console.log(powerUp.kind);

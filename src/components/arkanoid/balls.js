@@ -185,6 +185,18 @@ export function hitBallBrick(bricks) {
             // solid brick, reflect ball
             ball.vy = -ball.vy;
           } else if (
+            br.painted === "strong" &&
+            ball.x + ball.radius >= br.x &&
+            ball.x - ball.radius <= br.x + brick.w &&
+            ball.y + ball.radius >= br.y &&
+            ball.y - ball.radius <= br.y + brick.h
+          ) {
+            // strong brick, needs two hits
+            ball.vy = -ball.vy;
+            livesScore.score += 5;
+            let newBricks = [...bricks];
+            newBricks[c][r].painted = true;
+          } else if (
             br.painted === true &&
             ball.x + ball.radius >= br.x &&
             ball.x - ball.radius <= br.x + brick.w &&
@@ -193,9 +205,7 @@ export function hitBallBrick(bricks) {
           ) {
             livesScore.score += 10;
             let newBricks = [...bricks];
-            // console.log(newBricks);
             newBricks[c][r].painted = false;
-            // console.log(newBricks[c][r]);
             changeHitBricks();
             if (hitBricks == bricksInLevel) {
               winLevel();
@@ -207,16 +217,11 @@ export function hitBallBrick(bricks) {
               !powerUp.released &&
               Math.floor(Math.random() * 100) < settings.specialBricksPercent;
             if (isSpecialBrick) {
-              // console.log("sp");
               powerUp.released = true;
-
               const keys = Object.keys(specialBricks);
               const random = Math.floor(Math.random() * 9);
               // const random = 9;
               powerUp.kind = specialBricks[keys[random]];
-
-              // console.log(powerUp.kind);
-
               powerUp.x = br.x;
               powerUp.y = br.y;
             }

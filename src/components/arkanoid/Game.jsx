@@ -2,7 +2,17 @@ import React, { useState, createContext, memo } from "react";
 import Canvas from "./Canvas";
 import Modal from "./Modal";
 import styles from "../../styles/arkanoid.module.css";
-import { base, level1, level2, level3 } from "./levels";
+import {
+  base,
+  level1,
+  level2,
+  level3,
+  level4,
+  level5,
+  level6,
+  level7,
+  level8,
+} from "./levels";
 import { settings } from "./settings.js";
 import {
   paddles,
@@ -29,6 +39,7 @@ import {
 } from "./powerups.js";
 import { restart, gameStage, changeGameStage, winLevel } from "./stages.js";
 import { addAmmo, ammo, drawGun, gun } from "./gun.js";
+import LevelChooser from "./LevelChooser.jsx";
 
 export let LEFT;
 export let RIGHT;
@@ -43,8 +54,9 @@ export function changeHitBricks() {
   hitBricks += 1;
 }
 
-export function changeLevel() {
-  LEVEL += 1;
+export function changeLevel(level) {
+  LEVEL = level;
+  console.log(LEVEL);
 }
 
 export function changeSticky(state) {
@@ -63,7 +75,7 @@ function Game() {
   const [levelSave, setLevelSave] = useState(1);
   const [gameStageSave, setGameStageSave] = useState(null);
   // const [stateLives, setStateLives] = useState(3);
-  LEVEL = 1;
+  LEVEL = levelSave;
   let bricks;
   /* state stages:
   loaded - game first opened
@@ -81,15 +93,42 @@ function Game() {
   modalLoss
   */
 
+  function countBricks(bricks) {
+    let count = 0;
+    bricks.forEach((row, rIndex) => {
+      row.forEach((column, cIndex) => {
+        if (column.painted === true || column.painted == "strong") {
+          count++;
+        }
+      });
+    });
+    console.log(count);
+  }
+
   if (levelSave == 1) {
     bricks = level1(brick);
-    bricksInLevel = 55;
+    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 2) {
     bricks = level2(brick);
-    bricksInLevel = 46;
+    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 3) {
     bricks = level3(brick);
-    bricksInLevel = 33;
+    bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 4) {
+    bricks = level4(brick);
+    bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 5) {
+    bricks = level5(brick);
+    bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 6) {
+    bricks = level6(brick);
+    // bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 7) {
+    bricks = level7(brick);
+    // bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 8) {
+    bricks = level8(brick);
+    // bricksInLevel = countBricks(bricks);
   }
 
   document.onkeydown = function (e) {
@@ -259,7 +298,7 @@ function Game() {
       setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
       hitBricks = 0;
-      changeLevel();
+      changeLevel(LEVEL + 1);
       powerUp.kind = null;
       powerUp.released = false;
       powerUp.on = false;
@@ -271,6 +310,12 @@ function Game() {
         Press left or right arrow on your keyboard to move the paddle. For
         powerups: to launch a sticky ball or shoot, press space.
       </span>
+      {/* <button onClick={() => console.log(LEVEL)}>lvl</button> */}
+      <LevelChooser
+        setLevelSave={setLevelSave}
+        LEVEL={LEVEL}
+        changeLevel={changeLevel}
+      />
       <Canvas
         draw={draw}
         collision={collision}
