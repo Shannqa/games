@@ -381,3 +381,26 @@ export function level8(brick) {
   });
   return bricks;
 }
+
+export function level9(brick) {
+  const brickBase = base(brick);
+
+  const bricks = brickBase.map((col, cId) => {
+    return col.map((row, rId) => {
+      if (rId >= 1 && rId < 8) {
+        // 6
+        if (cId >= 4 && cId <= 7) {
+          return {
+            ...row,
+            painted: true,
+          };
+        } else {
+          return { ...row };
+        }
+      } else {
+        return { ...row };
+      }
+    });
+  });
+  return bricks;
+}

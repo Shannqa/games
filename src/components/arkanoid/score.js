@@ -13,5 +13,11 @@ export const livesScore = {
       settings.canvasW - scoreSize.width - 5,
       16
     );
+    ctx.beginPath();
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.moveTo(0, settings.gameAreaY);
+    ctx.lineTo(settings.canvasW, settings.gameAreaY);
+    ctx.stroke();
   },
 };

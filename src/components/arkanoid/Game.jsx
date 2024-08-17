@@ -12,6 +12,7 @@ import {
   level6,
   level7,
   level8,
+  level9,
 } from "./levels";
 import { settings } from "./settings.js";
 import {
@@ -128,6 +129,9 @@ function Game() {
     // bricksInLevel = countBricks(bricks);
   } else if (levelSave == 8) {
     bricks = level8(brick);
+    // bricksInLevel = countBricks(bricks);
+  } else if (levelSave == 9) {
+    bricks = level9(brick);
     // bricksInLevel = countBricks(bricks);
   }
 

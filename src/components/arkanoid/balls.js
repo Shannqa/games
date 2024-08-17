@@ -93,7 +93,7 @@ export function moveBall() {
           lifeLoss();
         }
       }
-    } else if (ball.y + ball.vy < ball.radius) {
+    } else if (ball.y + ball.vy <= ball.radius + settings.gameAreaY) {
       // top of canvas, reflect ball
       ball.vy = -ball.vy;
     } else if (
@@ -169,66 +169,87 @@ export function hitBallPaddle() {
 }
 
 export function hitBallBrick(bricks) {
+  let xDir = null;
+  let yDir = null;
+  let toChange = [];
   // collision - ball - brick
   balls.forEach((ball) => {
     if (ball.active) {
       for (let c = 0; c < 11; c++) {
         for (let r = 0; r < 11; r++) {
           const br = bricks[c][r];
-          if (
-            br.painted === "solid" &&
-            ball.x + ball.radius >= br.x &&
-            ball.x - ball.radius <= br.x + brick.w &&
-            ball.y + ball.radius >= br.y &&
-            ball.y - ball.radius <= br.y + brick.h
-          ) {
-            // solid brick, reflect ball
-            ball.vy = -ball.vy;
-          } else if (
-            br.painted === "strong" &&
-            ball.x + ball.radius >= br.x &&
-            ball.x - ball.radius <= br.x + brick.w &&
-            ball.y + ball.radius >= br.y &&
-            ball.y - ball.radius <= br.y + brick.h
-          ) {
-            // strong brick, needs two hits
-            ball.vy = -ball.vy;
-            livesScore.score += 5;
-            let newBricks = [...bricks];
-            newBricks[c][r].painted = true;
-          } else if (
-            br.painted === true &&
-            ball.x + ball.radius >= br.x &&
-            ball.x - ball.radius <= br.x + brick.w &&
-            ball.y + ball.radius >= br.y &&
-            ball.y - ball.radius <= br.y + brick.h
-          ) {
-            livesScore.score += 10;
-            let newBricks = [...bricks];
-            newBricks[c][r].painted = false;
-            changeHitBricks();
-            if (hitBricks == bricksInLevel) {
-              winLevel();
-              return;
-            }
+          const x2 = br.x + brick.w;
+          const y2 = br.y + brick.h;
+          let edge = null;
 
-            // special bricks
-            const isSpecialBrick =
-              !powerUp.released &&
-              Math.floor(Math.random() * 100) < settings.specialBricksPercent;
-            if (isSpecialBrick) {
-              powerUp.released = true;
-              const keys = Object.keys(specialBricks);
-              const random = Math.floor(Math.random() * 9);
-              // const random = 9;
-              powerUp.kind = specialBricks[keys[random]];
-              powerUp.x = br.x;
-              powerUp.y = br.y;
+          // determine which edge of the brick is collided with by the ball
+          if (
+            br.painted !== false &&
+            ball.y + ball.radius >= br.y &&
+            ball.y - ball.radius <= br.y &&
+            ball.x >= br.x &&
+            ball.x <= x2
+          ) {
+            edge = "top";
+          } else if (
+            br.painted !== false &&
+            ball.y + ball.radius >= y2 &&
+            ball.y - ball.radius <= y2 &&
+            ball.x >= br.x &&
+            ball.x <= x2
+          ) {
+            edge = "bottom";
+          } else if (
+            br.painted !== false &&
+            ball.x + ball.radius >= br.x &&
+            ball.x - ball.radius <= br.x &&
+            ball.y >= br.y &&
+            ball.y <= y2
+          ) {
+            edge = "left";
+          } else if (
+            br.painted !== false &&
+            ball.x + ball.radius >= x2 &&
+            ball.x - ball.radius <= x2 &&
+            ball.y >= br.y &&
+            ball.y <= y2
+          ) {
+            edge = "right";
+          }
+
+          // change direction of the ball
+          if (edge === "bottom" || edge == "top") {
+            yDir = -ball.vy;
+          } else if (edge === "left" || edge === "right") {
+            xDir = -ball.vx;
+          }
+
+          // add to the queue of bricks to change
+          if (edge) {
+            if (br.painted === true) {
+              toChange.push({ c: c, r: r, painted: false });
+            } else if (br.painted === "strong") {
+              toChange.push({ c: c, r: r, painted: true });
             }
-            ball.vy = -ball.vy;
           }
         }
       }
+    }
+
+    // apply the change of direction of the ball
+    if (xDir) {
+      ball.vx = xDir;
+    } else if (yDir) {
+      ball.vy = yDir;
+    }
+
+    // change bricks
+    if (toChange.length > 0) {
+      toChange.forEach((brickToChange) => {
+        console.log(brickToChange);
+        bricks[brickToChange.c][brickToChange.r].painted =
+          brickToChange.painted;
+      });
     }
   });
 }
