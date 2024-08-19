@@ -2,8 +2,25 @@ import { balls, resetBall } from "./balls";
 import { powerUp } from "./powerups";
 import { livesScore } from "./score";
 import { paddles, resetPaddle } from "./paddles";
-export let gameStage = "ready";
 import { LEVEL, changeLevel } from "./Game";
+
+export let gameStage = "ready";
+
+/* state stages:
+  loaded - game first opened
+  modalGameOver
+  modalNextLevel
+  startLevel
+  */
+/* canvas stages:
+  ready
+  playing
+  gameLoss
+  lifeLoss
+  levelWin
+  modalWin
+  modalLoss
+  */
 
 export function changeGameStage(stage) {
   gameStage = stage;
@@ -43,6 +60,7 @@ export function winGame() {
 
 export function winLevel() {
   changeGameStage("levelWin");
+  console.log("level win");
   // saveLevel(LEVEL);
   // saveLives(livesScore.lives);
   // saveScore(livesScore.score);

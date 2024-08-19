@@ -29,7 +29,6 @@ export function addAmmo(paddle) {
 export function deleteAmmo() {
   while (ammo.length > 0) {
     ammo.pop();
-    console.log(ammo);
   }
 }
 

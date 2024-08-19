@@ -6,4 +6,5 @@ export const settings = {
   specialBricksPercent: 60,
   paddleAngle: 60,
   levelCount: 9,
+  powerUpTimer: 10000,
 };

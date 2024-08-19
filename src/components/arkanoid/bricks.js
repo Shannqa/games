@@ -68,3 +68,16 @@ export function drawBricks(ctx, bricks) {
     }
   }
 }
+
+// count the number of bricks in a level, needed for win conditions
+export function countBricks(bricks) {
+  let count = 0;
+  bricks.forEach((row, rIndex) => {
+    row.forEach((column, cIndex) => {
+      if (column.painted === true || column.painted == "strong") {
+        count++;
+      }
+    });
+  });
+  return count;
+}

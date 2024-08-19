@@ -1,6 +1,6 @@
 import { settings } from "./settings.js";
 import { powerUp, specialBricks } from "./powerups.js";
-import { LEFT, RIGHT, stay } from "./Game.jsx";
+import { LEFT, RIGHT } from "./Game.jsx";
 import { gameStage } from "./stages.js";
 import { balls } from "./balls.js";
 import { gun } from "./gun.js";
@@ -32,6 +32,7 @@ export const paddles = [
 
 export function drawPaddle(ctx, paddle) {
   ctx.beginPath();
+  ctx.lineWidth = 1;
   ctx.strokeStyle = "#103549";
   ctx.fillStyle = "#234e66";
   ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
@@ -72,10 +73,13 @@ export function movePaddle(ctx, paddles) {
     // normal paddle moves
     if (RIGHT === true && paddles[0].x + paddles[0].w < settings.canvasW) {
       paddles[0].x += paddles[0].vx;
-      if (stay) {
-        // powerup sticky ball
-        balls[0].x += paddles[0].vx;
-      }
+      balls.forEach((ball) => {
+        // sticky ball, move the ball with the paddle
+        if (ball.stay) {
+          ball.x += paddles[0].vx;
+        }
+      });
+
       // if (powerUp.on && powerUp.kind == specialBricks.gunMode) {
       //   // powerup gun
       //   gun.x1 = paddles[0].x + gun.distance;
@@ -84,10 +88,12 @@ export function movePaddle(ctx, paddles) {
     }
     if (LEFT === true && paddles[0].x > 0) {
       paddles[0].x -= paddles[0].vx;
-      if (stay) {
-        // powerup sticky ball
-        balls[0].x = paddles[0].x;
-      }
+      balls.forEach((ball) => {
+        // sticky ball, move the ball with the paddle
+        if (ball.stay) {
+          ball.x -= paddles[0].vx;
+        }
+      });
       // if (powerUp.on && powerUp.kind == specialBricks.gunMode) {
       //   // powerup gun
       //   gun.x1 = paddles[0].x + gun.distance;

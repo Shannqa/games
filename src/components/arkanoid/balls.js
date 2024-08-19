@@ -2,25 +2,25 @@ import { settings } from "./settings";
 import { livesScore } from "./score";
 import { paddles, defaultPaddle } from "./paddles";
 import { brick } from "./bricks";
-import { powerUp, specialBricks } from "./powerups";
+import { powerUp, specialBricks, changeActiveBalls } from "./powerups";
 import { lifeLoss, gameLoss, winLevel, winGame } from "./stages";
 import {
   changeHitBricks,
   hitBricks,
   bricksInLevel,
-  stay,
-  changeStay,
   sticky,
   SPACE,
+  LEVEL,
 } from "./Game";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
   y: settings.canvasH - 90, // 500
-  vx: 2.5,
-  vy: -2.5,
+  vx: 3,
+  vy: -3,
   radius: 10,
   active: true,
+  stay: false,
 };
 
 export const balls = [
@@ -31,6 +31,7 @@ export const balls = [
     vy: defaultBall.vy,
     radius: defaultBall.radius,
     active: true,
+    stay: defaultBall.stay,
   },
   {
     x: defaultBall.x,
@@ -39,33 +40,34 @@ export const balls = [
     vy: defaultBall.vy,
     radius: defaultBall.radius,
     active: false,
+    stay: defaultBall.stay,
   },
   {
     x: defaultBall.x,
     y: defaultBall.y,
-    vx: defaultBall.vx,
+    vx: -defaultBall.vx,
     vy: defaultBall.vy,
     radius: defaultBall.radius,
     active: false,
+    stay: defaultBall.stay,
   },
 ];
 
 export function drawBall(ctx, ball) {
-  // const radgrad = ctx.createRadialGradient(
-  //   Math.floor(ball.x),
-  //   Math.floor(ball.y),
-  //   ball.radius + 1,
-  //   Math.floor(ball.x),
-  //   Math.floor(ball.y),
-  //   1
-  // );
-  // radgrad.addColorStop(0, "#dca85d");
-  // radgrad.addColorStop(0.5, "#dca85d");
-  // radgrad.addColorStop(0.9, "#f4d3a5");
-  // radgrad.addColorStop(1, "#fee8c9");
+  const radgrad = ctx.createRadialGradient(
+    Math.floor(ball.x),
+    Math.floor(ball.y),
+    ball.radius + 1,
+    Math.floor(ball.x),
+    Math.floor(ball.y),
+    1
+  );
+  radgrad.addColorStop(0, "#dca85d");
+  radgrad.addColorStop(0.5, "#dca85d");
+  radgrad.addColorStop(0.9, "#f4d3a5");
+  radgrad.addColorStop(1, "#fee8c9");
   ctx.beginPath();
-  // ctx.fillStyle = radgrad;
-  ctx.fillStyle = "red";
+  ctx.fillStyle = radgrad;
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true);
   ctx.fill();
   ctx.closePath();
@@ -85,6 +87,9 @@ export function moveBall() {
     if (ball.y + ball.vy > settings.canvasH - ball.radius) {
       // bottom of canvas
       ball.active = false;
+      if (!balls[0].active) {
+        changeActiveBalls();
+      }
       if (!balls[0].active && !balls[1].active && !balls[2].active) {
         // all balls are inactive, lose a life and/or game
         if (livesScore.lives < 1) {
@@ -137,7 +142,9 @@ export function hitBallPaddle() {
 
     if (bounce) {
       if (sticky && !SPACE) {
-        changeStay(true);
+        // powerup sticky ball
+        ball.stay = true;
+        return;
       }
       let maxAngle = settings.paddleAngle;
       let middle = paddle.w / 2;
@@ -163,7 +170,12 @@ export function hitBallPaddle() {
       ball.vy = Math.sqrt((speed * speed) / (tanTh * tanTh + 1));
       ball.vx = tanTh * ball.vy;
       ball.vy = -ball.vy;
-      // console.log("vx", ball.vx, "vy", ball.vy);
+      if (balls[1] === ball) {
+        console.log("ball1", ball.vx);
+      }
+      if (balls[2] === ball) {
+        console.log("ball2", ball.vx);
+      }
     }
   });
 }
@@ -234,28 +246,32 @@ export function hitBallBrick(bricks) {
               // special bricks with powerups
               const isSpecialBrick =
                 !powerUp.released &&
+                !powerUp.on &&
                 Math.floor(Math.random() * 100) < settings.specialBricksPercent;
               if (isSpecialBrick) {
                 powerUp.released = true;
                 const keys = Object.keys(specialBricks);
-                const random = Math.floor(Math.random() * 10);
+                // const random = Math.floor(Math.random() * 10);
+                const random = 4;
                 powerUp.kind = specialBricks[keys[random]];
                 powerUp.x = br.x;
                 powerUp.y = br.y;
-              } else if (br.painted === "strong") {
-                toChange.push({ c: c, r: r, painted: true });
-                livesScore.score += 5;
               }
+            } else if (br.painted == "strong") {
+              console.log("strong");
+              toChange.push({ c: c, r: r, painted: true });
+              livesScore.score += 5;
+            }
 
-              // determine wins
-              if (hitBricks === bricksInLevel) {
-                if (LEVEL + 1 === settings.levelCount) {
-                  winGame();
-                  return;
-                } else {
-                  winLevel();
-                  return;
-                }
+            // determine wins
+            if (hitBricks === bricksInLevel) {
+              console.log("hit", hitBricks, "inlvl", bricksInLevel);
+              if (LEVEL + 1 === settings.levelCount) {
+                winGame();
+                return;
+              } else {
+                winLevel();
+                return;
               }
             }
           }
@@ -273,7 +289,6 @@ export function hitBallBrick(bricks) {
     // change bricks
     if (toChange.length > 0) {
       toChange.forEach((brickToChange) => {
-        console.log(brickToChange);
         bricks[brickToChange.c][brickToChange.r].painted =
           brickToChange.painted;
       });

@@ -2,9 +2,10 @@ import React from "react";
 
 function LevelChooser({ setLevelSave, changeLevel, LEVEL }) {
   function selectLevel(level) {
+    // make sure it's a number not a string
+    level = parseInt(level);
     setLevelSave(level);
     changeLevel(level);
-    // console.log(LEVEL);
   }
   return (
     <div>
