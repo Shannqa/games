@@ -108,32 +108,24 @@ function Game() {
 
   if (levelSave == 1) {
     bricks = level1(brick);
-    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 2) {
     bricks = level2(brick);
-    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 3) {
     bricks = level3(brick);
-    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 4) {
     bricks = level4(brick);
-    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 5) {
     bricks = level5(brick);
-    bricksInLevel = countBricks(bricks);
   } else if (levelSave == 6) {
     bricks = level6(brick);
-    // bricksInLevel = countBricks(bricks);
   } else if (levelSave == 7) {
     bricks = level7(brick);
-    // bricksInLevel = countBricks(bricks);
   } else if (levelSave == 8) {
     bricks = level8(brick);
-    // bricksInLevel = countBricks(bricks);
   } else if (levelSave == 9) {
     bricks = level9(brick);
-    // bricksInLevel = countBricks(bricks);
   }
+  bricksInLevel = countBricks(bricks);
 
   document.onkeydown = function (e) {
     if (e.key === " " || e.code === "Space") {
@@ -290,9 +282,16 @@ function Game() {
     // console.log(gameStage);
     if (gameStage === "gameLoss") {
       setGameStageSave("gameLoss");
-      // console.log("1");
+    } else if (gameStage === "gameWin") {
+      changeGameStage("modalGameWin");
+      setGameStageSave("modalNextLevel");
+      setScoreSave(livesScore.score);
+      setLevelSave(levelSave + 1);
+      setLivesSave(livesScore.lives);
+      powerUp.kind = null;
+      powerUp.released = false;
+      powerUp.on = false;
     } else if (gameStage === "levelWin") {
-      // winLevel();
       changeGameStage("modalWin");
       balls[0].x = defaultBall.x;
       balls[0].y = defaultBall.y;
@@ -312,7 +311,7 @@ function Game() {
     <div className={styles.gameWindow}>
       <span>
         Press left or right arrow on your keyboard to move the paddle. For
-        powerups: to launch a sticky ball or shoot, press space.
+        powerups: to launch a sticky ball, press space.
       </span>
       {/* <button onClick={() => console.log(LEVEL)}>lvl</button> */}
       <LevelChooser

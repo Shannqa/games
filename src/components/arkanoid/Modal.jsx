@@ -14,6 +14,13 @@ function Modal({ restart, lives, score, gameStageSave, setGameStageSave }) {
         <button onClick={() => nextLevel()}>Continue</button>
       </div>
     );
+  } else if (gameStageSave === "modalGameWin") {
+    <div className={`${styles.modal} ${styles.win}`}>
+      <div>Congratulations! </div>
+      <div>You beat all levels!</div>
+      <div>Your final score: {score}</div>
+      <button onClick={() => restart()}>Play again</button>
+    </div>;
   } else if (gameStageSave === "gameLoss") {
     return (
       <div className={`${styles.modal} ${styles.loss}`}>

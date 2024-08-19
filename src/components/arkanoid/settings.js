@@ -3,6 +3,7 @@ export const settings = {
   canvasW: 704, // 792
   canvasH: 600,
   gameAreaY: 28,
-  specialBricksPercent: 80,
+  specialBricksPercent: 60,
   paddleAngle: 60,
+  levelCount: 9,
 };

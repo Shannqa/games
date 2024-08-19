@@ -37,6 +37,10 @@ export function restart() {
   setLives(settings.lives);
 }
 
+export function winGame() {
+  changeGameStage("gameWin");
+}
+
 export function winLevel() {
   changeGameStage("levelWin");
   // saveLevel(LEVEL);

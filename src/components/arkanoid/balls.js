@@ -3,7 +3,7 @@ import { livesScore } from "./score";
 import { paddles, defaultPaddle } from "./paddles";
 import { brick } from "./bricks";
 import { powerUp, specialBricks } from "./powerups";
-import { lifeLoss, gameLoss, winLevel } from "./stages";
+import { lifeLoss, gameLoss, winLevel, winGame } from "./stages";
 import {
   changeHitBricks,
   hitBricks,
@@ -228,8 +228,35 @@ export function hitBallBrick(bricks) {
           if (edge) {
             if (br.painted === true) {
               toChange.push({ c: c, r: r, painted: false });
-            } else if (br.painted === "strong") {
-              toChange.push({ c: c, r: r, painted: true });
+              livesScore.score += 10;
+              changeHitBricks();
+
+              // special bricks with powerups
+              const isSpecialBrick =
+                !powerUp.released &&
+                Math.floor(Math.random() * 100) < settings.specialBricksPercent;
+              if (isSpecialBrick) {
+                powerUp.released = true;
+                const keys = Object.keys(specialBricks);
+                const random = Math.floor(Math.random() * 10);
+                powerUp.kind = specialBricks[keys[random]];
+                powerUp.x = br.x;
+                powerUp.y = br.y;
+              } else if (br.painted === "strong") {
+                toChange.push({ c: c, r: r, painted: true });
+                livesScore.score += 5;
+              }
+
+              // determine wins
+              if (hitBricks === bricksInLevel) {
+                if (LEVEL + 1 === settings.levelCount) {
+                  winGame();
+                  return;
+                } else {
+                  winLevel();
+                  return;
+                }
+              }
             }
           }
         }
