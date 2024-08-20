@@ -25,10 +25,47 @@
 
 .gameWindow {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  justify-content: center;
   align-items: center;
 }
 
 canvas {
   max-height: 90vh;
+}
+
+.controls {
+  text-align: center;
+  padding-left: 8px;
+}
+
+.controls p {
+  font-weight: bold;
+  padding-bottom: 4px;
+}
+
+.divider {
+  margin: 4px;
+}
+
+.keys1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.keys2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  gap: 2px;
+}
+.key {
+  /* display: flex;
+  flex-direction: column; */
 }

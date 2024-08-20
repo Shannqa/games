@@ -1,12 +1,6 @@
-what is dark green powerup? doesnt do anything i think -- extra life, needs to be communicated
-very dark blue, triple balls - 2 extra balls have same angle, when they touch the paddle there is a crash, paddle disappears, balls stop moving. ball1 moves with the paddle when it shouldnt?
-2x smaller/ bigger, big/small ball paddle shouldnt work
-wormhole - paddle may disappear and have weird shading
+wormhole - paddle may disappear
 
 after loading the game, if the first move is paddle to the left, the ball goes right instead of left
-
-- multi balls
-  secon balls moves weirdly, jumps up and falls down in the middle of canvas - i think its tripple ball
 
 - add
 
@@ -15,7 +9,7 @@ after loading the game, if the first move is paddle to the left, the ball goes r
 
 - sticky ball
 
-* ball at the corner of paddle - when you move the paddle to the edge of canvas and then shoot, ball goes directly upwards and shakes and cant be moved the other way
+* ball at the corner of paddle - when you move the paddle to the edge of canvas and then shoot, ball goes directly upwards and shakes and cant be moved the other way. or it can just disappear outside the canvas
 
 - solid brick
   -- ball can become stuck inside a solid brick, or run around the edge
@@ -28,9 +22,12 @@ Game.jsx:60 6
 ball1 doesnt change back to ball0 after powerup runs out. problem - ball1 might need to become ball0 a long time after the powerup ends. need to check for it. maybe check again on dropping ball
 when wormhole stops, suddenly ball[1] and ball[2] are logged with x and vx 0
 
-1 155 3
-Game.jsx:207 2 149 -3
-balls.js:174 ball1 0.26639761292042297
-balls.js:177 ball2 -0.26639761292042297
-Game.jsx:202 1 155.26639761292043 0.26639761292042297
-Game.jsx:207 2 148.73360238707957 -0.26639761292042297
+level in the input field is not updating after lvl up
+
+shoot the ball - change to release the ball maybe
+canvas should be taller
+maybe the center of the paddle shouldn't be 90 degree angle but a bit skewed
+
+- multiple balls - should disappear before drawing a new level after lvlup
+- change canvas background, should be a bit lighter
+- lvl6 annoyingly difficult, 4 too. need less solid bricks

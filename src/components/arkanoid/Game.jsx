@@ -21,14 +21,7 @@ import {
   movePaddle,
   defaultPaddle,
 } from "./paddles.js";
-import {
-  balls,
-  drawBall,
-  moveBall,
-  hitBallBrick,
-  hitBallPaddle,
-  defaultBall,
-} from "./balls.js";
+import { balls, drawBall, moveBall, defaultBall } from "./balls.js";
 import { drawBricks, countBricks, brick } from "./bricks.js";
 import { livesScore } from "./score.js";
 import {
@@ -42,7 +35,8 @@ import {
 import { restart, gameStage, changeGameStage, winLevel } from "./stages.js";
 import { addAmmo, ammo, drawGun, gun } from "./gun.js";
 import LevelChooser from "./LevelChooser.jsx";
-
+import { hitBallPaddle, hitBallBrick } from "./collisions.js";
+import Controls from "./Controls.jsx";
 export let LEFT;
 export let RIGHT;
 export let SPACE;
@@ -98,13 +92,14 @@ function Game() {
 
   document.onkeydown = function (e) {
     if (e.key === " " || e.code === "Space") {
-      if (sticky || stay) {
-        SPACE = true;
-        balls.forEach((ball) => {
+      SPACE = true;
+      balls.forEach((ball) => {
+        if (ball.stay) {
           ball.stay = false;
-        });
-      }
+        }
+      });
     }
+
     if (e.key === "Left" || e.key === "ArrowLeft") {
       if (
         gameStage == "lifeLoss" ||
@@ -199,12 +194,10 @@ function Game() {
       if (balls[1].active && !balls[1].stay) {
         balls[1].x += balls[1].vx;
         balls[1].y += balls[1].vy;
-        console.log("1", balls[1].x, balls[1].vx);
       }
       if (balls[2].active && !balls[2].stay) {
         balls[2].x += balls[2].vx;
         balls[2].y += balls[2].vy;
-        console.log("2", balls[2].x, balls[2].vx);
       }
       moveBall();
     }
@@ -220,7 +213,7 @@ function Game() {
       changeGameStage("modalGameWin");
       setGameStageSave("modalNextLevel");
       setScoreSave(livesScore.score);
-      setLevelSave(levelSave++);
+      setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
       powerUp.kind = null;
       powerUp.released = false;
@@ -243,16 +236,8 @@ function Game() {
   }
   return (
     <div className={styles.gameWindow}>
-      <span>
-        Press left or right arrow on your keyboard to move the paddle. For
-        powerups: to launch a sticky ball, press space.
-      </span>
       {/* <button onClick={() => console.log(LEVEL)}>lvl</button> */}
-      <LevelChooser
-        setLevelSave={setLevelSave}
-        LEVEL={LEVEL}
-        changeLevel={changeLevel}
-      />
+
       <Canvas
         draw={draw}
         collision={collision}
@@ -262,6 +247,11 @@ function Game() {
         lives={livesScore.lives}
         score={livesScore.score}
         gameStage={gameStageSave}
+      />
+      <Controls
+        setLevelSave={setLevelSave}
+        LEVEL={LEVEL}
+        changeLevel={changeLevel}
       />
       <Modal
         restart={restart}

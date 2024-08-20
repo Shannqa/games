@@ -3,7 +3,7 @@ import { balls, defaultBall, resetBall } from "./balls.js";
 import { settings } from "./settings.js";
 import { livesScore } from "./score.js";
 import { gameStage, winLevel } from "./stages.js";
-import { sticky, changeSticky } from "./Game.jsx";
+import { changeSticky } from "./Game.jsx";
 import { gun, ammo, addAmmo, deleteAmmo } from "./gun.js";
 import { brick } from "./bricks.js";
 import { changeHitBricks, hitBricks, bricksInLevel } from "./Game";
@@ -133,10 +133,10 @@ export const specialBricks = {
     color2: "#2c1081",
     run() {
       balls[1].active = true;
-      balls[1].x = paddles[0].x + paddles[0].w / 2;
+      balls[1].x = paddles[0].x + paddles[0].w / 2 - 10;
       balls[1].y = defaultBall.y;
       balls[2].active = true;
-      balls[2].x = paddles[0].x + paddles[0].w / 2;
+      balls[2].x = paddles[0].x + paddles[0].w / 2 + 10;
       balls[2].y = defaultBall.y;
       setTimeout(() => specialBricks.threeBalls.stop(), settings.powerUpTimer);
     },
@@ -380,11 +380,14 @@ export function changeActiveBalls() {
     }
 
     if (ballToRemove) {
+      console.log(ballToRemove.x, balls[1].x, balls[2].x);
       balls[0].x = ballToRemove.x;
       balls[0].y = ballToRemove.y;
       balls[0].vx = ballToRemove.vx;
       balls[0].vy = ballToRemove.vy;
+      balls[0].active = true;
       resetBall(ballToRemove);
+      console.log(ballToRemove.x, balls[1].x, balls[2].x);
       ballToRemove.active = false;
     }
   }
