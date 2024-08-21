@@ -30,4 +30,5 @@ maybe the center of the paddle shouldn't be 90 degree angle but a bit skewed
 
 - multiple balls - should disappear before drawing a new level after lvlup
 - change canvas background, should be a bit lighter
-- lvl6 annoyingly difficult, 4 too. need less solid bricks
+
+adjust ball / paddle speeds, how fast should the ball be able to go at an angle down in order to catch it by the paddle in time

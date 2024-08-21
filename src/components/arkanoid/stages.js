@@ -61,6 +61,16 @@ export function winGame() {
 export function winLevel() {
   changeGameStage("levelWin");
   console.log("level win");
+  balls.forEach((ball) => {
+    resetBall(ball);
+  });
+  balls[1].active = false;
+  balls[2].active = false;
+  powerUp.kind = null;
+  powerUp.released = false;
+  powerUp.on = false;
+  resetPaddle();
+
   // saveLevel(LEVEL);
   // saveLives(livesScore.lives);
   // saveScore(livesScore.score);

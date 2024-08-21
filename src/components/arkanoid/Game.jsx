@@ -21,7 +21,7 @@ import {
   movePaddle,
   defaultPaddle,
 } from "./paddles.js";
-import { balls, drawBall, moveBall, defaultBall } from "./balls.js";
+import { balls, drawBall, moveBall, defaultBall, resetBall } from "./balls.js";
 import { drawBricks, countBricks, brick } from "./bricks.js";
 import { livesScore } from "./score.js";
 import {
@@ -220,18 +220,12 @@ function Game() {
       powerUp.on = false;
     } else if (gameStage === "levelWin") {
       changeGameStage("modalWin");
-      balls[0].x = defaultBall.x;
-      balls[0].y = defaultBall.y;
-      paddles[0].x = defaultPaddle.x;
       setGameStageSave("modalNextLevel");
       setScoreSave(livesScore.score);
       setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
       hitBricks = 0;
       changeLevel(LEVEL + 1);
-      powerUp.kind = null;
-      powerUp.released = false;
-      powerUp.on = false;
     }
   }
   return (

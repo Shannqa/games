@@ -94,6 +94,7 @@ export function hitBallBrick(bricks) {
           if (
             br.painted !== false &&
             ball.y + ball.radius >= br.y &&
+            ball.y + ball.radius < br.y + ball.vy && // solid brick fix
             ball.y - ball.radius <= br.y &&
             ball.x >= br.x &&
             ball.x <= x2
@@ -102,6 +103,7 @@ export function hitBallBrick(bricks) {
           } else if (
             br.painted !== false &&
             ball.y + ball.radius >= y2 &&
+            ball.y - ball.radius > y2 - ball.vy && // attempting to fick the bug with solid bricks not reflecting balls properly
             ball.y - ball.radius <= y2 &&
             ball.x >= br.x &&
             ball.x <= x2
@@ -110,6 +112,7 @@ export function hitBallBrick(bricks) {
           } else if (
             br.painted !== false &&
             ball.x + ball.radius >= br.x &&
+            ball.x + ball.radius < br.x + ball.vx && // solid brick fix
             ball.x - ball.radius <= br.x &&
             ball.y >= br.y &&
             ball.y <= y2
@@ -119,6 +122,7 @@ export function hitBallBrick(bricks) {
             br.painted !== false &&
             ball.x + ball.radius >= x2 &&
             ball.x - ball.radius <= x2 &&
+            ball.x - ball.radius > x2 - ball.vx && // solid brick fix
             ball.y >= br.y &&
             ball.y <= y2
           ) {
@@ -157,17 +161,18 @@ export function hitBallBrick(bricks) {
               // console.log("strong");
               toChange.push({ c: c, r: r, painted: true });
               livesScore.score += 5;
+            } else if (br.painted == "solid") {
+              console.log("solid", br, Date.now());
+              console.log(
+                balls[0].x.toString(),
+                balls[0].y.toString(),
+                balls[0].vx.toString(),
+                balls[0].vy.toString()
+              );
             }
           }
         }
       }
-    }
-
-    // apply the change of direction of the ball - problem, balls 1-2 change dir when ball0 hits a brick
-    if (balls[1].active && xDir) {
-      console.log(
-        JSON.stringify(`before, ${balls[0].vy}, ${balls[1].vy}, ${balls[2].vy}`)
-      );
     }
 
     if (xDir) {
@@ -175,11 +180,7 @@ export function hitBallBrick(bricks) {
     } else if (yDir) {
       ball.vy = yDir;
     }
-    if (balls[1].active && xDir) {
-      console.log(
-        JSON.stringify(`after, ${balls[0].vy}, ${balls[1].vy}, ${balls[2].vy}`)
-      );
-    }
+
     // change bricks
     if (toChange.length > 0) {
       toChange.forEach((brickToChange) => {
