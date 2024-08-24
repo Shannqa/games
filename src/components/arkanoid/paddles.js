@@ -4,6 +4,7 @@ import { LEFT, RIGHT } from "./Game.jsx";
 import { gameStage } from "./stages.js";
 import { balls } from "./balls.js";
 import { gun } from "./gun.js";
+import { changeActivePaddle } from "./powerups.js";
 
 export const defaultPaddle = {
   x: settings.canvasW / 2 - 50,
@@ -20,6 +21,7 @@ export const paddles = [
     w: defaultPaddle.w,
     h: defaultPaddle.h,
     vx: defaultPaddle.vx,
+    active: true,
   },
   {
     x: defaultPaddle.x,
@@ -27,6 +29,7 @@ export const paddles = [
     w: defaultPaddle.w,
     h: defaultPaddle.h,
     vx: defaultPaddle.vx,
+    active: false,
   },
 ];
 
@@ -46,8 +49,11 @@ export function resetPaddle() {
 }
 
 export function movePaddle(ctx, paddles) {
-  if (powerUp.kind === specialBricks.wormhole && powerUp.on) {
-    // wormhole enabled
+  if (
+    (powerUp.kind === specialBricks.wormhole && powerUp.on) ||
+    specialBricks.wormhole.twoPaddles
+  ) {
+    // wormhole enabled or disabled already while two paddles still active
     if (RIGHT === true) {
       paddles[0].x += paddles[0].vx;
     }
@@ -56,6 +62,7 @@ export function movePaddle(ctx, paddles) {
       let leftX = settings.canvasW - paddles[0].x;
       paddles[1].x = 0 - leftX;
       drawPaddle(ctx, paddles[1]);
+      specialBricks.wormhole.twoPaddles = true;
       paddles[1].active = true;
     }
     if (LEFT === true) {
@@ -67,8 +74,10 @@ export function movePaddle(ctx, paddles) {
       let rightX = 0 - paddles[0].x;
       paddles[1].x = settings.canvasW - rightX;
       drawPaddle(ctx, paddles[1]);
+      specialBricks.wormhole.twoPaddles = true;
       paddles[1].active = true;
     }
+    changeActivePaddle();
   } else {
     // normal paddle moves
     if (RIGHT === true && paddles[0].x + paddles[0].w < settings.canvasW) {

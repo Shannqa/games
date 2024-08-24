@@ -1,6 +1,6 @@
 import React from "react";
 
-function LevelChooser({ setLevelSave, changeLevel, LEVEL }) {
+function LevelChooser({ setLevelSave, changeLevel, levelSave }) {
   function selectLevel(level) {
     // make sure it's a number not a string
     level = parseInt(level);
@@ -10,7 +10,11 @@ function LevelChooser({ setLevelSave, changeLevel, LEVEL }) {
   return (
     <div>
       <form>
-        <select name="level" onChange={(e) => selectLevel(e.target.value)}>
+        <select
+          name="level"
+          value={levelSave}
+          onChange={(e) => selectLevel(e.target.value)}
+        >
           <option value={1}>1</option>
           <option value={2}>2</option>
           <option value={3}>3</option>

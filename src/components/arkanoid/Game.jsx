@@ -204,7 +204,6 @@ function Game() {
 
     hitBallPaddle();
     hitBallBrick(bricks);
-    // hitBallBrick(balls[1], bricks);
     powerUpRelease(ctx);
     // console.log(gameStage);
     if (gameStage === "gameLoss") {
@@ -244,7 +243,7 @@ function Game() {
       />
       <Controls
         setLevelSave={setLevelSave}
-        LEVEL={LEVEL}
+        levelSave={levelSave}
         changeLevel={changeLevel}
       />
       <Modal

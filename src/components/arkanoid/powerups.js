@@ -1,4 +1,4 @@
-import { paddles, defaultPaddle } from "./paddles.js";
+import { paddles, defaultPaddle, resetPaddle } from "./paddles.js";
 import { balls, defaultBall, resetBall } from "./balls.js";
 import { settings } from "./settings.js";
 import { livesScore } from "./score.js";
@@ -7,8 +7,6 @@ import { changeSticky } from "./Game.jsx";
 import { gun, ammo, addAmmo, deleteAmmo } from "./gun.js";
 import { brick } from "./bricks.js";
 import { changeHitBricks, hitBricks, bricksInLevel } from "./Game";
-// second ball doesnt fall down the canvas
-// ball gets faster after the first hit of paddle
 
 let gunInterval;
 
@@ -71,28 +69,13 @@ export const specialBricks = {
     desc: "paddle can go through the wall and appear on the other side",
     color1: "#840075",
     color2: "#a0008d",
+    twoPaddles: false,
     run() {
       setTimeout(() => specialBricks.wormhole.stop(), settings.powerUpTimer);
     },
     stop() {
       powerUp.on = false;
-      if (!paddles[0].active && paddles[1].active) {
-        // only second paddle active - make it the primary paddle
-        paddles[0].x = paddles[1].x;
-        paddles[1].active = false;
-        paddles[0].active = true;
-      } else if (paddles[0].active && paddles[1].active) {
-        // both paddles active and on screen - remove 2nd, move 1st to be fully within canvas
-        paddles[1].active = false;
-        if (paddles[0].x < 0) {
-          paddles[0].x = 0;
-        } else if (paddles[0].x + paddles[0].w > settings.canvasW) {
-          paddles[0].x = settings.canvasW - paddles[0].w;
-        }
-      }
-      if (gameStage == "lifeLoss") {
-        paddles[0].x = defaultPaddle.x;
-      }
+      changeActivePaddle();
     },
   },
   twoBalls: {
@@ -390,5 +373,27 @@ export function changeActiveBalls() {
       console.log(ballToRemove.x, balls[1].x, balls[2].x);
       ballToRemove.active = false;
     }
+  }
+}
+
+export function changeActivePaddle() {
+  if (paddles[0].x > settings.canvasW || paddles[0].x + defaultPaddle.w < 0) {
+    // paddle 0 is completely outside of canvas
+    paddles[0].active = false;
+  }
+  if (paddles[1].x > settings.canvasW || paddles[1].x + defaultPaddle.w < 0) {
+    // paddle 0 is completely outside of canvas
+    paddles[1].active = false;
+  }
+
+  if (paddles[0].active && !paddles[1].active) {
+    // all good, paddle0 is main
+    return;
+  } else if (!paddles[0].active && paddles[1].active) {
+    // paddle1 is main, change to paddle0
+    paddles[0].x = paddles[1].x;
+    paddles[0].active = true;
+    paddles[1].active = false;
+    specialBricks.wormhole.twoPaddles = false;
   }
 }

@@ -94,7 +94,6 @@ export function hitBallBrick(bricks) {
           if (
             br.painted !== false &&
             ball.y + ball.radius >= br.y &&
-            ball.y + ball.radius < br.y + ball.vy && // solid brick fix
             ball.y - ball.radius <= br.y &&
             ball.x >= br.x &&
             ball.x <= x2
@@ -103,7 +102,6 @@ export function hitBallBrick(bricks) {
           } else if (
             br.painted !== false &&
             ball.y + ball.radius >= y2 &&
-            ball.y - ball.radius > y2 - ball.vy && // attempting to fick the bug with solid bricks not reflecting balls properly
             ball.y - ball.radius <= y2 &&
             ball.x >= br.x &&
             ball.x <= x2
@@ -112,7 +110,6 @@ export function hitBallBrick(bricks) {
           } else if (
             br.painted !== false &&
             ball.x + ball.radius >= br.x &&
-            ball.x + ball.radius < br.x + ball.vx && // solid brick fix
             ball.x - ball.radius <= br.x &&
             ball.y >= br.y &&
             ball.y <= y2
@@ -122,7 +119,6 @@ export function hitBallBrick(bricks) {
             br.painted !== false &&
             ball.x + ball.radius >= x2 &&
             ball.x - ball.radius <= x2 &&
-            ball.x - ball.radius > x2 - ball.vx && // solid brick fix
             ball.y >= br.y &&
             ball.y <= y2
           ) {
@@ -130,10 +126,32 @@ export function hitBallBrick(bricks) {
           }
 
           // change direction of the ball
-          if (edge === "bottom" || edge == "top") {
-            yDir = -ball.vy;
-          } else if (edge === "left" || edge === "right") {
-            xDir = -ball.vx;
+          // make sure the ball is reflected properly and it doesn't get stuck on edges of the brick
+          // particularly in the case of solid blocks by rapidly switching between directions towards and away from the brick
+          if (edge === "bottom") {
+            if (ball.vy < 0) {
+              yDir = -ball.vy;
+            } else {
+              yDir = ball.vy;
+            }
+          } else if (edge == "top") {
+            if (ball.vy > 0) {
+              yDir = -ball.vy;
+            } else {
+              yDir = ball.vy;
+            }
+          } else if (edge === "left") {
+            if (ball.vx > 0) {
+              xDir = -ball.vx;
+            } else {
+              xDir = ball.vx;
+            }
+          } else if (edge === "right") {
+            if (ball.vx < 0) {
+              xDir = -ball.vx;
+            } else {
+              xDir = ball.vx;
+            }
           }
 
           // add to the queue of bricks to change
@@ -151,8 +169,8 @@ export function hitBallBrick(bricks) {
               if (isSpecialBrick) {
                 powerUp.released = true;
                 const keys = Object.keys(specialBricks);
-                const random = Math.floor(Math.random() * 10);
-                // const random = 4;
+                // const random = Math.floor(Math.random() * 10);
+                const random = 1;
                 powerUp.kind = specialBricks[keys[random]];
                 powerUp.x = br.x;
                 powerUp.y = br.y;
