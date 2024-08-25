@@ -1,13 +1,13 @@
 import { settings } from "./settings";
 import { livesScore } from "./score";
-import { changeActiveBalls } from "./powerups";
+import { changeActiveBalls, specialBricks, powerUp } from "./powerups";
 import { lifeLoss, gameLoss } from "./stages";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
   y: settings.canvasH - 90, // 500
-  vx: 3,
-  vy: -3,
+  vx: 3.5,
+  vy: -3.5,
   radius: 10,
   active: true,
   stay: false,
@@ -96,7 +96,22 @@ export function moveBall() {
       ball.x + ball.vx < ball.radius
     ) {
       // right and left of canvas, reflect ball
-      ball.vx = -ball.vx;
+
+      if (powerUp.kind == specialBricks.stickyBall && powerUp.on) {
+        // sticky ball. make sure it's properly reflected when near edges of canvas
+        if (ball.x + ball.radius > settings.canvasW) {
+          console.log(ball.x.toString(), ball.vx.toString());
+          if (ball.vx > 0) {
+            ball.vx = -3;
+          }
+        } else if (ball.x - ball.radius < settings.canvasW) {
+          if (ball.vx < 0) {
+            ball.vx = 3;
+          }
+        }
+      } else {
+        ball.vx = -ball.vx;
+      }
     }
   });
 }

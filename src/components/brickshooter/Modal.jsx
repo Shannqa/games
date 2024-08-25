@@ -1,9 +1,24 @@
 import React from "react";
-import styles from "../../styles/arkanoid.module.css";
+import styles from "../../styles/brickshooter.module.css";
 
 function Modal({ restart, lives, score, gameStageSave, setGameStageSave }) {
+  function startGame() {
+    setGameStageSave("startLevel");
+    const canvas = document.getElementById("brickCanvas");
+    canvas.scrollIntoView();
+  }
+
   function nextLevel() {
     setGameStageSave("newLevel");
+  }
+
+  if (gameStageSave === "loaded") {
+    return (
+      <div className={`${styles.modal}`}>
+        <div>Click to begin!</div>
+        <button onClick={() => startGame()}>Start game</button>
+      </div>
+    );
   }
   if (gameStageSave === "modalNextLevel") {
     return (

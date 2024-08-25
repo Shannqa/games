@@ -28,10 +28,12 @@
   /* flex-direction: column; */
   justify-content: center;
   align-items: center;
+  
 }
 
 canvas {
-  max-height: 90vh;
+  max-height: 100vh;
+  border: 2px black solid;
 }
 
 .controls {
@@ -68,4 +70,45 @@ canvas {
 .key {
   /* display: flex;
   flex-direction: column; */
+}
+
+.gameWindow {
+  background-color: #f0f0f0;
+  padding: 12px;
+}
+
+.scroller {
+  position: absolute;
+  top: 1px;
+  right: -30px;
+  border-radius: 50%;
+  border: 1px black solid;
+  cursor: pointer;
+}
+
+.scroller:hover {
+  box-shadow: 2px 2px 1px #656565;
+}
+
+.gameCanvas {
+  position: relative;
+}
+
+.modal button {
+  margin: 10px;
+  background-color: #11364a;
+  color: #dca85d;
+  border: 1px #dca85d solid;
+  padding: 6px 18px;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.modal button:hover {
+  background-color: #2f7ba4;
+  cursor: pointer;
+}
+
+.modal button:active {
+  background-color: rgb(56 9 135);
 }

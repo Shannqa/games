@@ -6,7 +6,7 @@ import { gameStage, winLevel } from "./stages.js";
 import { changeSticky } from "./Game.jsx";
 import { gun, ammo, addAmmo, deleteAmmo } from "./gun.js";
 import { brick } from "./bricks.js";
-import { changeHitBricks, hitBricks, bricksInLevel } from "./Game";
+import { changeHitBricks, hitBricks, bricksInLevel } from "./Game.jsx";
 
 let gunInterval;
 

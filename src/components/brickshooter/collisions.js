@@ -169,8 +169,8 @@ export function hitBallBrick(bricks) {
               if (isSpecialBrick) {
                 powerUp.released = true;
                 const keys = Object.keys(specialBricks);
-                // const random = Math.floor(Math.random() * 10);
-                const random = 1;
+                const random = Math.floor(Math.random() * 10);
+                // const random = 6;
                 powerUp.kind = specialBricks[keys[random]];
                 powerUp.x = br.x;
                 powerUp.y = br.y;

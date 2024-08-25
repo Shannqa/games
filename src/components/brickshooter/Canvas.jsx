@@ -30,7 +30,14 @@ function Canvas(props) {
     };
   }, [draw, collision]);
 
-  return <canvas ref={canvasRef} width={width} height={height}></canvas>;
+  return (
+    <canvas
+      id="brickCanvas"
+      ref={canvasRef}
+      width={width}
+      height={height}
+    ></canvas>
+  );
 }
 
 export default Canvas;

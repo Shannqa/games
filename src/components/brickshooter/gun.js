@@ -34,8 +34,8 @@ export function deleteAmmo() {
 
 export function drawGun(ctx, bullet) {
   ctx.beginPath();
-  ctx.strokeStyle = "#fff";
-  ctx.fillStyle = "#fff";
+  ctx.strokeStyle = "#000";
+  ctx.fillStyle = "#000";
   if (bullet.active1) {
     ctx.rect(bullet.x1, bullet.y, gun.w, gun.h);
   }

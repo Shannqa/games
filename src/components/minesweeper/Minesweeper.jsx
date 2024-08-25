@@ -182,7 +182,7 @@ function Minesweeper() {
       }}
     >
       <div className={styles.gameWindow}>
-        <h2>Minesweeper</h2>
+        {/* <h2>Minesweeper</h2> */}
         <div className={styles.menus}>
           <DifficultyChooser />
           <Counters restart={resetGame} />

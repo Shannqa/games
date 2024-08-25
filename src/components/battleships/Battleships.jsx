@@ -79,7 +79,7 @@ function Battleships() {
       }}
     >
       <div className={styles.gameWindow}>
-        <h2>Battleships</h2>
+        {/* <h2>Battleships</h2> */}
         <div className={styles.gameMain}>
           {stage === "preparing" ? (
             <Pregame createGrid={createGrid} />

@@ -79,43 +79,11 @@ a {
   border-top: 2px solid #dca85d;
 }
 
-.home-links {
-  margin: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 160px;
-  justify-content: space-evenly;
-}
-
 .home-links p {
   font-family: Cinzel, sans-serif;
   font-size: 1.6rem;
 }
 
-.menu-link {
-  margin: 10px;
-  background-color: #11364a;
-  color: #dca85d;
-  border: 1px #dca85d solid;
-  padding: 10px 24px;
-  font-size: 1.4rem;
-  align-self: center;
-  text-decoration: none;
-}
-
-.menu-link:hover {
-  background-color: #234e66;
-  cursor: pointer;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 8px;
-  padding-bottom: 12px;
-}
 
 canvas {
   border: 1px black solid;

@@ -11,7 +11,7 @@ export const defaultPaddle = {
   y: settings.canvasH - 80, // 510
   w: 100,
   h: 14,
-  vx: 5,
+  vx: 5.5,
 };
 
 export const paddles = [

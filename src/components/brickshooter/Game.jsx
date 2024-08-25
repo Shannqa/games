@@ -1,7 +1,7 @@
 import React, { useState, createContext, memo } from "react";
-import Canvas from "./Canvas";
-import Modal from "./Modal";
-import styles from "../../styles/arkanoid.module.css";
+import Canvas from "./Canvas.jsx";
+import Modal from "./Modal.jsx";
+import styles from "../../styles/brickshooter.module.css";
 import {
   level1,
   level2,
@@ -12,7 +12,7 @@ import {
   level7,
   level8,
   level9,
-} from "./levels";
+} from "./levels.js";
 import { settings } from "./settings.js";
 import {
   paddles,
@@ -64,7 +64,7 @@ function Game() {
   const [scoreSave, setScoreSave] = useState(0);
   const [livesSave, setLivesSave] = useState(3);
   const [levelSave, setLevelSave] = useState(1);
-  const [gameStageSave, setGameStageSave] = useState(null);
+  const [gameStageSave, setGameStageSave] = useState("loaded");
   // const [stateLives, setStateLives] = useState(3);
   LEVEL = levelSave;
   let bricks;
@@ -92,6 +92,7 @@ function Game() {
 
   document.onkeydown = function (e) {
     if (e.key === " " || e.code === "Space") {
+      e.preventDefault();
       SPACE = true;
       balls.forEach((ball) => {
         if (ball.stay) {
@@ -101,6 +102,7 @@ function Game() {
     }
 
     if (e.key === "Left" || e.key === "ArrowLeft") {
+      e.preventDefault();
       if (
         gameStage == "lifeLoss" ||
         gameStage == undefined ||
@@ -118,6 +120,7 @@ function Game() {
       LEFT = true;
     }
     if (e.key === "Right" || e.key === "ArrowRight") {
+      e.preventDefault();
       if (
         gameStage == "lifeLoss" ||
         gameStage == undefined ||
@@ -141,6 +144,11 @@ function Game() {
     if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
     if (e.key === " " || e.code === "Space") SPACE = false;
   };
+
+  function scroll() {
+    const canvas = document.getElementById("brickCanvas");
+    canvas.scrollIntoView();
+  }
 
   function draw(ctx, frameCount) {
     if (gameStageSave == "newLevel") {
@@ -230,28 +238,36 @@ function Game() {
   return (
     <div className={styles.gameWindow}>
       {/* <button onClick={() => console.log(LEVEL)}>lvl</button> */}
-
-      <Canvas
-        draw={draw}
-        collision={collision}
-        setCollision={setCollision}
-        width={settings.canvasW}
-        height={settings.canvasH}
-        lives={livesScore.lives}
-        score={livesScore.score}
-        gameStage={gameStageSave}
-      />
+      <div className={styles.gameCanvas}>
+        <img
+          id="scroller"
+          className={styles.scroller}
+          src="/keyboard_double_arrow_down_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg"
+          onClick={scroll}
+          alt="Scroll into view"
+        />
+        <Canvas
+          draw={draw}
+          collision={collision}
+          setCollision={setCollision}
+          width={settings.canvasW}
+          height={settings.canvasH}
+          lives={livesScore.lives}
+          score={livesScore.score}
+          gameStage={gameStageSave}
+        />
+        <Modal
+          restart={restart}
+          lives={livesScore.lives}
+          score={livesScore.score}
+          gameStageSave={gameStageSave}
+          setGameStageSave={setGameStageSave}
+        />
+      </div>
       <Controls
         setLevelSave={setLevelSave}
         levelSave={levelSave}
         changeLevel={changeLevel}
-      />
-      <Modal
-        restart={restart}
-        lives={livesScore.lives}
-        score={livesScore.score}
-        gameStageSave={gameStageSave}
-        setGameStageSave={setGameStageSave}
       />
     </div>
   );

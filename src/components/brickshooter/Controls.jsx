@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/arkanoid.module.css";
+import styles from "../../styles/brickshooter.module.css";
 import LevelChooser from "./LevelChooser";
 
 function Controls({ setLevelSave, LEVEL, changeLevel }) {
