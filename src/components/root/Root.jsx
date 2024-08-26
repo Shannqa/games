@@ -1,16 +1,44 @@
-import React from "react";
+import React, { useEffect, createContext } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import Menu from "./Menu";
 import Footer from "./Footer";
-// import "../../../src/styles/App.css";
 import styles from "../../styles/Root.module.css";
 
-// import "./Root.css";
-import Battleships from "../battleships/Battleships";
+export const AppContext = createContext({
+  scoresBS = [],
+  setScoresBS: () => {}
+});
 
 function Root() {
+  const [scoresBS, setScoresBS] = useState(null);
+  
+  // fetch highscores from db
+  useEffect(() => {
+    fetch("/api/scores", {
+      method: "GET",
+      headers: {
+        accept: "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(body => {
+      if (body.success) {
+        setScoresBS(body.scoresBS);
+      }
+    })
+    .catch(err => console.log(err))
+  }, [])
+  
+  
+  
+  
   return (
+    <AppContext.Provider
+      value={{
+        scoresBS,
+        setScoresBS
+      }}
+    >
     <div className={styles.root}>
       <div className={styles.top}>
         <Header />
@@ -18,6 +46,7 @@ function Root() {
       </div>
       <Footer />
     </div>
+    </AppContext.Provider>
   );
 }
 
