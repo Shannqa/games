@@ -1,5 +1,5 @@
 export const settings = {
-  lives: 10,
+  lives: 2,
   canvasW: 704, // 792
   canvasH: 600,
   gameAreaY: 28,

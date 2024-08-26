@@ -10,7 +10,7 @@ function Menu() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="#">Credits</Link>
+          <Link to="/highscores">Highscores</Link>
         </li>
         <li>
           <a href="https://github.com/Shannqa/games">Github</a>

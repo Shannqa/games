@@ -26,7 +26,7 @@ body {
   justify-content: space-between;
 }
 
-.home {
+.home, .highscores {
   background-color: #f0f0f0;
   width: 1200px;
 }
@@ -182,4 +182,43 @@ h1 {
 
 .gameWindow {
   position: relative;
+}
+
+.highscores {
+  background-color: #f0f0f0;
+  width: 1200px;
+  padding: 40px;
+}
+
+.highscores table {
+  border: 1px black solid;
+  width: 200px;
+  margin: 6px 0;
+}
+
+.highscores td, .highscores th {
+  padding: 4px;
+  border: 1px black solid;
+  text-align: center;
+}
+
+.highscores h2 {
+  text-align: center;
+}
+
+.highscores input {
+  height: 1.5rem;
+  margin: 4px 0;
+}
+
+@media screen and (max-width: 1200px) {
+  .home, .highscores {
+    width: 1000px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .home, .highscores {
+    width: 800px;
+  }
 }

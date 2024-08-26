@@ -112,3 +112,17 @@ canvas {
 .modal button:active {
   background-color: rgb(56 9 135);
 }
+
+.modal p {
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.modal > div {
+  line-height: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}

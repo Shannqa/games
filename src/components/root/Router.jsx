@@ -5,6 +5,8 @@ import Battleships from "../battleships/Battleships";
 import Minesweeper from "../minesweeper/Minesweeper";
 import Brickshooter from "../brickshooter/Brickshooter";
 import Home from "./Home";
+import Highscores from "./Highscores";
+
 function Router() {
   const router = createBrowserRouter([
     {
@@ -26,6 +28,10 @@ function Router() {
         {
           path: "/brickshooter",
           element: <Brickshooter />,
+        },
+        {
+          path: "/highscores",
+          element: <Highscores />,
         },
       ],
     },

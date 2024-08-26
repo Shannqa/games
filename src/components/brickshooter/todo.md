@@ -20,3 +20,11 @@ maybe the center of the paddle shouldn't be 90 degree angle but a bit skewed
 - change canvas background, should be a bit lighter
 
 adjust ball / paddle speeds, how fast should the ball be able to go at an angle down in order to catch it by the paddle in time
+
+wormhole error - its possible to move the paddle beyond the edge of canvas long after powerup ends
+
+last level - after winning, the game tries to switch to next level:
+10
+bricks.js:75 Uncaught TypeError: Cannot read properties of undefined (reading 'forEach')
+at countBricks (bricks.js:75:10)
+at Game (Game.jsx:91:19)
