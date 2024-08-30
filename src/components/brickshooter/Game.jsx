@@ -100,7 +100,7 @@ function Game() {
         }
       });
     }
-
+ 
     if (e.key === "Left" || e.key === "ArrowLeft") {
       e.preventDefault();
       if (
