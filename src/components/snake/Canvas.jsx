@@ -10,10 +10,13 @@ function Canvas(props) {
     const context = canvas.getContext("2d");
     let frameCount = 0;
     let animationFrameId;
+    let frameLimit = 60;
 
     const render = () => {
       frameCount++;
-      draw(context, frameCount);
+      if (frameCount % frameLimit === 0) {
+        draw(context, frameCount);
+      }
       if (collision === true) {
         window.cancelAnimationFrame(animationFrameId);
         // setCollision(false);
@@ -31,12 +34,7 @@ function Canvas(props) {
   }, [draw, collision]);
 
   return (
-    <canvas
-      id="canvas"
-      ref={canvasRef}
-      width={width}
-      height={height}
-    ></canvas>
+    <canvas id="canvas" ref={canvasRef} width={width} height={height}></canvas>
   );
 }
 
