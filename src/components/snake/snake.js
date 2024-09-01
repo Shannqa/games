@@ -1,54 +1,117 @@
-import settings from "./settings";
+import settings, { squaresX, squaresY } from "./settings";
+import { currentDir } from "./keyboard";
+import { changeGameStage, gameStage } from "./SnakeGame";
 
 const canvasW = settings.canvasW;
 const canvasH = settings.canvasH;
 const squareSize = settings.squareSize;
-const squaresY = canvasH / squareSize;
-const squaresX = canvasW / squareSize;
 
 export const snake = [
-  [squaresX / 2 + 1, squaresY / 2],
-  [squaresX / 2, squaresY / 2],
-  [squaresX / 2 - 1, squaresY / 2],
+  {
+    // head
+    x: Math.floor(squaresX / 2 + 1),
+    y: Math.floor(squaresY / 2),
+    dir: "right",
+  },
+  {
+    x: Math.floor(squaresX / 2),
+    y: Math.floor(squaresY / 2),
+    dir: "right",
+  },
+  {
+    x: Math.floor(squaresX / 2 - 1),
+    y: Math.floor(squaresY / 2),
+    dir: "right",
+  },
 ];
 
 export function drawSnake(ctx) {
+  console.log(squaresX, squaresY, squareSize);
   ctx.beginPath();
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "#103549";
+  // ctx.lineWidth = 1;
+  // ctx.strokeStyle = "#103549";
   ctx.fillStyle = "#234e66";
 
   snake.forEach((sq) => {
-    ctx.rect(sq[0] * squareSize, sq[1] * squareSize, squareSize, squareSize);
+    ctx.rect(sq.x * squareSize, sq.y * squareSize, squareSize, squareSize);
+    console.log(sq.x, sq.y);
   });
 
-  ctx.stroke();
+  // ctx.stroke();
   ctx.fill();
   ctx.closePath();
 }
 
 export function moveSnake() {
-  if (snake[0][0] >= squaresX) {
-    console.log("coll");
+  let headDir = snake[0].dir;
+
+  if (
+    (headDir === "up" && currentDir === "down") ||
+    (headDir === "down" && currentDir === "up") ||
+    (headDir === "left" && currentDir === "right") ||
+    (headDir === "right" && currentDir === "left")
+  ) {
+    // do nothing
   } else {
-    snake.forEach((sq) => {
-      sq[0] += 1;
+    // change direction
+    headDir = currentDir;
+  }
+  // add new head
+  if (headDir === "up") {
+    snake.unshift({
+      x: snake[0].x,
+      y: snake[0].y - 1,
+      dir: "up",
     });
+  } else if (headDir === "down") {
+    snake.unshift({
+      x: snake[0].x,
+      y: snake[0].y + 1,
+      dir: "down",
+    });
+  } else if (headDir === "left") {
+    snake.unshift({
+      x: snake[0].x - 1,
+      y: snake[0].y,
+      dir: "left",
+    });
+  } else if (headDir === "right") {
+    snake.unshift({
+      x: snake[0].x + 1,
+      y: snake[0].y,
+      dir: "right",
+    });
+  }
+  // remove last square
+  snake.pop();
+}
+
+export function detectCollision() {
+  if (
+    snake[0].x <= 0 ||
+    snake[0].x >= squaresX ||
+    snake[0].y <= 0 ||
+    snake[0].y >= squaresY
+  ) {
+    // hit edges of canvas
+    changeGameStage("stop");
+    return;
   }
 }
 
-// >
-// x + sq, y
+// if (
+//   snake[0][0] >= squaresX ||
+//   snake[0][0] <= 0 ||
+//   snake[0][1] >= squaresY ||
+//   snake[0][1] <= 0
+// ) {
+//   // snake hits edges of canvas
+//   return;
+// }
+// // change current direction of snake on arrow press
 
-// <
-// x - sq, y
+// if (currentDir === "up") {
+//   snake[0][2] = "up";
+// }
 
-// /\
-// x, y - sq
-
-// \/
-// x, y + sq
-
-// 100, 100
-// 105, 100
-// 110, 100
+// snake.unshift([]);

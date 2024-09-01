@@ -10,7 +10,7 @@ function Canvas(props) {
     const context = canvas.getContext("2d");
     let frameCount = 0;
     let animationFrameId;
-    let frameLimit = 60;
+    let frameLimit = 40;
 
     const render = () => {
       frameCount++;

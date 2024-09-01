@@ -28,7 +28,8 @@ body {
 
 .home, .highscores {
   background-color: #f0f0f0;
-  width: 1200px;
+  min-width: 800px;
+  max-width: 1200px;
 }
 
 a {
@@ -97,6 +98,7 @@ h1 {
 .hero {
   border: 4px solid #dca85d;
   background-color: #dce9f0;
+  min-width: 800px;
 }
 
 .hero h2 {
@@ -110,7 +112,13 @@ h1 {
   padding: 20px;
   justify-content: center;
   align-items: flex-start;
+
 }
+
+.left {
+  flex-grow: 1;
+}
+
 .controller {
   /* transform: rotate(24deg);   */
 }
@@ -211,7 +219,7 @@ h1 {
   margin: 4px 0;
 }
 
-@media screen and (max-width: 1200px) {
+/* @media screen and (max-width: 1200px) {
   .home, .highscores {
     width: 1000px;
   }
@@ -221,4 +229,4 @@ h1 {
   .home, .highscores {
     width: 800px;
   }
-}
+} */
