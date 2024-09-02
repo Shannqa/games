@@ -3,6 +3,7 @@ const settings = {
   canvasH: 400,
   snakeSpeed: 5,
   squareSize: 16,
+  gameAreaY: 20,
 };
 
 export const squaresY = settings.canvasH / settings.squareSize;

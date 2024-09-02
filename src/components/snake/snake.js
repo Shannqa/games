@@ -26,15 +26,15 @@ export const snake = [
 ];
 
 export function drawSnake(ctx) {
-  console.log(squaresX, squaresY, squareSize);
+  // console.log(squaresX, squaresY, squareSize);
   ctx.beginPath();
   // ctx.lineWidth = 1;
   // ctx.strokeStyle = "#103549";
-  ctx.fillStyle = "#234e66";
+  ctx.fillStyle = "#2f7ba4";
 
   snake.forEach((sq) => {
     ctx.rect(sq.x * squareSize, sq.y * squareSize, squareSize, squareSize);
-    console.log(sq.x, sq.y);
+    // console.log(sq.x, sq.y);
   });
 
   // ctx.stroke();
@@ -42,7 +42,7 @@ export function drawSnake(ctx) {
   ctx.closePath();
 }
 
-export function moveSnake() {
+export function moveSnake(foodEaten = false) {
   let headDir = snake[0].dir;
 
   if (
@@ -82,36 +82,21 @@ export function moveSnake() {
       dir: "right",
     });
   }
-  // remove last square
-  snake.pop();
+  if (!foodEaten) {
+    // remove last square
+    snake.pop();
+  }
 }
 
 export function detectCollision() {
   if (
-    snake[0].x <= 0 ||
-    snake[0].x >= squaresX ||
-    snake[0].y <= 0 ||
-    snake[0].y >= squaresY
+    snake[0].x < 0 ||
+    snake[0].x > squaresX ||
+    snake[0].y < 0 ||
+    snake[0].y > squaresY
   ) {
     // hit edges of canvas
     changeGameStage("stop");
     return;
   }
 }
-
-// if (
-//   snake[0][0] >= squaresX ||
-//   snake[0][0] <= 0 ||
-//   snake[0][1] >= squaresY ||
-//   snake[0][1] <= 0
-// ) {
-//   // snake hits edges of canvas
-//   return;
-// }
-// // change current direction of snake on arrow press
-
-// if (currentDir === "up") {
-//   snake[0][2] = "up";
-// }
-
-// snake.unshift([]);
