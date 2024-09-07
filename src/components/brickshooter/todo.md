@@ -28,3 +28,4 @@ last level - after winning, the game tries to switch to next level:
 bricks.js:75 Uncaught TypeError: Cannot read properties of undefined (reading 'forEach')
 at countBricks (bricks.js:75:10)
 at Game (Game.jsx:91:19)
+modal on - can move

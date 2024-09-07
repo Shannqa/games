@@ -1,12 +1,12 @@
 import settings, { squaresX, squaresY } from "./settings";
 import { currentDir } from "./keyboard";
 import { changeGameStage, gameStage } from "./SnakeGame";
-
+import { setLoss } from "./stages";
 const canvasW = settings.canvasW;
 const canvasH = settings.canvasH;
 const squareSize = settings.squareSize;
 
-export const snake = [
+export const defaultSnake = [
   {
     // head
     x: Math.floor(squaresX / 2 + 1),
@@ -24,6 +24,8 @@ export const snake = [
     dir: "right",
   },
 ];
+
+export const snake = [];
 
 export function drawSnake(ctx) {
   // console.log(squaresX, squaresY, squareSize);
@@ -88,7 +90,7 @@ export function moveSnake(foodEaten = false) {
   }
 }
 
-export function detectCollision() {
+export function detectCollision(setGameState, setModal) {
   if (
     snake[0].x < 0 ||
     snake[0].x > squaresX ||
@@ -96,7 +98,7 @@ export function detectCollision() {
     snake[0].y > squaresY
   ) {
     // hit edges of canvas
-    changeGameStage("stop");
+    setLoss(setGameState, setModal);
     return;
   }
 }

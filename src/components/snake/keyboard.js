@@ -23,6 +23,10 @@ function keyDown(e) {
   }
 }
 
+export function changeCurrentDir(direction) {
+  currentDir = direction;
+}
+
 // function keyUp(e) {
 //   if (e.key === "Up" || e.key === "ArrowUp") UP = false;
 //   if (e.key === "Down" || e.key === "ArrowDown") DOWN = false;
