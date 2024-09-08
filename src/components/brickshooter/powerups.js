@@ -234,7 +234,7 @@ export function powerUpRelease(ctx) {
 }
 
 // powerup - gun mode
-export function hitGunBricks(bricks) {
+export function hitGunBricks(bricks, setModal, setGameState, setLevelSave) {
   ammo.forEach((bullet) => {
     for (let c = 0; c < 11; c++) {
       for (let r = 0; r < 11; r++) {
@@ -269,13 +269,13 @@ export function hitGunBricks(bricks) {
           } else if (br.painted === true) {
             bricks[c][r].painted = false;
             livesScore.score += 10;
-            changeHitBricks();
+            changeHitBricks(hitBricks + 1);
             if (hitBricks === bricksInLevel) {
               if (LEVEL + 1 === settings.levelCount) {
-                winGame();
+                winGame(setModal, setGameState, setLevelSave);
                 return;
               } else {
-                winLevel();
+                winLevel(setModal, setGameState, setLevelSave);
                 return;
               }
             }

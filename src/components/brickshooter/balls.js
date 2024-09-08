@@ -71,7 +71,7 @@ export function resetBall(ball) {
   ball.radius = defaultBall.radius;
 }
 
-export function moveBall() {
+export function moveBall(setModal, setGameState, setLevelSave) {
   // ball hiting edges of the canvas
   balls.forEach((ball) => {
     if (ball.y + ball.vy > settings.canvasH - ball.radius) {
@@ -83,7 +83,7 @@ export function moveBall() {
       if (!balls[0].active && !balls[1].active && !balls[2].active) {
         // all balls are inactive, lose a life and/or game
         if (livesScore.lives < 1) {
-          gameLoss();
+          gameLoss(setModal, setGameState, setLevelSave);
         } else {
           lifeLoss();
         }

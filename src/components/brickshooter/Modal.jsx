@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../root/Root.jsx";
 import styles from "../../styles/brickshooter.module.css";
-import { changeGameStage } from "./stages.js";
+import { changeGameStage, resetStats } from "./stages.js";
 
 function Modal({
-  restart,
   lives,
   score,
   gameState,
   setGameState,
   modal,
   setModal,
+  setLevelSave,
 }) {
   const { scoresBS, setScoresBS } = useContext(AppContext);
   const [playerName, setPlayerName] = useState("");
@@ -64,11 +64,13 @@ function Modal({
     const canvas = document.getElementById("brickCanvas");
     canvas.scrollIntoView();
     setModal(false);
-    console.log("aa");
+    // resetStats(setLevelSave);
   }
 
   function nextLevel() {
     setGameState("newLevel");
+    changeGameStage("playing");
+    setModal(false);
   }
 
   if (gameState === "loaded") {
@@ -79,7 +81,7 @@ function Modal({
       </div>
     );
   }
-  if (gameState === "modalNextLevel") {
+  if (gameState === "nextLevel") {
     return (
       <div className={`${styles.modal} ${styles.win}`}>
         <div>Good job!</div>
@@ -88,7 +90,7 @@ function Modal({
         <button onClick={() => nextLevel()}>Continue</button>
       </div>
     );
-  } else if (gameState === "modalGameWin") {
+  } else if (gameState === "gameWin") {
     <div className={`${styles.modal} ${styles.win}`}>
       <p>Congratulations, you beat all levels!</p>
       <div>Your earned {score} points.</div>
@@ -103,7 +105,7 @@ function Modal({
           <button onClick={addScore}>Save score</button>
         </div>
       ) : (
-        <button onClick={() => restart()}>Play again</button>
+        <button onClick={() => startGame()}>Play again</button>
       )}
     </div>;
   } else if (gameState === "gameLoss") {
@@ -112,7 +114,8 @@ function Modal({
         {isHighscore() ? (
           <div>
             <p>New highscore!</p>
-            <div>Enter the name you want to be remembered by:</div>
+            <div>You earned {score} points</div>
+            <div>Enter your name:</div>
             <input
               type="text"
               placeholder="Your name..."
@@ -136,7 +139,6 @@ function Modal({
   } else if (gameState === "playAgain") {
     return (
       <div className={`${styles.modal} ${styles.loss}`}>
-        <p>Highscore saved!</p>
         <div>Would you like to play again?</div>
         <button onClick={() => startGame()}>Play again</button>
       </div>

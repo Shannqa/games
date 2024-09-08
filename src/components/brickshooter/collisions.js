@@ -76,7 +76,7 @@ export function hitBallPaddle() {
   });
 }
 
-export function hitBallBrick(bricks) {
+export function hitBallBrick(bricks, setModal, setGameState, setLevelSave) {
   let toChange = [];
   // collision - ball - brick
   balls.forEach((ball) => {
@@ -159,7 +159,7 @@ export function hitBallBrick(bricks) {
             if (br.painted === true) {
               toChange.push({ c: c, r: r, painted: false });
               livesScore.score += 10;
-              changeHitBricks();
+              changeHitBricks(hitBricks + 1);
 
               // special bricks with powerups
               const isSpecialBrick =
@@ -206,15 +206,15 @@ export function hitBallBrick(bricks) {
           brickToChange.painted;
       });
     }
-
+    console.log("hit", hitBricks, "inlvl", bricksInLevel);
     // determine wins
     if (hitBricks === bricksInLevel) {
-      console.log("hit", hitBricks, "inlvl", bricksInLevel);
+      console.log("levelwin", "hit", hitBricks, "inlvl", bricksInLevel);
       if (LEVEL + 1 === settings.levelCount) {
-        winGame();
+        winGame(setModal, setGameState, setLevelSave);
         return;
       } else {
-        winLevel();
+        winLevel(setModal, setGameState, setLevelSave);
         return;
       }
     }

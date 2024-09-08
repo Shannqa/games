@@ -32,20 +32,19 @@ import {
   drawWormhole,
   announceExtraLife,
 } from "./powerups.js";
-import { restart, gameStage, changeGameStage, winLevel } from "./stages.js";
+import { gameStage, changeGameStage, winLevel } from "./stages.js";
 import { addAmmo, ammo, drawGun, gun } from "./gun.js";
 import LevelChooser from "./LevelChooser.jsx";
 import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
 import { keyDown, keyUp } from "./keyboard.js";
-import { LEFT, RIGHT, SPACE } from "./keyboard.js";
 export let LEVEL;
 export let hitBricks = 0;
 export let bricksInLevel;
 export let sticky = false;
 
-export function changeHitBricks() {
-  hitBricks += 1;
+export function changeHitBricks(bricks) {
+  hitBricks = bricks;
 }
 
 export function changeLevel(level) {
@@ -102,90 +101,80 @@ function Game() {
   }
 
   function draw(ctx, frameCount) {
-    if (gameState == "newLevel") {
-      setGameState("playing");
-      changeGameStage("ready");
-    }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     livesScore.draw(ctx);
-
     drawBricks(ctx, bricks);
     drawPaddle(ctx, paddles[0]);
-
-    if (powerUp.on) {
-      if (powerUp.kind == specialBricks.wormhole) {
-        drawWormhole(ctx);
-      } else if (powerUp.kind == specialBricks.extraLife)
-        announceExtraLife(ctx);
-    }
-
     balls.forEach((ball) => {
       if (ball.active) {
         drawBall(ctx, ball);
       }
     });
 
-    movePaddle(ctx, paddles);
-    if (powerUp.kind == specialBricks.gunMode && powerUp.on) {
-      // gunMode powerup
-      // console.log(ammo);
-      ammo.forEach((bullet) => {
-        if (bullet.active1 || bullet.active2) {
-          drawGun(ctx, bullet);
-          bullet.y += gun.vy;
-        }
-      });
-      hitGunBricks(bricks);
-      // console.log(ammo);
-    }
-    if (
-      gameStage === "lifeLoss" ||
-      gameStage === "ready" ||
-      gameStage == "newLevel" ||
-      gameStage == "modalWin"
-    ) {
-      // dont move the ball
-    } else {
-      if (balls[0].active && !balls[0].stay) {
-        balls[0].x += balls[0].vx;
-        balls[0].y += balls[0].vy;
-      }
-      if (balls[1].active && !balls[1].stay) {
-        balls[1].x += balls[1].vx;
-        balls[1].y += balls[1].vy;
-      }
-      if (balls[2].active && !balls[2].stay) {
-        balls[2].x += balls[2].vx;
-        balls[2].y += balls[2].vy;
-      }
-      moveBall();
+    if (modal || gameStage === "lifeLoss" || gameStage === "gameLoss") {
+      return;
     }
 
-    hitBallPaddle();
-    hitBallBrick(bricks);
-    powerUpRelease(ctx);
-    // console.log(gameStage);
-    if (gameStage === "gameLoss" && !modal) {
-      setGameState("gameLoss");
-      setModal(true);
-    } else if (gameStage === "gameWin") {
-      changeGameStage("modalGameWin");
-      setGameState("modalNextLevel");
-      setScoreSave(livesScore.score);
-      setLevelSave(levelSave + 1);
-      setLivesSave(livesScore.lives);
-      powerUp.kind = null;
-      powerUp.released = false;
-      powerUp.on = false;
-    } else if (gameStage === "levelWin") {
-      changeGameStage("modalWin");
-      setGameState("modalNextLevel");
-      setScoreSave(livesScore.score);
-      setLevelSave(levelSave + 1);
-      setLivesSave(livesScore.lives);
-      hitBricks = 0;
-      changeLevel(LEVEL + 1);
+    // powerups
+    if (powerUp.on) {
+      if (powerUp.kind == specialBricks.wormhole) {
+        drawWormhole(ctx);
+      } else if (powerUp.kind == specialBricks.extraLife) {
+        announceExtraLife(ctx);
+      } else if (powerUp.kind == specialBricks.gunMode) {
+        ammo.forEach((bullet) => {
+          if (bullet.active1 || bullet.active2) {
+            drawGun(ctx, bullet);
+            bullet.y += gun.vy;
+          }
+        });
+        hitGunBricks(bricks, setModal, setGameState, setLevelSave);
+      }
     }
+
+    // move paddle
+    movePaddle(ctx, paddles);
+
+    // move ball
+    if (balls[0].active && !balls[0].stay) {
+      balls[0].x += balls[0].vx;
+      balls[0].y += balls[0].vy;
+    }
+    if (balls[1].active && !balls[1].stay) {
+      balls[1].x += balls[1].vx;
+      balls[1].y += balls[1].vy;
+    }
+    if (balls[2].active && !balls[2].stay) {
+      balls[2].x += balls[2].vx;
+      balls[2].y += balls[2].vy;
+    }
+    moveBall(setModal, setGameState, setLevelSave);
+
+    hitBallPaddle();
+    hitBallBrick(bricks, setModal, setGameState, setLevelSave);
+    powerUpRelease(ctx);
+
+    // if (gameStage === "gameLoss" && !modal) {
+    //   setGameState("gameLoss");
+    //   setModal(true);
+    // } else if (gameStage === "gameWin") {
+    //   changeGameStage("modalGameWin");
+    //   setGameState("modalNextLevel");
+    //   setScoreSave(livesScore.score);
+    //   setLevelSave(levelSave + 1);
+    //   setLivesSave(livesScore.lives);
+    //   powerUp.kind = null;
+    //   powerUp.released = false;
+    //   powerUp.on = false;
+    // } else if (gameStage === "levelWin") {
+    //   changeGameStage("modalWin");
+    //   setGameState("modalNextLevel");
+    //   setScoreSave(livesScore.score);
+    //   setLevelSave(levelSave + 1);
+    //   setLivesSave(livesScore.lives);
+    //   hitBricks = 0;
+    //   changeLevel(LEVEL + 1);
+    // }
   }
   return (
     <div className={styles.gameWindow}>
@@ -209,13 +198,13 @@ function Game() {
           gameState={gameState}
         />
         <Modal
-          restart={restart}
           lives={livesScore.lives}
           score={livesScore.score}
           gameState={gameState}
           setGameState={setGameState}
           modal={modal}
           setModal={setModal}
+          setLevelSave={setLevelSave}
         />
       </div>
       <Controls
