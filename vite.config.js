@@ -14,7 +14,7 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: `${import.meta.env.VITE_SERVER}:${import.meta.env.VITE_PORT}`,
+          target: `${process.env.VITE_SERVER}:${process.env.VITE_PORT}`,
           secure: false,
         },
       },
