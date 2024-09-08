@@ -18,7 +18,7 @@ function Root() {
 
   // fetch highscores from db
   useEffect(() => {
-    fetch(`${server}:${port}/api/scores`, {
+    fetch(`${server}/api/scores`, {
       method: "GET",
       headers: {
         accept: "application/json",
