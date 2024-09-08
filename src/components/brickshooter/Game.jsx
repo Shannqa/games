@@ -37,9 +37,8 @@ import { addAmmo, ammo, drawGun, gun } from "./gun.js";
 import LevelChooser from "./LevelChooser.jsx";
 import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
-export let LEFT;
-export let RIGHT;
-export let SPACE;
+import { keyDown, keyUp } from "./keyboard.js";
+import { LEFT, RIGHT, SPACE } from "./keyboard.js";
 export let LEVEL;
 export let hitBricks = 0;
 export let bricksInLevel;
@@ -64,7 +63,9 @@ function Game() {
   const [scoreSave, setScoreSave] = useState(0);
   const [livesSave, setLivesSave] = useState(3);
   const [levelSave, setLevelSave] = useState(1);
-  const [gameStageSave, setGameStageSave] = useState("loaded");
+  const [gameState, setGameState] = useState("loaded");
+  const [modal, setModal] = useState(true);
+
   // const [stateLives, setStateLives] = useState(3);
   LEVEL = levelSave;
   let bricks;
@@ -90,60 +91,10 @@ function Game() {
   }
   bricksInLevel = countBricks(bricks);
 
-  document.onkeydown = function (e) {
-    if (e.key === " " || e.code === "Space") {
-      e.preventDefault();
-      SPACE = true;
-      balls.forEach((ball) => {
-        if (ball.stay) {
-          ball.stay = false;
-        }
-      });
-    }
- 
-    if (e.key === "Left" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      if (
-        gameStage == "lifeLoss" ||
-        gameStage == undefined ||
-        gameStage == "ready"
-      ) {
-        changeGameStage("playing");
-      } else if (
-        gameStage == "gameLoss" ||
-        gameStage == "modalWin" ||
-        gameStage == "levelWin" ||
-        gameStage == "modalLoss"
-      ) {
-        return;
-      }
-      LEFT = true;
-    }
-    if (e.key === "Right" || e.key === "ArrowRight") {
-      e.preventDefault();
-      if (
-        gameStage == "lifeLoss" ||
-        gameStage == undefined ||
-        gameStage == "ready"
-      ) {
-        changeGameStage("playing");
-      } else if (
-        gameStage == "gameLoss" ||
-        gameStage == "modalWin" ||
-        gameStage == "levelWin" ||
-        gameStage == "modalLoss"
-      ) {
-        return;
-      }
-      RIGHT = true;
-    }
-  };
-
-  document.onkeyup = function (e) {
-    if (e.key === "Left" || e.key === "ArrowLeft") LEFT = false;
-    if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
-    if (e.key === " " || e.code === "Space") SPACE = false;
-  };
+  if (!modal) {
+    document.onkeydown = keyDown;
+    document.onkeyup = keyUp;
+  }
 
   function scroll() {
     const canvas = document.getElementById("brickCanvas");
@@ -151,8 +102,8 @@ function Game() {
   }
 
   function draw(ctx, frameCount) {
-    if (gameStageSave == "newLevel") {
-      setGameStageSave("playing");
+    if (gameState == "newLevel") {
+      setGameState("playing");
       changeGameStage("ready");
     }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -214,11 +165,12 @@ function Game() {
     hitBallBrick(bricks);
     powerUpRelease(ctx);
     // console.log(gameStage);
-    if (gameStage === "gameLoss") {
-      setGameStageSave("gameLoss");
+    if (gameStage === "gameLoss" && !modal) {
+      setGameState("gameLoss");
+      setModal(true);
     } else if (gameStage === "gameWin") {
       changeGameStage("modalGameWin");
-      setGameStageSave("modalNextLevel");
+      setGameState("modalNextLevel");
       setScoreSave(livesScore.score);
       setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
@@ -227,7 +179,7 @@ function Game() {
       powerUp.on = false;
     } else if (gameStage === "levelWin") {
       changeGameStage("modalWin");
-      setGameStageSave("modalNextLevel");
+      setGameState("modalNextLevel");
       setScoreSave(livesScore.score);
       setLevelSave(levelSave + 1);
       setLivesSave(livesScore.lives);
@@ -254,14 +206,16 @@ function Game() {
           height={settings.canvasH}
           lives={livesScore.lives}
           score={livesScore.score}
-          gameStage={gameStageSave}
+          gameState={gameState}
         />
         <Modal
           restart={restart}
           lives={livesScore.lives}
           score={livesScore.score}
-          gameStageSave={gameStageSave}
-          setGameStageSave={setGameStageSave}
+          gameState={gameState}
+          setGameState={setGameState}
+          modal={modal}
+          setModal={setModal}
         />
       </div>
       <Controls

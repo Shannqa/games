@@ -3,6 +3,7 @@ import { powerUp } from "./powerups";
 import { livesScore } from "./score";
 import { paddles, resetPaddle } from "./paddles";
 import { LEVEL, changeLevel } from "./Game";
+import { settings } from "./settings";
 
 export let gameStage = "ready";
 
@@ -26,9 +27,7 @@ export function changeGameStage(stage) {
   gameStage = stage;
 }
 
-export function lifeLoss() {
-  gameStage = "lifeLoss";
-  console.log(gameStage);
+function reset() {
   resetBall(balls[0]);
   balls[0].active = true;
   resetPaddle(paddles[0]);
@@ -38,13 +37,21 @@ export function lifeLoss() {
   powerUp.kind = null;
   powerUp.on = false;
   powerUp.released = false;
+}
 
+export function lifeLoss() {
+  changeGameStage("lifeLoss");
+  console.log(gameStage);
+  reset();
   livesScore.lives -= 1;
 }
 
 export function gameLoss() {
   changeGameStage("gameLoss");
+  reset();
   console.log("gameLoss");
+  livesScore.lives = settings.lives;
+  livesScore.score = 0;
 }
 
 function win() {}

@@ -13,6 +13,17 @@
   box-shadow: #0a2839 6px 7px 5px 0px, #051b25b8 0px 0px 6px 3px;
 }
 
+.modal .buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.modal input {
+  margin: 8px;
+  height: 1.5rem;
+  font-size: 1.2rem;
+}
+
 .win {
 }
 .loss {

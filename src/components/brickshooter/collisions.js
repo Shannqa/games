@@ -7,12 +7,12 @@ import {
   hitBricks,
   bricksInLevel,
   sticky,
-  SPACE,
   LEVEL,
 } from "./Game";
 import { winGame, winLevel } from "./stages";
 import { brick } from "./bricks";
 import { livesScore } from "./score";
+import { SPACE } from "./keyboard";
 
 export function hitBallPaddle() {
   // bounce: ball - paddle

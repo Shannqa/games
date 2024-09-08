@@ -1,6 +1,6 @@
 import { settings } from "./settings.js";
 import { powerUp, specialBricks } from "./powerups.js";
-import { LEFT, RIGHT } from "./Game.jsx";
+import { LEFT, RIGHT } from "./keyboard.js";
 import { gameStage } from "./stages.js";
 import { balls } from "./balls.js";
 import { gun } from "./gun.js";

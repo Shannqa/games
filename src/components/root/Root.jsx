@@ -12,9 +12,7 @@ export const AppContext = createContext({
 function Root() {
   const [scoresBS, setScoresBS] = useState(null);
   const server = import.meta.env.VITE_SERVER;
-  const port = import.meta.env.VITE_PORT;
   console.log(server);
-  console.log(port);
 
   // fetch highscores from db
   useEffect(() => {
