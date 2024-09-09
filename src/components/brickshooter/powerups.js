@@ -7,6 +7,7 @@ import { changeSticky } from "./Game.jsx";
 import { gun, ammo, addAmmo, deleteAmmo } from "./gun.js";
 import { brick } from "./bricks.js";
 import { changeHitBricks, hitBricks, bricksInLevel } from "./Game.jsx";
+import { LEVEL } from "./Game.jsx";
 
 let gunInterval;
 
@@ -234,7 +235,14 @@ export function powerUpRelease(ctx) {
 }
 
 // powerup - gun mode
-export function hitGunBricks(bricks, setModal, setGameState, setLevelSave) {
+export function hitGunBricks(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   ammo.forEach((bullet) => {
     for (let c = 0; c < 11; c++) {
       for (let r = 0; r < 11; r++) {
@@ -272,10 +280,24 @@ export function hitGunBricks(bricks, setModal, setGameState, setLevelSave) {
             changeHitBricks(hitBricks + 1);
             if (hitBricks === bricksInLevel) {
               if (LEVEL + 1 === settings.levelCount) {
-                winGame(setModal, setGameState, setLevelSave);
+                winGame(
+                  setModal,
+                  setGameState,
+                  setLevelSave,
+                  savedBricks,
+                  setSavedBricks,
+                  bricks
+                );
                 return;
               } else {
-                winLevel(setModal, setGameState, setLevelSave);
+                winLevel(
+                  setModal,
+                  setGameState,
+                  setLevelSave,
+                  savedBricks,
+                  setSavedBricks,
+                  bricks
+                );
                 return;
               }
             }

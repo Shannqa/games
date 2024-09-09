@@ -12,7 +12,14 @@ export function changeGameStage(stage) {
 }
 
 // click on modal - start playing
-export function startGame() {
+export function startGame(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   setGameState("playing");
   // changeGameStage("playing");
   const canvas = document.getElementById("brickCanvas");
@@ -22,11 +29,19 @@ export function startGame() {
 }
 
 // win level - show modal
-export function winLevel(setModal, setGameState, setLevelSave) {
+export function winLevel(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
+  setSavedBricks(bricks);
   console.log("level win");
   resetDrawings();
   // changeGameStage("nextLevel");
-  setGameState("nextLevel");
+  changeGameStage("nextLevel");
   setModal(true);
   // saveLevel(LEVEL);
   // saveLives(livesScore.lives);
@@ -34,9 +49,17 @@ export function winLevel(setModal, setGameState, setLevelSave) {
 }
 
 // win level - click on modal
-export function winLevelNext() {
-  setGameState("playing");
-  //changeGameStage("playing");
+export function winLevelNext(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
+  // setGameState("playing");
+  setSavedBricks(null);
+  changeGameStage("playing");
   setModal(false);
   setLevelSave(LEVEL + 1);
   changeLevel(LEVEL + 1);
@@ -51,26 +74,52 @@ export function lifeLoss() {
 }
 
 // game over, show modal
-export function gameLoss(setModal, setGameState, setLevelSave) {
-  //changeGameStage("gameLoss");
-  setGameState("gameLoss");
+export function gameLoss(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
+  setSavedBricks(bricks);
+  console.log(livesScore.score);
   setModal(true);
+  setGameState("gameLoss");
+  // changeGameStage("gameLoss");
+
   resetDrawings();
 }
 
 // win game, show modal
-export function winGame(setModal, setGameState) {
+export function winGame(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   //changeGameStage("gameWin");
+  setSavedBricks(bricks);
   setGameState("gameWin");
   setModal(true);
   resetDrawings();
 }
 
 // reset game after win or loss, click on modal
-export function resetGame(setModal, setGameState) {
+export function resetGame(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   setGameState("playing");
   resetStats(setLevelSave);
   setModal(false);
+  setSavedBricks(null);
 }
 
 // reset balls, paddles, powerups
@@ -99,4 +148,6 @@ export function resetStats(setLevelSave) {
   changeHitBricks(0);
 }
 
-
+/*
+win level and game loss - cant save state (gamestate?), otherwise it will re-render and reset bricks
+*/

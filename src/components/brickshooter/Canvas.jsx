@@ -13,14 +13,14 @@ function Canvas(props) {
     const render = () => {
       frameCount++;
       draw(context, frameCount);
-      if (collision === true) {
-        console.log("coll");
-        window.cancelAnimationFrame(animationFrameId);
-        // setCollision(false);
-        return;
-      } else {
-        animationFrameId = window.requestAnimationFrame(render);
-      }
+      // if (collision === true) {
+      //   console.log("coll");
+      //   window.cancelAnimationFrame(animationFrameId);
+      //   // setCollision(false);
+      //   return;
+      // } else {
+      animationFrameId = window.requestAnimationFrame(render);
+      // }
     };
 
     render();

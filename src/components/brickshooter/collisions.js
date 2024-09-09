@@ -76,7 +76,14 @@ export function hitBallPaddle() {
   });
 }
 
-export function hitBallBrick(bricks, setModal, setGameState, setLevelSave) {
+export function hitBallBrick(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   let toChange = [];
   // collision - ball - brick
   balls.forEach((ball) => {
@@ -211,10 +218,24 @@ export function hitBallBrick(bricks, setModal, setGameState, setLevelSave) {
     if (hitBricks === bricksInLevel) {
       console.log("levelwin", "hit", hitBricks, "inlvl", bricksInLevel);
       if (LEVEL + 1 === settings.levelCount) {
-        winGame(setModal, setGameState, setLevelSave);
+        winGame(
+          setModal,
+          setGameState,
+          setLevelSave,
+          savedBricks,
+          setSavedBricks,
+          bricks
+        );
         return;
       } else {
-        winLevel(setModal, setGameState, setLevelSave);
+        winLevel(
+          setModal,
+          setGameState,
+          setLevelSave,
+          savedBricks,
+          setSavedBricks,
+          bricks
+        );
         return;
       }
     }

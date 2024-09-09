@@ -29,3 +29,8 @@ bricks.js:75 Uncaught TypeError: Cannot read properties of undefined (reading 'f
 at countBricks (bricks.js:75:10)
 at Game (Game.jsx:91:19)
 modal on - can move
+
+modal on next level - it resets the bricks when modal is shown
+disable checking highscore when highscores are not fetched
+modal is a state, it resets my bricks ffs. save bricks into state before the modal shows. if statebricks exists, show them, if not, show normal bricks
+win next level has no access to setsavedbricks function

@@ -64,6 +64,7 @@ function Game() {
   const [levelSave, setLevelSave] = useState(1);
   const [gameState, setGameState] = useState("loaded");
   const [modal, setModal] = useState(true);
+  const [savedBricks, setSavedBricks] = useState(null);
 
   // const [stateLives, setStateLives] = useState(3);
   LEVEL = levelSave;
@@ -103,7 +104,12 @@ function Game() {
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     livesScore.draw(ctx);
-    drawBricks(ctx, bricks);
+    if (savedBricks) {
+      drawBricks(ctx, savedBricks);
+    } else {
+      drawBricks(ctx, bricks);
+    }
+
     drawPaddle(ctx, paddles[0]);
     balls.forEach((ball) => {
       if (ball.active) {
@@ -128,7 +134,14 @@ function Game() {
             bullet.y += gun.vy;
           }
         });
-        hitGunBricks(bricks, setModal, setGameState, setLevelSave);
+        hitGunBricks(
+          setModal,
+          setGameState,
+          setLevelSave,
+          savedBricks,
+          setSavedBricks,
+          bricks
+        );
       }
     }
 
@@ -148,10 +161,24 @@ function Game() {
       balls[2].x += balls[2].vx;
       balls[2].y += balls[2].vy;
     }
-    moveBall(setModal, setGameState, setLevelSave);
+    moveBall(
+      setModal,
+      setGameState,
+      setLevelSave,
+      savedBricks,
+      setSavedBricks,
+      bricks
+    );
 
     hitBallPaddle();
-    hitBallBrick(bricks, setModal, setGameState, setLevelSave);
+    hitBallBrick(
+      setModal,
+      setGameState,
+      setLevelSave,
+      savedBricks,
+      setSavedBricks,
+      bricks
+    );
     powerUpRelease(ctx);
 
     // if (gameStage === "gameLoss" && !modal) {
@@ -205,6 +232,9 @@ function Game() {
           modal={modal}
           setModal={setModal}
           setLevelSave={setLevelSave}
+          savedBricks={savedBricks}
+          setSavedBricks={setSavedBricks}
+          bricks={bricks}
         />
       </div>
       <Controls

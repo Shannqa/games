@@ -22,7 +22,7 @@ export const balls = [
     radius: defaultBall.radius,
     active: true,
     stay: defaultBall.stay,
-    waiting: true
+    waiting: true,
   },
   {
     x: defaultBall.x,
@@ -72,7 +72,14 @@ export function resetBall(ball) {
   ball.radius = defaultBall.radius;
 }
 
-export function moveBall(setModal, setGameState, setLevelSave) {
+export function moveBall(
+  setModal,
+  setGameState,
+  setLevelSave,
+  savedBricks,
+  setSavedBricks,
+  bricks
+) {
   // ball hiting edges of the canvas
   balls.forEach((ball) => {
     if (ball.y + ball.vy > settings.canvasH - ball.radius) {
@@ -84,7 +91,14 @@ export function moveBall(setModal, setGameState, setLevelSave) {
       if (!balls[0].active && !balls[1].active && !balls[2].active) {
         // all balls are inactive, lose a life and/or game
         if (livesScore.lives < 1) {
-          gameLoss(setModal, setGameState, setLevelSave);
+          gameLoss(
+            setModal,
+            setGameState,
+            setLevelSave,
+            savedBricks,
+            setSavedBricks,
+            bricks
+          );
         } else {
           lifeLoss();
         }
