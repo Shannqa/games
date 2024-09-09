@@ -136,7 +136,7 @@ function Game() {
     movePaddle(ctx, paddles);
 
     // move ball
-    if (balls[0].active && !balls[0].stay) {
+    if (balls[0].active && !balls[0].stay && !balls[0].waiting) {
       balls[0].x += balls[0].vx;
       balls[0].y += balls[0].vy;
     }

@@ -22,6 +22,7 @@ export const balls = [
     radius: defaultBall.radius,
     active: true,
     stay: defaultBall.stay,
+    waiting: true
   },
   {
     x: defaultBall.x,

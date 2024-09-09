@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../root/Root.jsx";
 import styles from "../../styles/brickshooter.module.css";
-import { changeGameStage, resetStats } from "./stages.js";
+import { startGame, nextLevel, lifeLoss, gameLoss, winLevel, winGame, changeGameStage, resetStats } from "./stages.js";
 
 function Modal({
   lives,
@@ -58,21 +58,6 @@ function Modal({
     setGameState("playAgain");
   }
 
-  function startGame() {
-    setGameState("startLevel");
-    changeGameStage("playing");
-    const canvas = document.getElementById("brickCanvas");
-    canvas.scrollIntoView();
-    setModal(false);
-    // resetStats(setLevelSave);
-  }
-
-  function nextLevel() {
-    setGameState("newLevel");
-    changeGameStage("playing");
-    setModal(false);
-  }
-
   if (gameState === "loaded") {
     return (
       <div className={`${styles.modal}`}>
@@ -81,6 +66,7 @@ function Modal({
       </div>
     );
   }
+  
   if (gameState === "nextLevel") {
     return (
       <div className={`${styles.modal} ${styles.win}`}>

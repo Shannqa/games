@@ -7,28 +7,73 @@ import { settings } from "./settings";
 
 export let gameStage = "ready";
 
-// problem: set modal is inside a module, can't import it from Game
-
-/* state stages:
-  loaded - game first opened
-  modalGameOver
-  modalNextLevel
-  startLevel
-  */
-/* canvas stages:
-  ready
-  playing
-  gameLoss
-  lifeLoss
-  levelWin
-  modalWin
-  modalLoss
-  */
-
 export function changeGameStage(stage) {
   gameStage = stage;
 }
 
+// click on modal - start playing
+export function startGame() {
+  setGameState("playing");
+  // changeGameStage("playing");
+  const canvas = document.getElementById("brickCanvas");
+  canvas.scrollIntoView();
+  setModal(false);
+  // resetStats(setLevelSave);
+}
+
+// win level - show modal
+export function winLevel(setModal, setGameState, setLevelSave) {
+  console.log("level win");
+  resetDrawings();
+  // changeGameStage("nextLevel");
+  setGameState("nextLevel");
+  setModal(true);
+  // saveLevel(LEVEL);
+  // saveLives(livesScore.lives);
+  // saveScore(livesScore.score);
+}
+
+// win level - click on modal
+export function winLevelNext() {
+  setGameState("playing");
+  //changeGameStage("playing");
+  setModal(false);
+  setLevelSave(LEVEL + 1);
+  changeLevel(LEVEL + 1);
+  changeHitBricks(0);
+}
+
+// lost a life, continue
+export function lifeLoss() {
+  // changeGameStage("lifeLoss");
+  resetDrawings();
+  livesScore.lives -= 1;
+}
+
+// game over, show modal
+export function gameLoss(setModal, setGameState, setLevelSave) {
+  //changeGameStage("gameLoss");
+  setGameState("gameLoss");
+  setModal(true);
+  resetDrawings();
+}
+
+// win game, show modal
+export function winGame(setModal, setGameState) {
+  //changeGameStage("gameWin");
+  setGameState("gameWin");
+  setModal(true);
+  resetDrawings();
+}
+
+// reset game after win or loss, click on modal
+export function resetGame(setModal, setGameState) {
+  setGameState("playing");
+  resetStats(setLevelSave);
+  setModal(false);
+}
+
+// reset balls, paddles, powerups
 function resetDrawings() {
   balls.forEach((ball) => {
     resetBall(ball);
@@ -45,6 +90,7 @@ function resetDrawings() {
   resetPaddle();
 }
 
+// reset lives, score, level, hit bricks
 export function resetStats(setLevelSave) {
   livesScore.lives = settings.lives;
   livesScore.score = 0;
@@ -53,46 +99,4 @@ export function resetStats(setLevelSave) {
   changeHitBricks(0);
 }
 
-export function lifeLoss() {
-  changeGameStage("lifeLoss");
-  console.log(gameStage);
-  resetDrawings();
-  livesScore.lives -= 1;
-}
 
-export function gameLoss(setModal, setGameState, setLevelSave) {
-  changeGameStage("gameLoss");
-  setGameState("gameLoss");
-  setModal(true);
-  resetDrawings();
-  console.log("gameLoss");
-  resetStats(setLevelSave);
-}
-
-export function restart() {
-  setLives(settings.lives);
-}
-
-export function winGame() {
-  changeGameStage("gameWin");
-}
-
-export function winLevel(setModal, setGameState, setLevelSave) {
-  console.log("level win");
-  resetDrawings();
-  changeGameStage("nextLevel");
-  setGameState("nextLevel");
-  setModal(true);
-  // saveLevel(LEVEL);
-  // saveLives(livesScore.lives);
-  // saveScore(livesScore.score);
-}
-
-export function nextLevel() {
-  setGameState("playing");
-  changeGameStage("playing");
-  setModal(false);
-  setLevelSave(LEVEL + 1);
-  changeLevel(LEVEL + 1);
-  changeHitBricks(0);
-}
