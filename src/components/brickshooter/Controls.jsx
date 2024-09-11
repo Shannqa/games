@@ -31,6 +31,15 @@ function Controls({ setLevelSave, LEVEL, changeLevel }) {
         <img src="/space_bar_24dp_000_FILL0_wght400_GRAD0_opsz24.svg" />
         <span>space bar</span>
       </div>
+      <img
+        src="stat_0_16dp_000_FILL0_wght400_GRAD0_opsz20.svg"
+        className={styles.divider}
+      />
+      <p>Pause the game:</p>
+      <div className={styles.keys2}>
+        <img src="/keyboard_return_24dp_000_FILL0_wght400_GRAD0_opsz24.svg" />
+        <span>enter</span>
+      </div>
     </div>
   );
 }
