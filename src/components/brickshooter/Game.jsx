@@ -38,6 +38,7 @@ import LevelChooser from "./LevelChooser.jsx";
 import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
 import { keyDown, keyUp } from "./keyboard.js";
+import { paused, drawPause } from "./pause.js";
 export let LEVEL;
 export let hitBricks = 0;
 export let bricksInLevel;
@@ -102,6 +103,10 @@ function Game() {
   }
 
   function draw(ctx, frameCount) {
+    if (paused) {
+      drawPause(ctx);
+      return;
+    }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     livesScore.draw(ctx);
     if (savedBricks) {

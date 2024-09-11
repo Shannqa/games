@@ -1,11 +1,11 @@
 import { gameStage, changeGameStage } from "./stages";
 import { balls } from "./balls";
-
-
+import { paused, changePaused } from "./pause";
 export let LEFT;
 export let RIGHT;
 export let SPACE;
-export function keyDown(e) {
+export let ENTER;
+export function keyDown(e, modal) {
   if (e.key === " " || e.code === "Space") {
     e.preventDefault();
     if (balls[0].waiting) {
@@ -25,7 +25,7 @@ export function keyDown(e) {
     if (balls[0].waiting) {
       // when paddle first moves, start moving the ball
       balls[0].waiting = false;
-    } 
+    }
     LEFT = true;
   }
   if (e.key === "Right" || e.key === "ArrowRight") {
@@ -33,8 +33,18 @@ export function keyDown(e) {
     if (balls[0].waiting) {
       // when paddle first moves, start moving the ball
       balls[0].waiting = false;
-    } 
+    }
     RIGHT = true;
+  }
+  if (e.key === "Enter" || e.code === "Enter") {
+    // pause the game
+    e.preventDefault();
+
+    if (paused) {
+      changePaused(false);
+    } else {
+      changePaused(true);
+    }
   }
 }
 
