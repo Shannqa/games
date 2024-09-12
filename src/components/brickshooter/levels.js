@@ -277,12 +277,12 @@ export function level6(brick) {
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
       if (cId == 0 || cId == 1 || cId == 6 || cId == 7) {
-        if (rId >= 2 && rId <= 5) {
+        if (rId >= 3 && rId <= 6) {
           return {
             ...row,
             painted: true,
           };
-        } else if (rId == 6) {
+        } else if (rId == 7) {
           return {
             ...row,
             painted: "solid",
@@ -291,12 +291,12 @@ export function level6(brick) {
           return { ...row };
         }
       } else if (cId == 3 || cId == 4 || cId == 9 || cId == 10) {
-        if (rId >= 1 && rId <= 3) {
+        if (rId >= 2 && rId <= 4) {
           return {
             ...row,
             painted: true,
           };
-        } else if (rId == 4) {
+        } else if (rId == 5) {
           return {
             ...row,
             painted: "solid",
@@ -395,78 +395,40 @@ export function level8(brick) {
 
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
-      if (cId == 0 || cId == 10) {
-        if (rId == 2 || rId == 4 || rId == 6) {
+      if (cId == 1 || cId == 9) {
+        if (rId == 2 || rId == 5 || rId == 8) {
           return {
             ...row,
             painted: "solid",
           };
-        } else if (rId == 3 || rId == 5) {
+        } else if (rId == 3 || rId == 4 || rId == 6 || rId == 7) {
           return {
             ...row,
-            painted: "strong",
+            painted: true,
           };
         } else {
           return { ...row };
         }
       }
-      if (cId == 1 || cId == 2 || cId == 8 || cId == 9) {
-        if (rId >= 2 && rId <= 6) {
+      if ((cId >= 2 && cId <= 4) || (cId >= 6 && cId <= 8)) {
+        if (rId >= 3 && rId <= 7) {
           return {
             ...row,
             painted: true,
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (cId == 3 || cId == 7) {
-        if (rId == 2 || rId == 3 || rId == 5 || rId == 6) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else if (rId == 4) {
-          return {
-            ...row,
-            painted: "solid",
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (cId == 4 || cId == 6) {
-        if (rId == 2 || rId == 3 || rId == 6) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else if (rId == 4) {
-          return {
-            ...row,
-            painted: "strong",
-          };
-        } else if (rId == 5) {
-          return {
-            ...row,
-            painted: "solid",
           };
         } else {
           return { ...row };
         }
       } else if (cId == 5) {
-        if (rId == 2 || rId == 3 || rId == 4) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else if (rId == 5) {
-          return {
-            ...row,
-            painted: "strong",
-          };
-        } else if (rId == 6) {
+        if (rId == 2 || rId == 5 || rId == 8) {
           return {
             ...row,
             painted: "solid",
+          };
+        } else if (rId == 3 || rId == 4 || rId == 6 || rId == 7) {
+          return {
+            ...row,
+            painted: true,
           };
         } else {
           return { ...row };
@@ -484,31 +446,18 @@ export function level9(brick) {
 
   const bricks = brickBase.map((col, cId) => {
     return col.map((row, rId) => {
-      if (rId == 2) {
-        if ((cId >= 1 && cId <= 3) || (cId >= 7 && cId <= 9)) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else {
-          return { ...row };
-        }
+      if (rId == 2 || rId == 7) {
+        return {
+          ...row,
+          painted: "strong",
+        };
       } else if (rId == 3) {
-        if (cId == 2 || cId == 4 || cId == 6 || cId == 8) {
+        if (cId >= 0 && cId <= 3) {
           return {
             ...row,
-            painted: true,
+            painted: "solid",
           };
-        } else if (cId == 3 || cId == 7) {
-          return {
-            ...row,
-            painted: "strong",
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (rId == 4) {
-        if ((cId >= 2 && cId <= 4) || (cId >= 6 && cId <= 8)) {
+        } else if (cId >= 4) {
           return {
             ...row,
             painted: true,
@@ -516,13 +465,61 @@ export function level9(brick) {
         } else {
           return { ...row };
         }
-      } else if (rId == 5) {
-        if (cId == 3 || cId == 7) {
+      } else if (rId == 4 || rId == 5) {
+        return {
+          ...row,
+          painted: true,
+        };
+      } else if (rId == 6) {
+        if (cId >= 7 && cId <= 10) {
+          return {
+            ...row,
+            painted: "solid",
+          };
+        } else if (cId <= 6) {
           return {
             ...row,
             painted: true,
           };
-        } else if (cId == 4 || cId == 6) {
+        } else {
+          return { ...row };
+        }
+      } else {
+        return { ...row };
+      }
+    });
+  });
+  return bricks;
+}
+
+export function level10(brick) {
+  const brickBase = base(brick);
+
+  const bricks = brickBase.map((col, cId) => {
+    return col.map((row, rId) => {
+      if (rId == 2 || rId == 6) {
+        if (cId == 1 || cId == 5 || cId == 9) {
+          return {
+            ...row,
+            painted: true,
+          };
+        } else {
+          return { ...row };
+        }
+      } else if (rId >= 3 && rId <= 5) {
+        if (
+          cId == 0 ||
+          cId == 2 ||
+          cId == 4 ||
+          cId == 6 ||
+          cId == 8 ||
+          cId == 10
+        ) {
+          return {
+            ...row,
+            painted: true,
+          };
+        } else if (cId == 1 || cId == 9) {
           return {
             ...row,
             painted: "strong",
@@ -531,33 +528,6 @@ export function level9(brick) {
           return {
             ...row,
             painted: "solid",
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (rId == 6) {
-        if (cId == 4 || cId == 6) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (rId == 7) {
-        if (cId == 3 || cId == 4 || cId == 6 || cId == 7) {
-          return {
-            ...row,
-            painted: true,
-          };
-        } else {
-          return { ...row };
-        }
-      } else if (rId == 8) {
-        if (cId == 2 || cId == 3 || cId == 7 || cId == 8) {
-          return {
-            ...row,
-            painted: true,
           };
         } else {
           return { ...row };

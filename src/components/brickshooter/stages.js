@@ -64,6 +64,7 @@ export function winLevelNext(
   setLevelSave(LEVEL + 1);
   changeLevel(LEVEL + 1);
   changeHitBricks(0);
+  balls[0].waiting = true;
 }
 
 // lost a life, continue

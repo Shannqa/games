@@ -217,7 +217,8 @@ export function hitBallBrick(
     // determine wins
     if (hitBricks === bricksInLevel) {
       console.log("levelwin", "hit", hitBricks, "inlvl", bricksInLevel);
-      if (LEVEL + 1 === settings.levelCount) {
+      console.log("lev", LEVEL, "sett", settings.levelCount);
+      if (LEVEL == settings.levelCount) {
         winGame(
           setModal,
           setGameState,

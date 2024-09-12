@@ -98,36 +98,38 @@ function Modal({
         </div>
       );
     } else if (gameState === "gameWin") {
-      <div className={`${styles.modal} ${styles.win}`}>
-        <p>Congratulations, you beat all levels!</p>
-        <div>Your earned {score} points.</div>
-        {isHighscore() ? (
-          <div>
-            Enter the name you want to be remembered by:
-            <input
-              type="text"
-              placeholder="Your name..."
-              onChange={(e) => setPlayerName(e.target.value)}
-            />
-            <button onClick={addScore}>Save score</button>
-          </div>
-        ) : (
-          <button
-            onClick={() =>
-              resetGame(
-                setModal,
-                setGameState,
-                setLevelSave,
-                savedBricks,
-                setSavedBricks,
-                bricks
-              )
-            }
-          >
-            Play again
-          </button>
-        )}
-      </div>;
+      return (
+        <div className={`${styles.modal} ${styles.win}`}>
+          <p>Congratulations, you beat all levels!</p>
+          <div>Your earned {score} points.</div>
+          {isHighscore() ? (
+            <div>
+              Enter the name you want to be remembered by:
+              <input
+                type="text"
+                placeholder="Your name..."
+                onChange={(e) => setPlayerName(e.target.value)}
+              />
+              <button onClick={addScore}>Save score</button>
+            </div>
+          ) : (
+            <button
+              onClick={() =>
+                resetGame(
+                  setModal,
+                  setGameState,
+                  setLevelSave,
+                  savedBricks,
+                  setSavedBricks,
+                  bricks
+                )
+              }
+            >
+              Play again
+            </button>
+          )}
+        </div>
+      );
     } else if (gameState === "gameLoss") {
       return (
         <div className={`${styles.modal} ${styles.loss}`}>
