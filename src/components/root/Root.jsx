@@ -7,16 +7,32 @@ import styles from "../../styles/Root.module.css";
 export const AppContext = createContext({
   scoresBS: [],
   setScoresBS: () => {},
+  loadingScores: "",
+  setLoadingScores: () => {},
 });
 
 function Root() {
   const [scoresBS, setScoresBS] = useState(null);
-  const server = import.meta.env.VITE_SERVER;
-  console.log(server);
-
+  const [loadingScores, setLoadingScores] = useState(false);
+  const [port, setPort] = useState(() => {
+    if (import.meta.env.VITE_ENV === "DEV") {
+      return parseInt(import.meta.env.VITE_PORT);
+    } else {
+      return null;
+    }
+  });
+  const [apiUrl, setApiUrl] = useState(() => {
+    if (import.meta.env.VITE_ENV === "DEV") {
+      return `${import.meta.env.VITE_SERVER}:${port}`;
+    } else {
+      return `${import.meta.env.VITE_SERVER}`;
+    }
+  });
   // fetch highscores from db
   useEffect(() => {
-    fetch(`${server}/api/scores`, {
+    setLoadingScores(true);
+
+    fetch(`${apiUrl}/api/scores`, {
       method: "GET",
       headers: {
         accept: "application/json",
@@ -29,14 +45,31 @@ function Root() {
           console.log(body);
         }
       })
-      .catch((err) => console.log(err));
-  }, []);
+      .catch((err) => {
+        if (import.meta.env.VITE_ENV === "DEV") {
+          if (port > parseInt(import.meta.env.VITE_PORT) + 3) {
+          } else {
+            console.log(
+              `Not connected on port ${port}. Trying port ${port + 1}...`
+            );
+            setPort(port + 1);
+            setApiUrl(`${import.meta.env.VITE_SERVER}:${port + 1}`);
+          }
+          console.log(err.message);
+        } else {
+          console.log(err.message);
+        }
+      })
+      .finally(setLoadingScores(false));
+  }, [apiUrl]);
 
   return (
     <AppContext.Provider
       value={{
         scoresBS,
         setScoresBS,
+        loadingScores,
+        setLoadingScores,
       }}
     >
       <div className={styles.root}>
