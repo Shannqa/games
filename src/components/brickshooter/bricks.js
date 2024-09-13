@@ -1,6 +1,6 @@
 export const brick = {
   w: 64, // 72
-  h: 28,
+  h: 36,
 };
 
 export function drawBricks(ctx, bricks) {

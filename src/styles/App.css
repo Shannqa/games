@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap");
 
 * {
   margin: 0;
@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-/* old background #0d1e26, old color #dca85d */
+ old background #0d1e26, old color #dca85d 
 
 body {
   background-color: #b5cad5;
@@ -29,7 +29,7 @@ h1,
 h2,
 h3 {
   font-family: Cinzel, sans-serif;
-  /* text-shadow: 2px 1px 2px #dca85d; */
+  text-shadow: 2px 1px 2px #dca85d; 
 }
 
 h1 {
@@ -44,12 +44,12 @@ a {
   color: black;
 }
 
-/* .box {
+ .box {
   width: 100px;
   height: 100px;
   background-color: aquamarine;
   border: 1px white solid;
-} */
+} 
 
 .home {
   display: flex;
@@ -87,4 +87,4 @@ a {
 
 canvas {
   border: 1px black solid;
-}
+} */

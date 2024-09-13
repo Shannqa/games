@@ -73,7 +73,7 @@ function Root() {
       }}
     >
       <div className={styles.root}>
-        <div className={styles.top}>
+        <div className={styles.main}>
           <Header />
           <Outlet />
         </div>

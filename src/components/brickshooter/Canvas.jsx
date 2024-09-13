@@ -1,12 +1,18 @@
 import React, { useRef } from "react";
 import { useEffect } from "react";
-import { handleStart, handleMove, handleEnd, handleCancel } from "./touch.js";
+import {
+  isTouchDevice,
+  handleStart,
+  handleMove,
+  handleEnd,
+  handleCancel,
+} from "./touch.js";
 
 function Canvas(props) {
   const canvasRef = useRef(null);
   const { draw, collision, setCollision, width, height, ...rest } = props;
 
-  function startup(canvas, ctx) {
+  function handleTouches(canvas, ctx) {
     console.log("Initialized.");
     // const el = document.getElementById("brickCanvas");
     canvas.addEventListener("touchstart", handleStart);
@@ -18,7 +24,11 @@ function Canvas(props) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    startup(canvas, context);
+
+    if (isTouchDevice) {
+      handleTouches(canvas, context);
+    }
+
     let frameCount = 0;
     let animationFrameId;
 

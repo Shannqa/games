@@ -5,10 +5,10 @@ import { lifeLoss, gameLoss } from "./stages";
 
 export const defaultBall = {
   x: settings.canvasW / 2,
-  y: settings.canvasH - 90, // 500
+  y: settings.canvasH - 94, // 500
   vx: 3.5,
   vy: -3.5,
-  radius: 10,
+  radius: 14,
   active: true,
   stay: false,
 };

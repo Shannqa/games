@@ -9,8 +9,8 @@ import { changeActivePaddle } from "./powerups.js";
 export const defaultPaddle = {
   x: settings.canvasW / 2 - 50,
   y: settings.canvasH - 80, // 510
-  w: 100,
-  h: 14,
+  w: 140,
+  h: 20,
   vx: 5.5,
 };
 

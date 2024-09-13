@@ -8,7 +8,8 @@ function Home() {
       <div className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.left}>
-            <h2>Retro games. Coded by one student</h2>
+            <h2>Retro games</h2>
+            <h3>Coded by one student</h3>
             <div className={styles.textOuter}>
               <div className={styles.text}>
                 <div className={styles.textInner}>
@@ -37,7 +38,7 @@ function Home() {
       </div>
       <div className={styles.homeLinks}>
         <h2>Play a game</h2>
-        <div>
+        <div className={styles.homeGames}>
           <Link className={styles.homeLink} to="/battleships">
             Battleships
           </Link>

@@ -137,3 +137,23 @@ canvas {
   align-items: center;
   
 }
+
+@media screen and (max-width: 500px) {
+  
+  .gameWindow {
+    padding: 0;
+  }
+  
+  .gameCanvas, canvas {
+    width: 100vw;
+  }
+
+  .controls {
+    display: none;
+  }
+
+  .scroller {
+    display: none;
+  }
+
+}
