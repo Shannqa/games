@@ -6,10 +6,10 @@ import Menu from "./Menu";
 function Header() {
   return (
     <header className={styles.header}>
-      {/* <h1>
+      <h1>
         <Link to="/">Gaming Corner</Link>
       </h1>
-      <Menu /> */}
+      <Menu />
     </header>
   );
 }
