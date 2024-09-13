@@ -40,6 +40,7 @@ import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
 import { keyDown, keyUp } from "./keyboard.js";
 import { paused, drawPause } from "./pause.js";
+import { handleStart, handleMove, handleEnd, handleCancel } from "./touch.js";
 export let LEVEL;
 export let hitBricks = 0;
 export let bricksInLevel;
@@ -94,6 +95,8 @@ function Game() {
     bricks = level10(brick);
   }
   bricksInLevel = countBricks(bricks);
+
+  // document.addEventListener("DOMContentLoaded", startup);
 
   if (!modal) {
     document.onkeydown = keyDown;
