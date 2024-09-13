@@ -257,16 +257,8 @@ h1 {
     align-self: flex-end;
   }
 
-  .home, .hero, .homeLinks, .heroInner, .left, .text {
-    max-width: 100vw;
-  }
-
-  .textOuter {
-    width: 100vw;
-  }
-
-  .hero p {
-    width: 100vw;
+  .home, .hero, .homeLinks, .heroInner, .left, .text, .textOuter, .hero p {
+    max-width: 100%;
   }
 
   .home, .highscores, .hero {
@@ -278,11 +270,18 @@ h1 {
     flex-direction: column;
     padding: 0;
   }
+  .heroInner {
+    align-items: center
+  }
+  .homeLinks {
+    height: inherit
+  }
+  .footer {
+    margin: 0;
+  }
 }
 
-.homeLinks {
-  height: inherit
-}
+
 /* @media screen and (max-width: 1200px) {
   .home, .highscores {
     width: 1000px;
