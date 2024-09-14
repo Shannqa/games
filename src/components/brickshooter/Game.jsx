@@ -122,12 +122,13 @@ function Game() {
     }
 
     drawPaddle(ctx, paddles[0]);
+    // console.log(paddles[0].x);
     balls.forEach((ball) => {
       if (ball.active) {
         drawBall(ctx, ball);
       }
     });
-
+    // console.log(balls[0].x);
     if (modal || gameStage === "lifeLoss" || gameStage === "gameLoss") {
       return;
     }

@@ -1,4 +1,5 @@
 import { paddles } from "./paddles";
+import { settings } from "./settings";
 
 export function isTouchDevice() {
   return (
@@ -10,9 +11,12 @@ export function isTouchDevice() {
 
 const ongoingTouches = [];
 let touchStartX = 0;
+const pixelRatio = window.innerWidth / settings.canvasW;
 
 export function handleStart(e) {
   e.preventDefault();
+
+  console.log(window);
   // console.log("touchstart.");
   const el = document.getElementById("brickCanvas");
   const touches = e.changedTouches;
@@ -25,10 +29,24 @@ export function handleStart(e) {
     const touchX = touches[i].pageX - canvasRect.left;
     const touchX2 = touchX + touches[i].radiusX;
     const touchY = touches[i].pageY - canvasRect.top;
+
+    console.log(touchX);
+    console.log(paddles[0].x * pixelRatio);
+
+    // width of canvas on mobile - eg 360 should correspond to canvas width 704
+    // 704 = 100%;
+    // 360 = x%
+    // x = 51,13636363636364%
+
     // ctx.arc(touchX, touchY, 4, 0, 2 * Math.PI, false); // a circle at the start
     // console.log(touches[i]);
-    if (touchX2 >= paddles[0].x && touchX <= paddles[0].x + paddles[0].w) {
+    if (
+      touchX2 >= paddles[0].x * pixelRatio &&
+      touchX <= paddles[0].x * pixelRatio + paddles[0].w * pixelRatio
+    ) {
       console.log("padd");
+
+      console.log(canvasRect);
       touchStartX = touchX;
     }
   }
@@ -48,9 +66,12 @@ export function handleMove(e) {
     const touchX2 = touchX + touches[i].radiusX;
     const touchY = touches[i].pageY - canvasRect.top;
 
-    if (touchX2 >= paddles[0].x && touchX <= paddles[0].x + paddles[0].w) {
+    if (
+      touchX2 >= paddles[0].x * pixelRatio &&
+      touchX <= paddles[0].x * pixelRatio + paddles[0].w * pixelRatio
+    ) {
       const dx = touchX - touchStartX;
-      paddles[0].x += dx;
+      paddles[0].x += dx / pixelRatio;
       console.log("padd");
       touchStartX = touchX;
     }
@@ -72,7 +93,10 @@ export function handleEnd(e) {
     const touchX = touches[i].pageX - canvasRect.left;
     const touchX2 = touchX + touches[i].radiusX;
     const touchY = touches[i].pageY - canvasRect.top;
-    if (touchX2 >= paddles[0].x && touchX <= paddles[0].x + paddles[0].w) {
+    if (
+      touchX2 >= paddles[0].x * pixelRatio &&
+      touchX <= paddles[0].x * pixelRatio + paddles[0].w * pixelRatio
+    ) {
       const dx = touchX - touchStartX;
       paddles[0].x += dx;
       console.log("padd");
