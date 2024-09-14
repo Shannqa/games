@@ -138,10 +138,16 @@ canvas {
   
 }
 
+.mobilebuttons {
+  display: none;
+}
+
 @media screen and (max-width: 500px) {
   
   .gameWindow {
     padding: 0;
+    flex-direction: column;
+    padding: 2px;
   }
   
   .gameCanvas, canvas {
@@ -154,6 +160,10 @@ canvas {
 
   .scroller {
     display: none;
+  }
+
+  .mobilebuttons {
+    display: block;
   }
 
 }

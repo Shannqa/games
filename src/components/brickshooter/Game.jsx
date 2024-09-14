@@ -39,8 +39,9 @@ import LevelChooser from "./LevelChooser.jsx";
 import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
 import { keyDown, keyUp } from "./keyboard.js";
-import { paused, drawPause } from "./pause.js";
-import { handleStart, handleMove, handleEnd, handleCancel } from "./touch.js";
+import { paused, drawPause, drawMobilePause, drawMobilePlay } from "./pause.js";
+import MobileButtons from "./MobileButtons.jsx";
+import { isTouchDevice } from "./touch.js";
 export let LEVEL;
 export let hitBricks = 0;
 export let bricksInLevel;
@@ -96,8 +97,6 @@ function Game() {
   }
   bricksInLevel = countBricks(bricks);
 
-  // document.addEventListener("DOMContentLoaded", startup);
-
   if (!modal) {
     document.onkeydown = keyDown;
     document.onkeyup = keyUp;
@@ -111,9 +110,19 @@ function Game() {
   function draw(ctx, frameCount) {
     if (paused) {
       drawPause(ctx);
+      if (isTouchDevice) {
+        // drawMobilePlay(ctx);
+        drawMobilePlay(ctx);
+      }
       return;
     }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    if (!paused) {
+      if (isTouchDevice) {
+        // drawMobilePlay(ctx);
+        drawMobilePause(ctx);
+      }
+    }
     livesScore.draw(ctx);
     if (savedBricks) {
       drawBricks(ctx, savedBricks);
@@ -192,32 +201,10 @@ function Game() {
       bricks
     );
     powerUpRelease(ctx);
-
-    // if (gameStage === "gameLoss" && !modal) {
-    //   setGameState("gameLoss");
-    //   setModal(true);
-    // } else if (gameStage === "gameWin") {
-    //   changeGameStage("modalGameWin");
-    //   setGameState("modalNextLevel");
-    //   setScoreSave(livesScore.score);
-    //   setLevelSave(levelSave + 1);
-    //   setLivesSave(livesScore.lives);
-    //   powerUp.kind = null;
-    //   powerUp.released = false;
-    //   powerUp.on = false;
-    // } else if (gameStage === "levelWin") {
-    //   changeGameStage("modalWin");
-    //   setGameState("modalNextLevel");
-    //   setScoreSave(livesScore.score);
-    //   setLevelSave(levelSave + 1);
-    //   setLivesSave(livesScore.lives);
-    //   hitBricks = 0;
-    //   changeLevel(LEVEL + 1);
-    // }
   }
   return (
     <div className={styles.gameWindow}>
-      {/* <button onClick={() => console.log(LEVEL)}>lvl</button> */}
+      {/* <MobileButtons /> */}
       <div className={styles.gameCanvas}>
         <img
           id="scroller"
@@ -235,6 +222,8 @@ function Game() {
           lives={livesScore.lives}
           score={livesScore.score}
           gameState={gameState}
+          modal={modal}
+          setModal={setModal}
         />
         <Modal
           lives={livesScore.lives}

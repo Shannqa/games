@@ -10,7 +10,16 @@ import {
 
 function Canvas(props) {
   const canvasRef = useRef(null);
-  const { draw, collision, setCollision, width, height, ...rest } = props;
+  const {
+    draw,
+    collision,
+    setCollision,
+    width,
+    height,
+    modal,
+    setModal,
+    ...rest
+  } = props;
 
   function handleTouches(canvas, ctx) {
     console.log("Initialized.");
@@ -25,7 +34,7 @@ function Canvas(props) {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    if (isTouchDevice) {
+    if (isTouchDevice && !modal) {
       handleTouches(canvas, context);
     }
 
