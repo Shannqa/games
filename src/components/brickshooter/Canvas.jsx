@@ -7,6 +7,7 @@ import {
   handleEnd,
   handleCancel,
 } from "./touch.js";
+import { settings, settingsMobile } from "./settings.js";
 
 function Canvas(props) {
   const canvasRef = useRef(null);
@@ -61,14 +62,25 @@ function Canvas(props) {
     };
   }, [draw, collision]);
 
-  return (
-    <canvas
-      id="brickCanvas"
-      ref={canvasRef}
-      width={width}
-      height={height}
-    ></canvas>
-  );
+  if (!isTouchDevice()) {
+    return (
+      <canvas
+        id="brickCanvas"
+        ref={canvasRef}
+        width={width}
+        height={settings.canvasH}
+      ></canvas>
+    );
+  } else {
+    return (
+      <canvas
+        id="brickCanvas"
+        ref={canvasRef}
+        width={width}
+        height={settingsMobile.canvasH}
+      ></canvas>
+    );
+  }
 }
 
 export default Canvas;

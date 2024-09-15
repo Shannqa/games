@@ -1,4 +1,8 @@
-import { settings } from "./settings";
+import { settingsBrowser, settingsMobile } from "./settings";
+import { isTouchDevice } from "./touch.js";
+
+const settings = isTouchDevice() ? settingsMobile : settingsBrowser;
+
 export let paused = false;
 
 export function changePaused(state) {
@@ -21,11 +25,18 @@ export function drawPause(ctx) {
 export function drawMobilePause(ctx) {
   ctx.beginPath();
   ctx.fillStyle = "#fff";
-  ctx.arc(settings.canvasW / 2, 18, 15, 0, Math.PI * 2, true);
+  ctx.arc(
+    settings.canvasW / 2,
+    settings.gameAreaY - 25,
+    15,
+    0,
+    Math.PI * 2,
+    true
+  );
   ctx.fill();
   ctx.fillStyle = "#000";
-  ctx.rect(settings.canvasW / 2 - 6, 13, 4, 10);
-  ctx.rect(settings.canvasW / 2 + 2, 13, 4, 10);
+  ctx.rect(settings.canvasW / 2 - 6, settings.gameAreaY - 30, 4, 10);
+  ctx.rect(settings.canvasW / 2 + 2, settings.gameAreaY - 30, 4, 10);
   ctx.fill();
   ctx.closePath();
 }
@@ -33,7 +44,14 @@ export function drawMobilePlay(ctx) {
   ctx.fillStyle = "#000";
   ctx.beginPath();
 
-  ctx.arc(settings.canvasW / 2, 18, 15, 0, Math.PI * 2, true);
+  ctx.arc(
+    settings.canvasW / 2,
+    settings.gameAreaY - 25,
+    15,
+    0,
+    Math.PI * 2,
+    true
+  );
   ctx.fill();
   ctx.closePath();
   ctx.beginPath();

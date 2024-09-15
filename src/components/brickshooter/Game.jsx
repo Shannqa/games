@@ -110,7 +110,7 @@ function Game() {
   function draw(ctx, frameCount) {
     if (paused) {
       drawPause(ctx);
-      if (isTouchDevice) {
+      if (isTouchDevice()) {
         // drawMobilePlay(ctx);
         drawMobilePlay(ctx);
       }
@@ -118,7 +118,7 @@ function Game() {
     }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     if (!paused) {
-      if (isTouchDevice) {
+      if (isTouchDevice()) {
         // drawMobilePlay(ctx);
         drawMobilePause(ctx);
       }

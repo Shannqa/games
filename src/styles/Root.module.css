@@ -24,7 +24,7 @@ html, body {
   align-items: center;
   width: 100%;
   background-color: #11364a;
-  height: 100vh;
+  height: 100%;
   justify-content: space-between;
 }
 
@@ -230,15 +230,18 @@ h1 {
 @media screen and (max-width: 500px) {
   body {
     max-height: 100%;
+    height: 100%;
   }
   .root {
     width: 100dvw;
     max-height: 100%;
+    height: 100%;
   }
 
   .main {
     width: 100vw;
-    /* height: 100%; */
+    max-height: 100%;
+    height: 100%;
   }
 
   .header {

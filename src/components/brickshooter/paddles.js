@@ -1,14 +1,17 @@
-import { settings } from "./settings.js";
+import { settingsBrowser, settingsMobile } from "./settings.js";
 import { powerUp, specialBricks } from "./powerups.js";
 import { LEFT, RIGHT } from "./keyboard.js";
 import { gameStage } from "./stages.js";
 import { balls } from "./balls.js";
 import { gun } from "./gun.js";
 import { changeActivePaddle } from "./powerups.js";
+import { isTouchDevice } from "./touch.js";
+
+const settings = isTouchDevice() ? settingsMobile : settingsBrowser;
 
 export const defaultPaddle = {
-  x: settings.canvasW / 2 - 50,
-  y: settings.canvasH - 80, // 510
+  x: settings.canvasW / 2 - 70,
+  y: settings.paddleY,
   w: 140,
   h: 20,
   vx: 5.5,

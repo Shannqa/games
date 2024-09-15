@@ -1,11 +1,14 @@
-import { settings } from "./settings";
+import { settingsBrowser, settingsMobile } from "./settings.js";
 import { livesScore } from "./score";
 import { changeActiveBalls, specialBricks, powerUp } from "./powerups";
 import { lifeLoss, gameLoss } from "./stages";
+import { isTouchDevice } from "./touch";
+
+const settings = isTouchDevice() ? settingsMobile : settingsBrowser;
 
 export const defaultBall = {
   x: settings.canvasW / 2,
-  y: settings.canvasH - 94, // 500
+  y: settings.paddleY - 14, // 500
   vx: 3.5,
   vy: -3.5,
   radius: 14,

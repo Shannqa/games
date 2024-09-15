@@ -144,10 +144,13 @@ canvas {
 
 @media screen and (max-width: 500px) {
   
+  body {
+    height: 100%;
+  }
   .gameWindow {
-    padding: 0;
+    padding: 8px;
     flex-direction: column;
-    padding: 2px;
+    margin-bottom: 8px;
   }
   
   .gameCanvas, canvas {
