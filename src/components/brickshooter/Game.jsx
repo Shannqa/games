@@ -1,4 +1,4 @@
-import React, { useState, createContext, memo } from "react";
+import React, { useState, createContext, memo, useEffect } from "react";
 import Canvas from "./Canvas.jsx";
 import Modal from "./Modal.jsx";
 import styles from "../../styles/brickshooter.module.css";
@@ -40,7 +40,6 @@ import { hitBallPaddle, hitBallBrick } from "./collisions.js";
 import Controls from "./Controls.jsx";
 import { keyDown, keyUp } from "./keyboard.js";
 import { paused, drawPause, drawMobilePause, drawMobilePlay } from "./pause.js";
-import MobileButtons from "./MobileButtons.jsx";
 import { isTouchDevice } from "./touch.js";
 export let LEVEL;
 export let hitBricks = 0;
@@ -97,10 +96,24 @@ function Game() {
   }
   bricksInLevel = countBricks(bricks);
 
-  if (!modal) {
-    document.onkeydown = keyDown;
-    document.onkeyup = keyUp;
-  }
+  useEffect(() => {
+    if (!modal) {
+      document.addEventListener("keydown", keyDown);
+      document.addEventListener("keyup", keyUp);
+    } else {
+      document.removeEventListener("keydown", keyDown);
+      document.removeEventListener("keyup", keyUp);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", keyDown);
+      document.removeEventListener("keyup", keyUp);
+    };
+  }, [modal]);
+
+  // if (!modal) {
+
+  // }
 
   function scroll() {
     const canvas = document.getElementById("brickCanvas");

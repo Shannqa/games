@@ -29,39 +29,39 @@ function Root() {
     }
   });
   // fetch highscores from db
-  // useEffect(() => {
-  //   setLoadingScores(true);
+  useEffect(() => {
+    setLoadingScores(true);
 
-  //   fetch(`${apiUrl}/api/scores`, {
-  //     method: "GET",
-  //     headers: {
-  //       accept: "application/json",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((body) => {
-  //       if (body) {
-  //         setScoresBS(body.brickshooter);
-  //         console.log(body);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       if (import.meta.env.VITE_ENV === "DEV") {
-  //         if (port > parseInt(import.meta.env.VITE_PORT) + 3) {
-  //         } else {
-  //           console.log(
-  //             `Not connected on port ${port}. Trying port ${port + 1}...`
-  //           );
-  //           setPort(port + 1);
-  //           setApiUrl(`${import.meta.env.VITE_SERVER}:${port + 1}`);
-  //         }
-  //         console.log(err.message);
-  //       } else {
-  //         console.log(err.message);
-  //       }
-  //     })
-  //     .finally(setLoadingScores(false));
-  // }, [apiUrl]);
+    fetch(`${apiUrl}/api/scores`, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body) {
+          setScoresBS(body.brickshooter);
+          console.log(body);
+        }
+      })
+      .catch((err) => {
+        if (import.meta.env.VITE_ENV === "DEV") {
+          if (port > parseInt(import.meta.env.VITE_PORT) + 3) {
+          } else {
+            console.log(
+              `Not connected on port ${port}. Trying port ${port + 1}...`
+            );
+            setPort(port + 1);
+            setApiUrl(`${import.meta.env.VITE_SERVER}:${port + 1}`);
+          }
+          console.log(err.message);
+        } else {
+          console.log(err.message);
+        }
+      })
+      .finally(setLoadingScores(false));
+  }, [apiUrl]);
 
   return (
     <AppContext.Provider

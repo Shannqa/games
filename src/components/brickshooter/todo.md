@@ -16,3 +16,5 @@ modal enter name - cant have a space
 wingame highscore saved - player isnt notified. needs a cancel
 
 mobile - the ball is too quick
+
+powerups - need to be bigger

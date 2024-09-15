@@ -5,6 +5,7 @@ export let LEFT;
 export let RIGHT;
 export let SPACE;
 export let ENTER;
+
 export function keyDown(e, modal) {
   if (e.key === " " || e.code === "Space") {
     e.preventDefault();
@@ -39,11 +40,12 @@ export function keyDown(e, modal) {
   if (e.key === "Enter" || e.code === "Enter") {
     // pause the game
     e.preventDefault();
-
-    if (paused) {
-      changePaused(false);
-    } else {
-      changePaused(true);
+    if (!modal) {
+      if (paused) {
+        changePaused(false);
+      } else {
+        changePaused(true);
+      }
     }
   }
 }

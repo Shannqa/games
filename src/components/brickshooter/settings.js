@@ -1,5 +1,5 @@
 export const settings = {
-  lives: 5,
+  lives: 2,
   canvasW: 704, // 792
   canvasH: 800,
   gameAreaY: 36,
@@ -12,7 +12,7 @@ export const settings = {
 };
 
 export const settingsBrowser = {
-  lives: 5,
+  lives: 2,
   canvasW: 704, // 792
   canvasH: 800,
   gameAreaY: 36,

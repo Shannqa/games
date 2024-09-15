@@ -40,6 +40,7 @@ export function winLevel(
   setSavedBricks(bricks);
   console.log("level win");
   resetDrawings();
+  setGameState("nextLevel");
   // changeGameStage("nextLevel");
   changeGameStage("nextLevel");
   setModal(true);
@@ -59,6 +60,7 @@ export function winLevelNext(
 ) {
   // setGameState("playing");
   setSavedBricks(null);
+  setGameState("playing");
   changeGameStage("playing");
   setModal(false);
   setLevelSave(LEVEL + 1);
@@ -148,7 +150,3 @@ export function resetStats(setLevelSave) {
   changeLevel(1);
   changeHitBricks(0);
 }
-
-/*
-win level and game loss - cant save state (gamestate?), otherwise it will re-render and reset bricks
-*/
