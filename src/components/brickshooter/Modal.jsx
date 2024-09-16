@@ -1,18 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from "../root/Root.jsx";
 import styles from "../../styles/brickshooter.module.css";
-import {
-  startGame,
-  winLevelNext,
-  resetGame,
-  lifeLoss,
-  gameLoss,
-  winLevel,
-  winGame,
-  gameStage,
-  changeGameStage,
-  resetStats,
-} from "./stages.js";
+import { startGame, winLevelNext, resetGame } from "./stages.js";
 import Dialog from "./Dialog.jsx";
 import { isHighscore } from "./score.js";
 
@@ -119,7 +108,7 @@ function Modal({
             );
           }}
           onCancel={null}
-          text={<p>Click to begin!</p>}
+          text={<h3>Click to begin!</h3>}
         />
 
         {/* game won, beat all levels */}
@@ -140,8 +129,8 @@ function Modal({
           onCancel={null}
           text={
             <>
-              <p>Congratulations, you beat all levels!</p>
-              <p>Your earned {score} points.</p>
+              <h3>Congratulations, you beat all levels!</h3>
+              <p>You earned {score} points.</p>
               <p>Would you like to play again?</p>
             </>
           }
@@ -162,8 +151,8 @@ function Modal({
           input={(e) => setPlayerName(e.target.value)}
           text={
             <>
-              <p>Congratulations, you beat all levels!</p>
-              <p>Your earned {score} points.</p>
+              <h3>Congratulations, you beat all levels!</h3>
+              <p>You earned {score} points.</p>
               <p>Enter your name:</p>
             </>
           }
@@ -187,7 +176,7 @@ function Modal({
           onCancel={null}
           text={
             <>
-              <p>Game over</p>
+              <h3>Game over</h3>
               <p>You earned {score} points</p>
               <p>Would you like to try again?</p>
             </>
@@ -209,7 +198,7 @@ function Modal({
           input={(e) => setPlayerName(e.target.value)}
           text={
             <>
-              <p>New highscore!</p>
+              <h3>New highscore!</h3>
               <p>You earned {score} points</p>
               <p>Enter your name:</p>
             </>
@@ -232,7 +221,7 @@ function Modal({
             );
           }}
           onCancel={null}
-          text={<p>Would you like to play again?</p>}
+          text={<h3>Would you like to play again?</h3>}
         />
 
         {/* next level */}
@@ -253,7 +242,7 @@ function Modal({
           onCancel={null}
           text={
             <>
-              <p>Good job!</p>
+              <h3>Good job!</h3>
               <p>Current score: {score}</p>
               <p>Lives left: {lives}</p>
             </>
@@ -262,146 +251,6 @@ function Modal({
       </>
     );
   }
-
-  // if (modal) {
-  //   if (gameState === "loaded") {
-  //     return (
-  //       <div className={`${styles.modal}`}>
-  //         <div>Click to begin!</div>
-  //         <button
-  //           onClick={() =>
-  //             startGame(
-  //               setModal,
-  //               setGameState,
-  //               setLevelSave,
-  //               savedBricks,
-  //               setSavedBricks,
-  //               bricks
-  //             )
-  //           }
-  //         >
-  //           Start game
-  //         </button>
-  //       </div>
-  //     );
-  //   } else if (gameState === "gameWin") {
-  //     return (
-  //       <div className={`${styles.modal} ${styles.win}`}>
-  //         <p>Congratulations, you beat all levels!</p>
-  //         <div>Your earned {score} points.</div>
-  //         {isHighscore() ? (
-  //           <div>
-  //             Enter the name you want to be remembered by:
-  //             <input
-  //               type="text"
-  //               placeholder="Your name..."
-  //               onChange={(e) => setPlayerName(e.target.value)}
-  //             />
-  //             <button onClick={addScore}>Save score</button>
-  //           </div>
-  //         ) : (
-  //           <button
-  //             onClick={() =>
-  //               resetGame(
-  //                 setModal,
-  //                 setGameState,
-  //                 setLevelSave,
-  //                 savedBricks,
-  //                 setSavedBricks,
-  //                 bricks
-  //               )
-  //             }
-  //           >
-  //             Play again
-  //           </button>
-  //         )}
-  //       </div>
-  //     );
-  //   } else if (gameState === "gameLoss") {
-  //     return (
-  //       <div className={`${styles.modal} ${styles.loss}`}>
-  //         {isHighscore() ? (
-  //           <div>
-  //             <p>New highscore!</p>
-  //             <div>You earned {score} points</div>
-  //             <div>Enter your name:</div>
-  //             <input
-  //               type="text"
-  //               placeholder="Your name..."
-  //               onChange={(e) => setPlayerName(e.target.value)}
-  //             />
-  //             <div className={styles.buttons}>
-  //               <button onClick={(e) => addScore(e)}>Save score</button>
-  //               <button onClick={(e) => cancelScore(e)}>Cancel</button>
-  //             </div>
-  //           </div>
-  //         ) : (
-  //           <div>
-  //             <p>Game over</p>
-  //             <div>You earned {score} points</div>
-  //             <div>Would you like to try again?</div>
-  //             <button
-  //               onClick={() =>
-  //                 resetGame(
-  //                   setModal,
-  //                   setGameState,
-  //                   setLevelSave,
-  //                   savedBricks,
-  //                   setSavedBricks,
-  //                   bricks
-  //                 )
-  //               }
-  //             >
-  //               Play again
-  //             </button>
-  //           </div>
-  //         )}
-  //       </div>
-  //     );
-  //   } else if (gameState === "playAgain") {
-  //     return (
-  //       <div className={`${styles.modal} ${styles.loss}`}>
-  //         <div>Would you like to play again?</div>
-  //         <button
-  //           onClick={() =>
-  //             startGame(
-  //               setModal,
-  //               setGameState,
-  //               setLevelSave,
-  //               savedBricks,
-  //               setSavedBricks,
-  //               bricks
-  //             )
-  //           }
-  //         >
-  //           Play again
-  //         </button>
-  //       </div>
-  //     );
-  //   } else if (gameStage === "nextLevel") {
-  //     return (
-  //       <div className={`${styles.modal} ${styles.win}`}>
-  //         <div>Good job!</div>
-  //         <div>Current score: {score}</div>
-  //         <div>Lives left: {lives}</div>
-  //         <button
-  //           onClick={() =>
-  //             winLevelNext(
-  //               setModal,
-  //               setGameState,
-  //               setLevelSave,
-  //               savedBricks,
-  //               setSavedBricks,
-  //               bricks
-  //             )
-  //           }
-  //         >
-  //           Continue
-  //         </button>
-  //       </div>
-  //     );
-  //   }
-  // }
 }
 
 export default Modal;

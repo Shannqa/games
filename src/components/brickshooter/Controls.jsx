@@ -26,7 +26,7 @@ function Controls({ setLevelSave, LEVEL, changeLevel }) {
         src="stat_0_16dp_000_FILL0_wght400_GRAD0_opsz20.svg"
         className={styles.divider}
       />
-      <p>Shoot the ball:</p>
+      <p>Release the ball:</p>
       <div className={styles.keys2}>
         <img src="/space_bar_24dp_000_FILL0_wght400_GRAD0_opsz24.svg" />
         <span>space bar</span>

@@ -1,7 +1,7 @@
 .modal {
   position: absolute;
   z-index: 10;
-  top: calc(50% - 50px);
+  top: calc(50% - 100px);
   left: calc(50% - 100px);
   padding: 12px 18px;
   background-color: #234e66;
@@ -78,10 +78,6 @@ canvas {
   align-items: center;
   gap: 2px;
 }
-.key {
-  /* display: flex;
-  flex-direction: column; */
-}
 
 .gameWindow {
   background-color: #f0f0f0;
@@ -124,22 +120,20 @@ canvas {
   background-color: rgb(56 9 135);
 }
 
-.modal p {
-  font-weight: bold;
+.modal h3 {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
-.modal > div {
-  line-height: 1.5rem;
+.modal p {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.modalButtons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-}
-
-.mobilebuttons {
-  display: none;
+  flex-direction: row;
+  justify-content: center;
 }
 
 @media screen and (max-width: 500px) {

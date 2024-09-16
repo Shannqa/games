@@ -56,12 +56,10 @@ export function drawMobilePlay(ctx) {
   ctx.closePath();
   ctx.beginPath();
   ctx.fillStyle = "#fff";
-  ctx.moveTo(settings.canvasW / 2 - 4, 10);
-  ctx.lineTo(settings.canvasW / 2 - 4, 26);
-  ctx.lineTo(settings.canvasW / 2 + 7, 18);
-  ctx.lineTo(settings.canvasW / 2 - 4, 10);
-  // ctx.rect(settings.canvasW / 2 - 6, 13, 4, 10);
-  // ctx.rect(settings.canvasW / 2 + 2, 13, 4, 10);
+  ctx.moveTo(settings.canvasW / 2 - 4, 17);
+  ctx.lineTo(settings.canvasW / 2 - 4, 32);
+  ctx.lineTo(settings.canvasW / 2 + 7, 25);
+  ctx.lineTo(settings.canvasW / 2 - 4, 17);
   ctx.fill();
   ctx.closePath();
 }

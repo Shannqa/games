@@ -313,8 +313,8 @@ export function hitGunBricks(
             powerUp.released = true;
 
             const keys = Object.keys(specialBricks);
-            // const random = Math.floor(Math.random() * 9);
-            const random = 7;
+            const random = Math.floor(Math.random() * 9);
+            // const random = 1;
             powerUp.kind = specialBricks[keys[random]];
 
             console.log(powerUp.kind);
@@ -402,14 +402,18 @@ export function changeActivePaddle() {
   if (paddles[0].x > settings.canvasW || paddles[0].x + defaultPaddle.w < 0) {
     // paddle 0 is completely outside of canvas
     paddles[0].active = false;
+    specialBricks.wormhole.twoPaddles = false;
   }
   if (paddles[1].x > settings.canvasW || paddles[1].x + defaultPaddle.w < 0) {
-    // paddle 0 is completely outside of canvas
+    // paddle 1 is completely outside of canvas
     paddles[1].active = false;
+    specialBricks.wormhole.twoPaddles = false;
   }
 
   if (paddles[0].active && !paddles[1].active) {
+    specialBricks.wormhole.twoPaddles = false;
     // all good, paddle0 is main
+    specialBricks.wormhole.twoPaddles = false;
     return;
   } else if (!paddles[0].active && paddles[1].active) {
     // paddle1 is main, change to paddle0
@@ -419,3 +423,11 @@ export function changeActivePaddle() {
     specialBricks.wormhole.twoPaddles = false;
   }
 }
+
+/* wormhole
+
+
+
+
+
+*/

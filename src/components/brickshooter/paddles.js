@@ -61,6 +61,8 @@ export function movePaddle(ctx, paddles) {
       paddles[0].x += paddles[0].vx;
     }
     if (paddles[0].x + paddles[0].w > settings.canvasW) {
+      console.log("right");
+
       // paddle to the right of canvas boundary
       let leftX = settings.canvasW - paddles[0].x;
       paddles[1].x = 0 - leftX;
@@ -68,9 +70,10 @@ export function movePaddle(ctx, paddles) {
       specialBricks.wormhole.twoPaddles = true;
       paddles[1].active = true;
     }
+
     if (LEFT === true) {
       paddles[0].x -= paddles[0].vx;
-      paddles[1].x -= paddles[1].vx;
+      paddles[1].x -= paddles[1].vx; // not sure why
     }
     if (paddles[0].x < 0) {
       // paddle to the left of canvas boundary
@@ -80,6 +83,15 @@ export function movePaddle(ctx, paddles) {
       specialBricks.wormhole.twoPaddles = true;
       paddles[1].active = true;
     }
+
+    console.log(
+      "powerUp.kind",
+      powerUp.kind,
+      "powerUp.on",
+      powerUp.on,
+      "specialBricks.wormhole.twoPaddles",
+      specialBricks.wormhole.twoPaddles
+    );
     changeActivePaddle();
   } else {
     // normal paddle moves

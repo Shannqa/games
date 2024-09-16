@@ -27,23 +27,26 @@ function Dialog({ isOpen, confirm, onConfirm, onCancel, text, input }) {
   return (
     <div className={`${styles.modal}`} role="dialog" tabIndex="-1">
       {text}
-      {input ? (
-        <>
-          <input
-            type="text"
-            placeholder="Anonnymous..."
-            onChange={input}
-            ref={modalRef}
-          />
-          <button onClick={onConfirm}>{confirm}</button>
-        </>
-      ) : (
-        <button onClick={onConfirm} ref={modalRef}>
-          {confirm}
-        </button>
+
+      {input && (
+        <input
+          type="text"
+          placeholder="Anonnymous..."
+          onChange={input}
+          ref={modalRef}
+        />
       )}
 
-      {onCancel && <button onClick={onCancel}>Cancel</button>}
+      <div className={styles.modalButtons}>
+        {input ? (
+          <button onClick={onConfirm}>{confirm}</button>
+        ) : (
+          <button onClick={onConfirm} ref={modalRef}>
+            {confirm}
+          </button>
+        )}
+        {onCancel && <button onClick={onCancel}>Cancel</button>}
+      </div>
     </div>
   );
 }
