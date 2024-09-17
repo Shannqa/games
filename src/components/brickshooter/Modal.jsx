@@ -36,14 +36,18 @@ function Modal({
       } else if (gameState === "gameWin") {
         if (highscore) {
           setModalWinHSOpen(true);
+          setModalWinOpen(false);
         } else {
           setModalWinOpen(true);
+          setModalWinHSOpen(false);
         }
       } else if (gameState === "gameLoss") {
         if (highscore) {
           setModalLossHSOpen(true);
+          setModalLossOpen(false); // fix - prevent 2 open at once
         } else {
           setModalLossOpen(true);
+          setModalLossHSOpen(false); // fix - prevent 2 open at once
         }
       } else if (gameState === "playAgain") {
         setModalAgainOpen(true);

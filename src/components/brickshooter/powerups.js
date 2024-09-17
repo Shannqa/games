@@ -70,13 +70,11 @@ export const specialBricks = {
     desc: "paddle can go through the wall and appear on the other side",
     color1: "#840075",
     color2: "#a0008d",
-    twoPaddles: false,
     run() {
       setTimeout(() => specialBricks.wormhole.stop(), settings.powerUpTimer);
     },
     stop() {
       powerUp.on = false;
-      changeActivePaddle();
     },
   },
   twoBalls: {
@@ -397,37 +395,3 @@ export function changeActiveBalls() {
     }
   }
 }
-
-export function changeActivePaddle() {
-  if (paddles[0].x > settings.canvasW || paddles[0].x + defaultPaddle.w < 0) {
-    // paddle 0 is completely outside of canvas
-    paddles[0].active = false;
-    specialBricks.wormhole.twoPaddles = false;
-  }
-  if (paddles[1].x > settings.canvasW || paddles[1].x + defaultPaddle.w < 0) {
-    // paddle 1 is completely outside of canvas
-    paddles[1].active = false;
-    specialBricks.wormhole.twoPaddles = false;
-  }
-
-  if (paddles[0].active && !paddles[1].active) {
-    specialBricks.wormhole.twoPaddles = false;
-    // all good, paddle0 is main
-    specialBricks.wormhole.twoPaddles = false;
-    return;
-  } else if (!paddles[0].active && paddles[1].active) {
-    // paddle1 is main, change to paddle0
-    paddles[0].x = paddles[1].x;
-    paddles[0].active = true;
-    paddles[1].active = false;
-    specialBricks.wormhole.twoPaddles = false;
-  }
-}
-
-/* wormhole
-
-
-
-
-
-*/

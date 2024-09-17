@@ -6,6 +6,15 @@ function Dialog({ isOpen, confirm, onConfirm, onCancel, text, input }) {
 
   useEffect(() => {
     modalRef.current?.focus();
+    const mod = document.querySelector(`.${styles.modal}`);
+
+    if (mod) {
+      const mod1 = mod.getBoundingClientRect();
+      console.log(mod1);
+      mod.style = `left: calc(50% - ${mod1.width / 2}px) !important`;
+
+      //`left: calc(50% - ${mod1.width / 2})px !important`;
+    }
   }, [isOpen]);
 
   useEffect(() => {
