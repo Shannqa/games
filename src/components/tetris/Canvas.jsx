@@ -12,8 +12,8 @@ import { settings, settingsMobile } from "./settings.js";
 function Canvas({ draw, width, height }) {
   // + modal, setModal
   const canvasRef = useRef(null);
-  
-/*
+
+  /*
   function handleTouches(canvas, ctx) {
     console.log("Initialized.");
     // const el = document.getElementById("brickCanvas");
@@ -52,18 +52,18 @@ function Canvas({ draw, width, height }) {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [draw, collision]);
+  }, [draw]);
 
-//  if (!isTouchDevice()) {
-    return (
-      <canvas
-        id="brickCanvas"
-        ref={canvasRef}
-        width={width}
-        height={settings.canvasH}
-      ></canvas>
-    );
-/*  } else {
+  //  if (!isTouchDevice()) {
+  return (
+    <canvas
+      id="tetrisCanvas"
+      ref={canvasRef}
+      width={width}
+      height={settings.canvasH}
+    ></canvas>
+  );
+  /*  } else {
     return (
       <canvas
         id="brickCanvas"
