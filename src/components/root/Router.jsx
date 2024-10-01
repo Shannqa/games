@@ -5,6 +5,7 @@ import Battleships from "../battleships/Battleships";
 import Minesweeper from "../minesweeper/Minesweeper";
 import Brickshooter from "../brickshooter/Brickshooter";
 import SnakeGame from "../snake/SnakeGame";
+import Tetris from "../tetris/Tetris";
 import Home from "./Home";
 import Highscores from "./Highscores";
 
@@ -33,6 +34,10 @@ function Router() {
         {
           path: "/snake",
           element: <SnakeGame />,
+        },
+        {
+          path: "/tetris",
+          element: <Tetris />,
         },
         {
           path: "/highscores",
