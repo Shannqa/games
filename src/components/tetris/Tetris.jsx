@@ -7,7 +7,17 @@ import { drawMenu } from "./menu.js"
 
 function Tetris() {
   const [nextBlock, setNextBlock] = useState(null);
+  const [currentBlock, setCurrentBlock] = useState(null);
+  const [gameState, setGameState] = useState("loaded");
+  const [modal, setModal] = useState(false);
   
+  useEffect(() => {
+    if (gameState === "loaded") {
+      setCurrentBlock(getRandomBlock(blocks));
+      setNextBlock(getRandomBlock(blocks));
+    }
+    
+  }, [gameState])
   function getRandomBlock(blocks) {
     const blocksArr = Object.keys(blocks);
     const randomNr = Math.floor(Math.random * blocksArr.length);

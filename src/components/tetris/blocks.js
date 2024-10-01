@@ -36,20 +36,32 @@ export const blocks = {
     ]
 }
 
+const blockColors = {
+  "O": "red",
+  "I": "blue",
+  "J": "green",
+  "L": "purple",
+  "S": "pink",
+  "Z": "orange",
+  "T": "darkgreen"
+}
+
 export function drawBlock(type, blocks, ctx, x, y) {
   const matrix = blocks.type;
   
-  ctx.beginPath();
-  ctx.strokeStyle = "#000";
-  ctx.fillStyle = "blue";
-  
-  martix.map((row, id) => {
-    row.map((col, id) => {
+  martix.map((row, rId) => {
+    row.map((col, cId) => {
       if (col === 1) {
-        ctx.rect(x + id * square.width, y + id * square.height, square.width, square.height);
-        ctx.fill();
-        ctx.stroke();
+        drawSquare(ctx, type, x + cId * square.width, y + rId * square.height);
       }
     });
   });
+}
+
+export function drawSquare(ctx, type, x, y) {
+  ctx.strokeStyle = "#000";
+  ctx.fillStyle = blockColors.type;
+  ctx.rect(x, y, square.width, square.height);
+  ctx.fill();
+  ctx.stroke();
 }
