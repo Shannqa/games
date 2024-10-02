@@ -4,6 +4,13 @@ export const settings = {
   menuWidth: 200,
   gameAreaW: 400,
   menuText: 20,
+  speed: 60, // 60 +/- 1 per second
+  squareSize: 20
 };
 
 export const settingsMobile = {};
+
+const nrOfBlocks = {
+  x: settings.gameAreaW / settings.squareSize,
+  y: settings.canvasH / settings.squareSize
+}

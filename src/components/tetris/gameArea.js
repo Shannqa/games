@@ -1,6 +1,5 @@
-const gameMatrix = [];
-
-function createEmptyMatrix(gameMatrix) {
+export function createEmptyMatrix() {
+  const gameMatrix = [];
   for (let row = 0; r < settings.blocksX; row++) {
     gameMatrix.push([]);
     for (let col = 0; col < settings.blocksY; col++) {
@@ -10,7 +9,7 @@ function createEmptyMatrix(gameMatrix) {
   return gameMatrix;
 }
 
-function drawMatrix(gameMatrix) {
+export function drawPlacedBlocks(gameMatrix) {
   gameMatrix.forEach((row, rId) => {
     row.forEach((col, cId) => {
       if (true) {
