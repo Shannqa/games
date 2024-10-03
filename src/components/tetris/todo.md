@@ -17,6 +17,6 @@ To add
 
 To change
 ======
-* canvas size
+* canvas size / standard is 10x20 or 10x24
 * block size
 * 

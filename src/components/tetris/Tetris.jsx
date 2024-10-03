@@ -13,6 +13,7 @@ function Tetris() {
   const [gameState, setGameState] = useState("loaded");
   const [modal, setModal] = useState(false);
   const [placedBlocks, setPlacedBlocks] = useState([]);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     if (gameState === "loaded") {
