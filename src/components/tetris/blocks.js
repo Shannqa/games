@@ -7,11 +7,6 @@ const square = {
 
 export let currentBlockCoords = [];
 
-export let currentBlock = {
-  x: settings.gameAreaW / 2,
-  y: 0,
-};
-
 export const blocks = {
   O: [
     [1, 1],
@@ -119,10 +114,6 @@ export function drawCurrentBlock(ctx, type, frameCount) {
   // drawBlock(ctx, type, currentBlock.x, currentBlock.y);
 }
 
-export function detectCollision(ctx, placedBlocks) {
-  currentBlock.forEach(square);
-}
-
 export function getStartCoords(type) {
   // determine coordinates of a block as it first appears on screen
 
@@ -157,7 +148,10 @@ export function stopBlock(placedBlocks, setPlacedBlocks, type, setGameState) {
     const [x, y] = currentBlockCoords[i];
     if (y + 1 >= nrOfBlocks.y || placedBlocks[y + 1][x]) {
       // undefined, placedblocks is an empty array !!!
-      // stop, place the block at the current stop
+      // last row has id 19, nrofb is 20
+      
+      
+      // if is at the bottom of canvas or next move would touch a placed block, stop and place the block at the current stop
       let newPlacements = [...placedBlocks];
       // maybe that for multidimensional arrays matrix.map((row) => [...row]);
 
@@ -174,4 +168,33 @@ export function stopBlock(placedBlocks, setPlacedBlocks, type, setGameState) {
       })*/
     }
   }
+}
+
+export function checkIfRowComplete(placedBlocks, setPlacedBlocks) {
+  const completedRows = []
+  placedBlocks.forEach((row, rId) => {
+    const checkedRow = row.every(square => {
+      return square !== null
+    });
+    if (checkedRow) {
+      completedRows.push(rId);
+    }
+  });
+  if (completedRows.length > 0) {
+    deleteRow(completedRows, placedBlocks, setPlacedBlocks)
+  }
+}
+
+function deleteRow(completedRows, placedBlocks, setPlacedBlocks) {
+  let newPlacedBlocks = placedBlocks.map((placedRow, placedrId) => {
+    completedRows.forEach((row, rId) => {
+      if (placedrId === row) {
+        return;
+      } else {
+        return [...row];
+      }
+    })
+  });
+  setPlacedBlocks(newPlacedBlocks);
+  // what should come first, clearing a row or generating a new current block
 }

@@ -54,7 +54,7 @@ function Tetris() {
       stopBlock(placedBlocks, setPlacedBlocks, currentBlockType, setGameState);
       // currentBlock.y += settings.squareSize;
     }
-
+checkIfRowComplete()
     // detectCollision(ctx);
   }
 

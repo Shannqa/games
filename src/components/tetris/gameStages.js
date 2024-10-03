@@ -26,7 +26,11 @@ export function newBlock(
   setGameState
 ) {
   setCurrentBlockType(nextBlock);
-  // reset coords of the new current block
+  getStartCoords(nextBlock);
   setNextBlock(getRandomBlock(blocks));
   setGameState("playing");
+}
+
+export function clearedRow() {
+  
 }

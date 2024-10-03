@@ -1,9 +1,10 @@
 import { settings } from "./settings";
+
 export function createEmptyMatrix() {
   const gameMatrix = [];
-  for (let row = 0; row < settings.blocksX; row++) {
+  for (let row = 0; row < nrOfBlocks.x; row++) {
     gameMatrix.push([]);
-    for (let col = 0; col < settings.blocksY; col++) {
+    for (let col = 0; col < nrOfBlocks.y; col++) {
       gameMatrix[row].push(null);
     }
   }
