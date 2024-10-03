@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Canvas from "./Canvas";
 import { settings } from "./settings.js";
-import { blocks, drawCurrentBlock, moveBlock, stopBlock } from "./blocks.js";
+import {
+  blocks,
+  drawCurrentBlock,
+  moveBlock,
+  stopBlock,
+  checkIfRowComplete,
+} from "./blocks.js";
 import { drawMenu } from "./menu.js";
 import styles from "../../styles/tetris.module.css";
-import { gameLoaded } from "./gameStages.js";
+import { gameLoaded, newBlock } from "./gameStages.js";
 import { drawPlacedBlocks } from "./gameArea.js";
 
 function Tetris() {
@@ -31,7 +37,8 @@ function Tetris() {
         nextBlock,
         setNextBlock,
         blocks,
-        setGameState
+        setGameState,
+        getRandomBlock
       );
     }
   }, [gameState]);
@@ -55,7 +62,7 @@ function Tetris() {
       stopBlock(placedBlocks, setPlacedBlocks, currentBlockType, setGameState);
       // currentBlock.y += settings.squareSize;
     }
-checkIfRowComplete()
+    checkIfRowComplete(placedBlocks, setPlacedBlocks);
     // detectCollision(ctx);
   }
 

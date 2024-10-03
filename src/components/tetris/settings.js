@@ -1,11 +1,11 @@
 export const settings = {
-  canvasW: 600,
-  canvasH: 600,
+  canvasW: 550,
+  canvasH: 500,
   menuWidth: 200,
-  gameAreaW: 400,
+  gameAreaW: 300,
   menuText: 20,
   speed: 60, // 60 +/- 1 per second
-  squareSize: 20,
+  squareSize: 25,
 };
 
 export const settingsMobile = {};

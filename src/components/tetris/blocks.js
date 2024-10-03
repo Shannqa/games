@@ -1,9 +1,9 @@
 import { settings, nrOfBlocks } from "./settings";
 
-const square = {
-  width: 20,
-  height: 20,
-};
+// export const square = {
+//   width: 20,
+//   height: 20,
+// };
 
 export let currentBlockCoords = [];
 
@@ -63,8 +63,8 @@ export function drawBlock(ctx, type, x, y) {
           drawSquare(
             ctx,
             type,
-            x + cId * square.width,
-            y + rId * square.height
+            x + cId * settings.squareSize,
+            y + rId * settings.squareSize
           );
         }
       });
@@ -81,7 +81,7 @@ export function drawBlockGameArea(ctx, type) {
     // console.log(type);
     ctx.beginPath();
     currentBlockCoords.forEach(([x, y]) => {
-      drawSquare(ctx, type, x * square.width, y * square.height);
+      drawSquare(ctx, type, x * settings.squareSize, y * settings.squareSize);
     });
     // matrix.map((row, rId) => {
     //   row.map((col, cId) => {
@@ -102,7 +102,7 @@ export function drawBlockGameArea(ctx, type) {
 export function drawSquare(ctx, type, x, y) {
   ctx.strokeStyle = "#000";
   ctx.fillStyle = blockColors[type];
-  ctx.rect(x, y, square.width, square.height);
+  ctx.rect(x, y, settings.squareSize, settings.squareSize);
   ctx.fill();
   ctx.stroke();
 }
@@ -116,7 +116,8 @@ export function drawCurrentBlock(ctx, type, frameCount) {
 
 export function getStartCoords(type) {
   // determine coordinates of a block as it first appears on screen
-
+  // reset coords first
+  currentBlockCoords.length = 0;
   const midX = Math.floor((nrOfBlocks.x - 1) / 2);
 
   const blockPattern = blocks[type];
@@ -137,28 +138,37 @@ export function moveBlock() {
   currentBlockCoords.map((coord) => {
     return (coord[1] += 1);
   });
-  console.log(currentBlockCoords);
+  // console.log(currentBlockCoords);
 }
 
 export function stopBlock(placedBlocks, setPlacedBlocks, type, setGameState) {
   // check if next move down would make the block intersect any of the already placed blocks
   if (!type) return;
-  console.log(nrOfBlocks.y);
+  // console.log(nrOfBlocks.y);
   for (let i = 0; i < currentBlockCoords.length; i++) {
     const [x, y] = currentBlockCoords[i];
-    if (y + 1 >= nrOfBlocks.y || placedBlocks[y + 1][x]) {
+    if (y >= nrOfBlocks.y - 1 || placedBlocks[x][y + 1]) {
       // undefined, placedblocks is an empty array !!!
       // last row has id 19, nrofb is 20
-      
-      
+
       // if is at the bottom of canvas or next move would touch a placed block, stop and place the block at the current stop
       let newPlacements = [...placedBlocks];
       // maybe that for multidimensional arrays matrix.map((row) => [...row]);
 
-      currentBlockCoords.forEach((coordX, coordY) => {
+      currentBlockCoords.forEach(([coordX, coordY]) => {
         newPlacements[coordX][coordY] = type;
+        // console.log(
+        //   "newPlacements",
+        //   newPlacements,
+        //   "coordX",
+        //   coordX,
+        //   "coordY",
+        //   coordY
+        // );
       });
+      console.log(JSON.stringify(currentBlockCoords));
       setPlacedBlocks(newPlacements);
+      console.log(newPlacements);
       setGameState("newBlock");
 
       /* const newPlacement = placedBlocks.map((row, rId) => {
@@ -171,17 +181,18 @@ export function stopBlock(placedBlocks, setPlacedBlocks, type, setGameState) {
 }
 
 export function checkIfRowComplete(placedBlocks, setPlacedBlocks) {
-  const completedRows = []
+  const completedRows = [];
+
   placedBlocks.forEach((row, rId) => {
-    const checkedRow = row.every(square => {
-      return square !== null
+    const checkedRow = row.every((square) => {
+      return square !== null;
     });
     if (checkedRow) {
       completedRows.push(rId);
     }
   });
   if (completedRows.length > 0) {
-    deleteRow(completedRows, placedBlocks, setPlacedBlocks)
+    deleteRow(completedRows, placedBlocks, setPlacedBlocks);
   }
 }
 
@@ -193,7 +204,7 @@ function deleteRow(completedRows, placedBlocks, setPlacedBlocks) {
       } else {
         return [...row];
       }
-    })
+    });
   });
   setPlacedBlocks(newPlacedBlocks);
   // what should come first, clearing a row or generating a new current block

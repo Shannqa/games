@@ -1,10 +1,11 @@
-import { settings } from "./settings";
+import { settings, nrOfBlocks } from "./settings";
+import { drawSquare } from "./blocks";
 
 export function createEmptyMatrix() {
   const gameMatrix = [];
-  for (let row = 0; row < nrOfBlocks.x; row++) {
+  for (let row = 0; row < nrOfBlocks.y; row++) {
     gameMatrix.push([]);
-    for (let col = 0; col < nrOfBlocks.y; col++) {
+    for (let col = 0; col < nrOfBlocks.x; col++) {
       gameMatrix[row].push(null);
     }
   }
@@ -12,10 +13,16 @@ export function createEmptyMatrix() {
 }
 
 export function drawPlacedBlocks(ctx, placedBlocks) {
+  // console.log(placedBlocks);
   placedBlocks.forEach((row, rId) => {
     row.forEach((col, cId) => {
-      if (true) {
-        drawSquare(ctx, col, cId * square.width, rId * square.height);
+      if (col) {
+        drawSquare(
+          ctx,
+          col,
+          rId * settings.squareSize,
+          cId * settings.squareSize
+        );
       }
     });
   });

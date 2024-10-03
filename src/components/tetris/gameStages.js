@@ -11,7 +11,10 @@ export function gameLoaded(
 ) {
   // first load of the game
   const currentType = getRandomBlock(blocks);
+  const mat = createEmptyMatrix();
+  console.log(mat);
   setPlacedBlocks(createEmptyMatrix());
+
   setCurrentBlockType(currentType);
   setNextBlock(getRandomBlock(blocks));
   getStartCoords(currentType);
@@ -23,7 +26,8 @@ export function newBlock(
   nextBlock,
   setNextBlock,
   blocks,
-  setGameState
+  setGameState,
+  getRandomBlock
 ) {
   setCurrentBlockType(nextBlock);
   getStartCoords(nextBlock);
@@ -31,6 +35,4 @@ export function newBlock(
   setGameState("playing");
 }
 
-export function clearedRow() {
-  
-}
+export function clearedRow() {}
