@@ -4,7 +4,7 @@ import { settings } from "./settings.js";
 import {
   blocks,
   drawCurrentBlock,
-  moveBlock,
+  moveBlockDown,
   stopBlock,
   checkIfRowComplete,
 } from "./blocks.js";
@@ -12,6 +12,7 @@ import { drawMenu } from "./menu.js";
 import styles from "../../styles/tetris.module.css";
 import { gameLoaded, newBlock } from "./gameStages.js";
 import { drawPlacedBlocks } from "./gameArea.js";
+import { keyDown, keyUp } from "./keyboard.js";
 
 function Tetris() {
   const [nextBlock, setNextBlock] = useState(null);
@@ -20,6 +21,21 @@ function Tetris() {
   const [modal, setModal] = useState(false);
   const [placedBlocks, setPlacedBlocks] = useState([]);
   const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    if (!modal) {
+      document.addEventListener("keydown", keyDown);
+      document.addEventListener("keyup", keyUp);
+    } else {
+      document.removeEventListener("keydown", keyDown);
+      document.removeEventListener("keyup", keyUp);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", keyDown);
+      document.removeEventListener("keyup", keyUp);
+    };
+  }, [modal]);
 
   useEffect(() => {
     if (gameState === "loaded") {
@@ -58,7 +74,7 @@ function Tetris() {
 
     if (frameCount % settings.speed === 0) {
       // tick of the game
-      moveBlock();
+      moveBlockDown();
       stopBlock(placedBlocks, setPlacedBlocks, currentBlockType, setGameState);
       // currentBlock.y += settings.squareSize;
     }
