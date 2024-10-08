@@ -16,7 +16,6 @@ import { keyDown, keyUp } from "./keyboard.js";
 
 function Tetris() {
   const [nextBlock, setNextBlock] = useState(null);
-  const [currentBlockType, setCurrentBlockType] = useState(null);
   const [gameState, setGameState] = useState("loaded");
   const [modal, setModal] = useState(false);
   const [placedBlocks, setPlacedBlocks] = useState([]);
@@ -40,42 +39,33 @@ function Tetris() {
   useEffect(() => {
     if (gameState === "loaded") {
       gameLoaded(
-        setCurrentBlockType,
         setNextBlock,
         setPlacedBlocks,
         blocks,
         setGameState,
-        getRandomBlock
       );
     } else if (gameState === "newBlock") {
       newBlock(
-        setCurrentBlockType,
         nextBlock,
         setNextBlock,
         blocks,
-        setGameState,
-        getRandomBlock
+        setGameState
       );
     }
   }, [gameState]);
 
-  function getRandomBlock(blocks) {
-    const blocksArr = Object.keys(blocks);
-    const randomNr = Math.floor(Math.random() * blocksArr.length);
-    const randomBlock = blocksArr[randomNr];
-    return randomBlock;
-  }
+  
 
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     drawMenu(ctx, nextBlock);
     drawPlacedBlocks(ctx, placedBlocks);
-    drawCurrentBlock(ctx, currentBlockType);
+    drawCurrentBlock(ctx);
 
     if (frameCount % settings.speed === 0) {
       // tick of the game
       moveBlockDown();
-      stopBlock(placedBlocks, setPlacedBlocks, currentBlockType, setGameState);
+      stopBlock(placedBlocks, setPlacedBlock, setGameState);
       // currentBlock.y += settings.squareSize;
     }
     checkIfRowComplete(placedBlocks, setPlacedBlocks);
