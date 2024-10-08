@@ -228,33 +228,44 @@ function deleteRow(completedRows, placedBlocks, setPlacedBlocks) {
 }
 
 export function rotateBlock() {
-  if (currentType === "O") {
+  if (!currentType) {
+    // no type, something went wrong
+    return;
+  } else if (currentType === "O") {
     // don't rotate O-blocks
     return;
-  }
-  
+  } else if (currentType === "I") {
+    // I has separate rotation rules
+  } else 
+  // basic rotation
   let rotatedCoords = currentBlockCoords.map((cell) => {
     const newX = currentPivot[1] - cell[1] + currentPivot[0];
     const newY = currentPivot[1] - currentPivot[0] + cell[0];
     return [newX, newY];
   });
+  if (!checkEdgesCollision(rotatedCoords) && !checkPlacedBlocksCollision(rotatedCoords)) {
+    // no collisions, valid rotation
+    currentBlockCoords = [...rotatedCoords];
+  } else {
+    // collision with edge of canvas or another piece. try the following jumps in order to see if any would be valid
+    const possibleJumps = [
+      [-1, 0],
+      [-1, -1],
+      [0, 2],
+      [-1, 2]
+    ];
+    
+  for (const [jumpX, jumpY] of possibleJumps) {
+    const kickedCoords = rotatedCoords.map(([x, y]) => [x + jumpX, y + jumpY]);
+    if (!checkEdgesCollision(kickedCoords) && !checkPlacedBlocksCollision(kickedCoords)) {
+      currentBlockCoords = [...kickedCoords];
+      return;
+    } else {
+      // rotation impossible, cancel
+      return;
+    }
+ }
   
-  // if the rotated block would go outside canvas, jump to the side
-
-   const isOutsideLeftEdge = rotatedCoords.some(([x, y]) => x < 0);
-   const isOutsideRightEdge = rotatedCoords.some(([x, y]) => x > nrOfBlocks.x - 1);
-   
-  
-   if (isOutsideLeftEdge) {
-     rotatedCoords = rotatedCoords.map(([x, y]) => [x + 1, y]);
-   } else if (isOutsideRightEdge) {
-     rotatedCoords = rotatedCoords.map(([x, y]) => [x - 1, y]);
-   }
-  console.log("rotated", JSON.stringify(rotatedCoords));
-  currentBlockCoords = [...rotatedCoords];
-}
-
-
 
 /*** check if moves are valid ***/
 
@@ -308,6 +319,10 @@ function checkPlacedBlocksCollision(newCoords) {
   }
 )}
   
+  
+function checkEdgesCollision(newCoords) {
+    return newCoords.some(([x, y]) => x < 0 || x >= nrOfBlocks.x || y < 0 || y >= nrOfBlocks.y);
+}
 /*
   
 rotation
