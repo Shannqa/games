@@ -16,13 +16,8 @@ export function drawPlacedBlocks(ctx, placedBlocks) {
   // console.log(placedBlocks);
   placedBlocks.forEach((row, rId) => {
     row.forEach((col, cId) => {
-      if (col) {
-        drawSquare(
-          ctx,
-          col,
-          rId * settings.squareSize,
-          cId * settings.squareSize
-        );
+      if (col !== null) {
+        drawSquare(ctx, cId * settings.squareSize, rId * settings.squareSize);
       }
     });
   });

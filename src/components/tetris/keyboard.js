@@ -6,11 +6,12 @@ export let DOWN;
 export let ENTER;
 export let SPACE;
 
-export function keyDown(e, modal) {
+export function keyDown(e) {
   if (e.key === "Left" || e.key === "ArrowLeft") {
     e.preventDefault();
     LEFT = true;
     moveToSide("left");
+    console.log("left");
   }
   if (e.key === "Right" || e.key === "ArrowRight") {
     e.preventDefault();
@@ -20,13 +21,13 @@ export function keyDown(e, modal) {
   if (e.key === "Enter" || e.code === "Enter") {
     // pause the game
     e.preventDefault();
-    if (!modal) {
-      if (paused) {
-        changePaused(false);
-      } else {
-        changePaused(true);
-      }
-    }
+    // if (!modal) {
+    //   if (paused) {
+    //     changePaused(false);
+    //   } else {
+    //     changePaused(true);
+    //   }
+    // }
   }
   if (e.key === " " || e.code === "Space") {
     rotateBlock();

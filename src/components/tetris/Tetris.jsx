@@ -5,7 +5,6 @@ import {
   blocks,
   drawCurrentBlock,
   moveBlockDown,
-  stopBlock,
   checkIfRowComplete,
 } from "./blocks.js";
 import { drawMenu } from "./menu.js";
@@ -38,23 +37,11 @@ function Tetris() {
 
   useEffect(() => {
     if (gameState === "loaded") {
-      gameLoaded(
-        setNextBlock,
-        setPlacedBlocks,
-        blocks,
-        setGameState,
-      );
+      gameLoaded(setNextBlock, setPlacedBlocks, blocks, setGameState);
     } else if (gameState === "newBlock") {
-      newBlock(
-        nextBlock,
-        setNextBlock,
-        blocks,
-        setGameState
-      );
+      newBlock(nextBlock, setNextBlock, blocks, setGameState);
     }
   }, [gameState]);
-
-  
 
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -64,11 +51,11 @@ function Tetris() {
 
     if (frameCount % settings.speed === 0) {
       // tick of the game
-      moveBlockDown();
-      stopBlock(placedBlocks, setPlacedBlock, setGameState);
+      moveBlockDown(placedBlocks, setPlacedBlocks, setGameState);
+      // stopBlock(placedBlocks, setPlacedBlock, setGameState);
       // currentBlock.y += settings.squareSize;
     }
-    checkIfRowComplete(placedBlocks, setPlacedBlocks);
+    // checkIfRowComplete(placedBlocks, setPlacedBlocks);
     // detectCollision(ctx);
   }
 

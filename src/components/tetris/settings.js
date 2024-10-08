@@ -4,7 +4,7 @@ export const settings = {
   menuWidth: 200,
   gameAreaW: 300,
   menuText: 20,
-  speed: 60, // 60 +/- 1 per second
+  speed: 20, // 60 +/- 1 per second
   squareSize: 25,
 };
 
