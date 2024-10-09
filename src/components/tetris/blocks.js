@@ -132,80 +132,141 @@ export function getStartCoords(type) {
 
 /*** current block and its movements ***/
 
-export function moveBlockDown(placedBlocks, setPlacedBlocks, setGameState) {
-  // move the current block down
-  console.log("move");
-  const newCoords = currentBlockCoords.map(([x, y]) => {
-    return [x, y + 1];
-  });
-  const isMoveValid = checkIfMoveDownValid(newCoords, placedBlocks);
-
-  if (isMoveValid) {
-    currentBlockCoords = [...newCoords];
-    currentPivot[1] += 1;
+export function autoMoveDown(placedBlocks, setPlacedBlocks, setGameState) {
+  const newCoords = getNewCoords("down"); 
+  const isValid = checkIfMoveValid(newCoords);
+  
+  if (isValid) {
+    saveNewCoords(newCoords);
   } else {
-    stopMovement(placedBlocks, setPlacedBlocks, setGameState);
+    saveNewStack(placedBlocks, setPlacedBlocks, );
+    //setPlacedCoords
   }
 }
 
-export function moveToSide(direction) {
-  // user's move left or right
-
-  let newCoords;
-  let newPivotX = currentPivot[0];
-  if (direction === "right") {
-    newCoords = currentBlockCoords.map(([x, y]) => [x + 1, y]);
-    newPivotX += 1;
-  } else if (direction === "left") {
-    newCoords = currentBlockCoords.map(([x, y]) => [x - 1, y]);
-    newPivotX -= 1;
-  }
-
-  const isMoveValid = checkIfMoveSidewaysValid(direction, newCoords);
-
-  if (isMoveValid) {
-    currentBlockCoords = [...newCoords];
-    currentPivot[0] = newPivotX;
+export function userMove(direction) {
+  const newCoords = getNewCoords(direction); 
+  const isValid = checkIfMoveValid(newCoords);
+  
+  if (isValid) {
+    saveNewCoords(newCoords);
   }
 }
 
-function stopMovement(placedBlocks, setPlacedBlocks, setGameState) {
-  // movement is stopped, place the current block
+function getNewCoords(direction) {
+  const newCoords = currentBlockCoords.map(([x, y]) => {
+      if (direction === "down") {
+        return [x, y + 1];
+      } else if (direction === "left") {
+        return [x - 1, y]
+      } else if (direction === "right") {
+        return [x + 1, y]
+      }
+  });
+  return newCoords;
+}
 
-  if (!currentType) {
-    // something went wrong
-    console.log("err");
-    return;
+function checkIfMoveValid(newCoords, placedBlocks) {
+
+  // check against the edges of the playing field
+  const outsideEdges = newCoords.some(
+    ([x, y]) => x < 0 || x >= nrOfBlocks.x || y < 0 || y >= nrOfBlocks.y);
+    
+    if (outsideEdges) {
+      return false;
+    }
+
+  // check against already placed blocks
+  const overlapingStack = newCoords.some(([x, y]) => {
+    return (
+      placedBlocks[x] &&
+      placedBlocks[x][y] !== undefined &&
+      placedBlocks[x][y] !== null
+    );
+  });
+  
+  if (overlapingStack) {
+    return false;
   }
+  
+  // otherwise the move is valid
+  return true;
+}
 
-  console.log("placedBlocks", placedBlocks);
-  console.log("curr", JSON.stringify(currentBlockCoords));
-  let newPlacements = placedBlocks.map((row, rId) => {
+function saveNewCoords(newCoords) {
+  currentBlockCoords = [...newCoords];
+}
+
+function saveNewStack(placedBlocks, setPlacedBlocks, setGameState) {
+  const newStack = placedBlocks.map((row, rId) => {
     return row.map((col, cId) => {
       for (const [x, y] of currentBlockCoords) {
         if (rId === y && cId === x) {
-          return "aa";
+          return currentType;
         }
       }
       return col;
-
-      // currentBlockCoords.forEach(([x, y]) => {
-      //   if (rId === x && cId === y) {
-      //     console.log(rId, x, cId, y, "uuu");
-      //     // add the type of block to the appropriate cell
-      //     return currentType;
-      //   } else {
-      //     return col;
-      //   }
-      // });
     });
   });
-  console.log("newPlacements", JSON.stringify(newPlacements));
-  setPlacedBlocks(newPlacements);
+  setPlacedBlocks(newStack);
   setGameState("newBlock");
 }
 
-///
+export function rotate() {
+  if (!currentType) {
+    // no type, something went wrong
+    return;
+  } else if (currentType === "O") {
+    // don't rotate O-blocks
+    return;
+  } else if (currentType === "I") {
+    // I has separate rotation rules
+  } else {
+    // basic rotation
+    const rotatedCoords = currentBlockCoords.map((cell) => {
+      const newX = currentPivot[1] - cell[1] + currentPivot[0];
+      const newY = currentPivot[1] - currentPivot[0] + cell[0];
+      return [newX, newY];
+    });
+    
+    const isValid = checkIfMoveValid(rotatedCoords);
+  
+    if (isValid) {
+      saveNewCoords(rotatedCoords);
+      return;
+    }
+    
+    // collision with edge of canvas or another piece. try the following jumps in order to see if any would be valid
+    
+    const possibleJumps = [
+      [-1, 0],
+      [-1, -1],
+      [0, 2],
+      [-1, 2],
+    ];
+
+    for (const [jumpX, jumpY] of possibleJumps) {
+      const kickedCoords = rotatedCoords.map(([x, y]) => [
+          x + jumpX,
+          y + jumpY,
+      ]);
+      
+      const isJumpValid = checkIfMoveValid(kickedCoords);
+  
+      if (isJumpValid) {
+        saveNewCoords(kickedCoords);
+        return;
+      }
+    }
+    // rotation impossible, cancel
+    return;
+  }
+}
+
+
+//add changes to pivot to moves
+
+
 export function checkIfRowComplete(placedBlocks, setPlacedBlocks) {
   const completedRows = [];
 
@@ -236,130 +297,5 @@ function deleteRow(completedRows, placedBlocks, setPlacedBlocks) {
   // what should come first, clearing a row or generating a new current block
 }
 
-export function rotateBlock() {
-  if (!currentType) {
-    // no type, something went wrong
-    return;
-  } else if (currentType === "O") {
-    // don't rotate O-blocks
-    return;
-  } else if (currentType === "I") {
-    // I has separate rotation rules
-  } else {
-    // basic rotation
-    let rotatedCoords = currentBlockCoords.map((cell) => {
-      const newX = currentPivot[1] - cell[1] + currentPivot[0];
-      const newY = currentPivot[1] - currentPivot[0] + cell[0];
-      return [newX, newY];
-    });
-    if (
-      !checkEdgesCollision(rotatedCoords) &&
-      !checkPlacedBlocksCollision(rotatedCoords)
-    ) {
-      // no collisions, valid rotation
-      currentBlockCoords = [...rotatedCoords];
-    } else {
-      // collision with edge of canvas or another piece. try the following jumps in order to see if any would be valid
-      const possibleJumps = [
-        [-1, 0],
-        [-1, -1],
-        [0, 2],
-        [-1, 2],
-      ];
 
-      for (const [jumpX, jumpY] of possibleJumps) {
-        const kickedCoords = rotatedCoords.map(([x, y]) => [
-          x + jumpX,
-          y + jumpY,
-        ]);
-        if (
-          !checkEdgesCollision(kickedCoords) &&
-          !checkPlacedBlocksCollision(kickedCoords)
-        ) {
-          currentBlockCoords = [...kickedCoords];
-          return;
-        } else {
-          // rotation impossible, cancel
-          return;
-        }
-      }
-    }
-  }
-}
-/*** check if moves are valid ***/
-
-function checkIfMoveDownValid(newCoords, placedBlocks) {
-  // check for collision with bottom of canvas
-  const isOutsideCanvas = newCoords.some(([x, y]) => y >= nrOfBlocks.y);
-
-  if (isOutsideCanvas) {
-    // move invalid
-    return false;
-  }
-
-  // check for collision with already placed blocks
-  const collision = checkPlacedBlocksCollision(newCoords, placedBlocks);
-
-  if (collision) {
-    // movement invalid
-    return false;
-  }
-  // otherwise, movement is valid
-  return true;
-}
-
-function checkIfMoveSidewaysValid(direction, newCoords) {
-  // check for collision with edges of canvas
-  const isOutsideCanvas = newCoords.some(
-    ([x, y]) => x < 0 || x >= nrOfBlocks.x
-  );
-
-  if (isOutsideCanvas) {
-    // move invalid
-    return false;
-  }
-
-  // check for collision with already placed blocks
-  const collision = checkPlacedBlocksCollision(newCoords);
-
-  if (collision) {
-    // movement invalid
-    return false;
-  }
-  // otherwise, movement is valid
-  return true;
-}
-
-function checkPlacedBlocksCollision(newCoords, placedBlocks) {
-  // test if any of the new coords would overlap an occupied field (isn't null)
-  return newCoords.some(([x, y]) => {
-    return (
-      placedBlocks[x] &&
-      placedBlocks[x][y] !== undefined &&
-      placedBlocks[x][y] !== null
-    );
-  });
-}
-
-function checkEdgesCollision(newCoords) {
-  return newCoords.some(
-    ([x, y]) => x < 0 || x >= nrOfBlocks.x || y < 0 || y >= nrOfBlocks.y
-  );
-}
-/*
-  
-rotation
-
-o o o o o o 
-o o x o o o
-o o x x @ o 
-o o o x o o
-o o o o o o
-
-o o o o o o
-o o o o o o
-o o o x x o
-o o x x o o
-o o o o o o
-
-*/
+/*****/

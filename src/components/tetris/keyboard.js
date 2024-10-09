@@ -6,19 +6,17 @@ export let DOWN;
 export let ENTER;
 export let SPACE;
 
-export function keyDown(e) {
+export function keyDown(e, placedBlocks) {
   if (e.key === "Left" || e.key === "ArrowLeft") {
     e.preventDefault();
-    LEFT = true;
-    moveToSide("left");
+    moveToSide("left", placedBlocks);
     console.log("left");
   }
   if (e.key === "Right" || e.key === "ArrowRight") {
     e.preventDefault();
-    RIGHT = true;
-    moveToSide("right");
+    moveToSide("right", placedBlocks);
   }
-  if (e.key === "Enter" || e.code === "Enter") {
+  if (e.key === "Enter") {
     // pause the game
     e.preventDefault();
     // if (!modal) {
@@ -29,13 +27,15 @@ export function keyDown(e) {
     //   }
     // }
   }
-  if (e.key === " " || e.code === "Space") {
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
     rotateBlock();
   }
 }
 
 export function keyUp(e) {
+  /*
   if (e.key === "Left" || e.key === "ArrowLeft") LEFT = false;
   if (e.key === "Right" || e.key === "ArrowRight") RIGHT = false;
-  if (e.key === " " || e.code === "Space") SPACE = false;
+  if (e.key === " " || e.code === "Space") SPACE = false;*/
 }

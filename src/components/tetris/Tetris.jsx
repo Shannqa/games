@@ -21,19 +21,17 @@ function Tetris() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-    if (!modal) {
-      document.addEventListener("keydown", keyDown);
-      document.addEventListener("keyup", keyUp);
-    } else {
-      document.removeEventListener("keydown", keyDown);
-      document.removeEventListener("keyup", keyUp);
-    }
-
+    const handleKeyDown = (e) => keyDown(e, placedBlocks);
+    const handleKeyUp = (e) => keyUp(e);
+    
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    
     return () => {
-      document.removeEventListener("keydown", keyDown);
-      document.removeEventListener("keyup", keyUp);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
     };
-  }, [modal]);
+  }, []);
 
   useEffect(() => {
     if (gameState === "loaded") {
