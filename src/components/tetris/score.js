@@ -12,3 +12,8 @@ export function changeScore(setScore, newScore) {
 export function resetScore(setScore) {
   setScore(0);
 }
+
+
+let level
+let lines
+let score

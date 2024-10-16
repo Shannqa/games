@@ -28,4 +28,8 @@ export function newBlock(
   setGameState("playing");
 }
 
-export function clearedRow() {}
+export function lineClear() {}
+
+export function gameLoss() {
+  
+}

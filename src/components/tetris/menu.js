@@ -1,7 +1,7 @@
 import { settings } from "./settings.js";
-import { blocks, drawBlock } from "./blocks.js";
+import { drawNextBlock } from "./drawing.js";
 
-export function drawMenu(ctx, nextBlock) {
+export function drawMenu(ctx, nextBlock, level, score, lines) {
   const menuStart = settings.canvasW - settings.menuWidth;
   ctx.beginPath();
   ctx.strokeStyle = "#000";
@@ -15,6 +15,6 @@ export function drawMenu(ctx, nextBlock) {
   ctx.fillStyle = "#000";
   ctx.fillText("Next:", menuStart + 20, 30);
   if (nextBlock) {
-    drawBlock(ctx, nextBlock, menuStart + 50, 50);
+    drawNextBlock(ctx, nextBlock, menuStart + 50, 50);
   }
 }

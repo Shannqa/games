@@ -1,132 +1,99 @@
 import { settings, nrOfBlocks } from "./settings";
+import { createEmptyMatrix } from "./gameArea.js"
 
 export let currentBlockCoords = [];
-export let currentPivot = [];
+export let currentPivot = {
+  x: null,
+  y: null
+};
 export let currentType = null;
 
 export const blocks = {
   O: [
-    [1, 1],
-    [1, 1],
+    [0, 0, 0, 0],
+    [0, 1, 1, 0],
+    [0, 1, 1, 0],
+    [0, 0, 0, 0],
   ],
   I: [
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
+    [0, 0, 0, 0], // 0 y
+    [1, 1, 1, 1], // 1
+    [0, 0, 0, 0], // 2
+    [0, 0, 0, 0], // 3
+    
+  // 3  4  5  6 x
   ],
   J: [
-    [0, 0, 0],
-    [1, 0, 0],
-    [1, 1, 1],
+    [0, 0, 0, 0],
+    [1, 1, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
   ],
   L: [
-    [0, 0, 0],
-    [0, 0, 1],
-    [1, 1, 1],
+    [0, 0, 0, 0],
+    [1, 1, 1, 0],
+    [1, 0, 0, 0],
+    [0, 0, 0, 0],
   ],
   S: [
-    [0, 0, 0],
-    [0, 1, 1],
-    [1, 1, 0],
+    [0, 0, 0, 0],
+    [0, 1, 1, 0],
+    [1, 1, 0, 0],
+    [0, 0, 0, 0],
   ],
   Z: [
-    [0, 0, 0],
-    [1, 1, 0],
-    [0, 1, 1],
+    [0, 0, 0, 0],
+    [1, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 0, 0],
   ],
   T: [
-    [0, 0, 0],
-    [1, 1, 1],
-    [0, 1, 0],
+    [0, 0, 0, 0],
+    [1, 1, 1, 0],
+    [0, 1, 0, 0],
+    [0, 0, 0, 0],
   ],
 };
 
-const blockColors = {
-  O: "red",
-  I: "blue",
-  J: "green",
-  L: "purple",
-  S: "pink",
-  Z: "orange",
-  T: "darkgreen",
-};
+export function createEmptyMatrix(nrOfRows) {
+  const gameMatrix = [];
+  for (let row = 0; row <= nrOfRows; row++) {
+    gameMatrix.push([]);
+    for (let col = 0; col < nrOfBlocks.x; col++) {
+      gameMatrix[row].push(null);
+    }
+  }
+  return gameMatrix;
+}
 
 export function getRandomBlock(blocks) {
-  const blocksArr = Object.keys(blocks);
-  const randomNr = Math.floor(Math.random() * blocksArr.length);
-  const randomBlock = blocksArr[randomNr];
+  // generate a random block type, return a letter 
+  const blockTypes = Object.keys(blocks);
+  const randomNr = Math.floor(Math.random() * blockTypes.length);
+  const randomBlock = blockTypes[randomNr];
   return randomBlock;
-}
-
-export function drawBlock(ctx, type, x, y) {
-  // debugger;
-
-  if (type) {
-    const matrix = blocks[type];
-    // console.log(type);
-    ctx.beginPath();
-    matrix.map((row, rId) => {
-      row.map((col, cId) => {
-        if (col === 1) {
-          drawSquare(
-            ctx,
-            type,
-            x + cId * settings.squareSize,
-            y + rId * settings.squareSize
-          );
-        }
-      });
-    });
-    ctx.closePath();
-  }
-}
-
-export function drawBlockGameArea(ctx) {
-  // debugger;
-
-  if (currentType) {
-    const matrix = blocks[currentType];
-    // console.log(type);
-    ctx.beginPath();
-    currentBlockCoords.forEach(([x, y]) => {
-      drawSquare(ctx, x * settings.squareSize, y * settings.squareSize);
-    });
-    ctx.closePath();
-  }
-}
-
-export function drawSquare(ctx, x, y) {
-  ctx.strokeStyle = "#000";
-  ctx.fillStyle = blockColors[currentType];
-  ctx.rect(x, y, settings.squareSize, settings.squareSize);
-  ctx.fill();
-  ctx.stroke();
-}
-
-export function drawCurrentBlock(ctx) {
-  // console.log(type);
-  if (!currentType) return;
-  drawBlockGameArea(ctx);
 }
 
 export function getStartCoords(type) {
   // determine coordinates of a block as it first appears on screen
   // reset coords first
   currentBlockCoords.length = 0;
-  const midX = Math.floor((nrOfBlocks.x - 1) / 2);
-  currentPivot = [midX, 1];
-  currentType = type;
+  currentPivot = [4, 1];
+  const upperLeftCorner = {
+    x: 3,
+    y: 0
+  };
   const blockPattern = blocks[type];
-
+  
   blockPattern.forEach((row, rId) => {
     row.forEach((col, cId) => {
       if (col === 1) {
-        currentBlockCoords.push([midX - 1 + cId, rId]);
+        currentBlockCoords.push([upperLeftCorner.x + cId, upperLeftCorner.y + rId]);
       }
     });
   });
-  console.log(currentBlockCoords);
+  
+  
   return currentBlockCoords;
 }
 
@@ -137,10 +104,10 @@ export function autoMoveDown(placedBlocks, setPlacedBlocks, setGameState) {
   const isValid = checkIfMoveValid(newCoords);
   
   if (isValid) {
-    saveNewCoords(newCoords);
+    saveNewCoords(newCoords)
+    currentPivot.y += 1;
   } else {
-    saveNewStack(placedBlocks, setPlacedBlocks, );
-    //setPlacedCoords
+    saveNewStack(placedBlocks, setPlacedBlocks);
   }
 }
 
@@ -150,6 +117,11 @@ export function userMove(direction) {
   
   if (isValid) {
     saveNewCoords(newCoords);
+    if (direction === "right") {
+      currentPivot.x += 1;
+    } else {
+      currentPivot.x -= 1;
+    }
   }
 }
 
@@ -219,13 +191,11 @@ export function rotate() {
   } else if (currentType === "O") {
     // don't rotate O-blocks
     return;
-  } else if (currentType === "I") {
-    // I has separate rotation rules
   } else {
     // basic rotation
-    const rotatedCoords = currentBlockCoords.map((cell) => {
-      const newX = currentPivot[1] - cell[1] + currentPivot[0];
-      const newY = currentPivot[1] - currentPivot[0] + cell[0];
+    const rotatedCoords = currentBlockCoords.map(([currentX, currentY]) => {
+      const newX = currentPivot.y - currentY + currentPivot.x;
+      const newY = currentPivot.y - currentPivot.x + currentX;
       return [newX, newY];
     });
     
@@ -254,48 +224,33 @@ export function rotate() {
       const isJumpValid = checkIfMoveValid(kickedCoords);
   
       if (isJumpValid) {
+        // if move possible, save
         saveNewCoords(kickedCoords);
-        return;
       }
     }
-    // rotation impossible, cancel
-    return;
   }
 }
 
-
-//add changes to pivot to moves
-
-
-export function checkIfRowComplete(placedBlocks, setPlacedBlocks) {
-  const completedRows = [];
-
+export function checkFullLines(placedBlocks, setPlacedBlocks) {
+  const linesToClear = [];
+  
   placedBlocks.forEach((row, rId) => {
-    const checkedRow = row.every((square) => {
-      return square !== null;
-    });
-    if (checkedRow) {
-      completedRows.push(rId);
+    
+    const rowFull = row.every((col, cId) => col !== null);
+    
+    if (rowFull) {
+      linesToClear.push(rId);
     }
   });
-  if (completedRows.length > 0) {
-    deleteRow(completedRows, placedBlocks, setPlacedBlocks);
-  }
+  return linesToClear;
 }
 
-function deleteRow(completedRows, placedBlocks, setPlacedBlocks) {
-  let newPlacedBlocks = placedBlocks.map((placedRow, placedrId) => {
-    completedRows.forEach((row, rId) => {
-      if (placedrId === row) {
-        return;
-      } else {
-        return [...row];
-      }
-    });
-  });
-  setPlacedBlocks(newPlacedBlocks);
-  // what should come first, clearing a row or generating a new current block
+function clearLines(linesToClear, placedBlocks, setPlacedBlocks) {
+  const matrixCleared = placedBlocks.filter((_, rId) => !linesToClear.includes(rId));
+  
+  const emptyRows = createEmptyMatrix(linesToClear.length);
+  
+  const newMatrix = [...emptyRows, ...matrixCleared];
+  
+  setPlacedBlocks(newMatrix);
 }
-
-
-/*****/

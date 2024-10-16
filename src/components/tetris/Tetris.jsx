@@ -14,11 +14,14 @@ import { drawPlacedBlocks } from "./gameArea.js";
 import { keyDown, keyUp } from "./keyboard.js";
 
 function Tetris() {
+  const [currentType, setCurrentType] = useState(null);
   const [nextBlock, setNextBlock] = useState(null);
   const [gameState, setGameState] = useState("loaded");
   const [modal, setModal] = useState(false);
   const [placedBlocks, setPlacedBlocks] = useState([]);
+  const [level, setLevel] = useState(0);
   const [score, setScore] = useState(0);
+  const [lines, setLines] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (e) => keyDown(e, placedBlocks);
@@ -38,12 +41,14 @@ function Tetris() {
       gameLoaded(setNextBlock, setPlacedBlocks, blocks, setGameState);
     } else if (gameState === "newBlock") {
       newBlock(nextBlock, setNextBlock, blocks, setGameState);
+    } else if (gameState === "lineClear") {
+      lineClear(level, setLevel, lines, setLines, setGameState);
     }
   }, [gameState]);
 
   function draw(ctx, frameCount) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    drawMenu(ctx, nextBlock);
+    drawMenu(ctx, nextBlock, level, score, lines);
     drawPlacedBlocks(ctx, placedBlocks);
     drawCurrentBlock(ctx);
 
